@@ -1,0 +1,148 @@
+/* tailwindcss and tw-animate-css imports removed — packages not installed */
+/* @import 'tailwindcss'; */
+/* @import 'tw-animate-css'; */
+/* @custom-variant dark (&:is(.dark *)); */
+
+:root {
+   --background: #f9fafb;
+   --foreground: #0b111a;
+   --card: #ffffff;
+   --card-foreground: #2b3749;
+   --popover: #ffffff;
+   --popover-foreground: #0a0a0a;
+   --primary: #7c766e;
+   --primary-foreground: #ffffff;
+   --secondary: #e5e5e5;
+   --secondary-foreground: #1d2837;
+   --muted: #f4f4f5;
+   --muted-foreground: #57534e;
+   --accent: #ece8e2;
+   --accent-foreground: #171717;
+   --destructive: #dc2626;
+   --destructive-foreground: #fef2f2;
+   --border: #d4d4d4;
+   --border-light: #e5e5e5;
+   --input: #d4d4d4;
+   --ring: #a3a3a3;
+   --chart-1: #ea580c;
+   --chart-2: #0d9488;
+   --chart-3: #164e63;
+   --chart-4: #fbbf24;
+   --chart-5: #ffb000;
+   --sidebar: #fafafa;
+   --sidebar-foreground: #0a0a0a;
+   --sidebar-primary: #171717;
+   --sidebar-primary-foreground: #fafafa;
+   --sidebar-accent: #f5f5f5;
+   --sidebar-accent-foreground: #171717;
+   --sidebar-border: #e5e5e5;
+   --sidebar-ring: #a3a3a3;
+
+   /* Text scale */
+   --text-muted: #8d9a94;
+   --text-light: #9ca3af;
+
+   /* Destructive extended */
+   --destructive-text: #991b1b;
+   --destructive-background: #fee2e2;
+   --destructive-border: #fca5a5;
+
+   /* Success */
+   --success: #326b52;
+   --success-background: #e8f0eb;
+
+   /* Warning */
+   --warning: #92400e;
+   --warning-background: #fffbeb;
+   --warning-border: #fde68a;
+
+   /* Info */
+   --info: #1e40af;
+   --info-background: #eff6ff;
+   --info-border: #bfdbfe;
+
+   /* Chart scale extended */
+   --chart-6: #ef6b51;
+   --chart-7: #c9a94e;
+   --chart-8: #7c3aed;
+   --chart-9: #2563eb;
+   --chart-10: #6b7280;
+
+   --font-sans: Inter, sans-serif;
+   --font-serif: Inter, sans-serif;
+   --font-mono: Geist Mono, monospace;
+   --radius: 0.625rem;
+   --shadow-2xs: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.05);
+   --shadow-xs: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.05);
+   --shadow-sm: 0px 1px 2px -1px rgba(0, 0, 0, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+   --shadow: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.1), -2.5px 1px 2px -6.5px hsl(0 0% 0% / 0.1);
+   --shadow-md: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.1), -2.5px 2px 4px -6.5px hsl(0 0% 0% / 0.1);
+   --shadow-lg: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.1), -2.5px 4px 6px -6.5px hsl(0 0% 0% / 0.1);
+   --shadow-xl: 0px 8px 10px -6px rgba(0, 0, 0, 0.1), 0px 20px 25px -5px rgba(0, 0, 0, 0.05);
+   --shadow-2xl: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.25);
+   --tracking-normal: 0em;
+   --spacing: 0.25rem;
+}
+
+.dark {
+   --background: #0f172a;
+   --foreground: #d1d5db;
+   --card: #1e293b;
+   --card-foreground: #d1d5db;
+   --popover: #1e293b;
+   --popover-foreground: #d1d5db;
+   --primary: #34d399;
+   --primary-foreground: #0f172a;
+   --secondary: #13714f;
+   --secondary-foreground: #fafafa;
+   --muted: #1e293b;
+   --muted-foreground: #6b7280;
+   --accent: #374151;
+   --accent-foreground: #a1a1aa;
+   --destructive: #ef4444;
+   --destructive-foreground: #0f172a;
+   --border: #4b5563;
+   --border-light: #6b7280;
+   --input: #4b5563;
+   --ring: #34d399;
+   --chart-1: #ea580c;
+   --chart-2: #0d9488;
+   --chart-3: #164e63;
+   --chart-4: #fbbf24;
+   --chart-5: #ffb000;
+   --sidebar: #052e16;
+   --sidebar-foreground: #d1d5db;
+   --sidebar-primary: #16a34a;
+   --sidebar-primary-foreground: #0f172a;
+   --sidebar-accent: #13714f;
+   --sidebar-accent-foreground: #a1a1aa;
+   --sidebar-border: #4b5563;
+   --sidebar-ring: #4abf7d;
+   --font-sans: DM Sans, sans-serif;
+   --font-serif: Lora, serif;
+   --font-mono: IBM Plex Mono, monospace;
+   --radius: 0.5rem;
+   --shadow-2xs: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.05);
+   --shadow-xs: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.05);
+   --shadow-sm: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.1), -2.5px 1px 2px -6.5px hsl(0 0% 0% / 0.1);
+   --shadow: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.1), -2.5px 1px 2px -6.5px hsl(0 0% 0% / 0.1);
+   --shadow-md: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.1), -2.5px 2px 4px -6.5px hsl(0 0% 0% / 0.1);
+   --shadow-lg: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.1), -2.5px 4px 6px -6.5px hsl(0 0% 0% / 0.1);
+   --shadow-xl: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.1), -2.5px 8px 10px -6.5px hsl(0 0% 0% / 0.1);
+   --shadow-2xl: -2.5px 4px 8px -5.5px hsl(0 0% 0% / 0.25);
+}
+
+/* Base element styles — replaces @layer base (no Tailwind) */
+*, *::before, *::after {
+   box-sizing: border-box;
+}
+
+body {
+   background: var(--background);
+   color: var(--foreground);
+   font-family: Inter, sans-serif;
+}
+
+a, button {
+   cursor: pointer;
+}
