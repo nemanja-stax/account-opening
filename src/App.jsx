@@ -50,7 +50,7 @@ const N = {
   bg:"#faf9f6", bgAlt:"var(--muted)", bgAlt2:"#ebebec", neutral:"var(--secondary)", card:"var(--card)",
   almostBlack:"#131313", darkBluGray:"var(--secondary-foreground)", darkBg:"#0c1520", medBluGray:"var(--card-foreground)",
   darkSec:"#111d2e", textGray:"var(--secondary-foreground)", secondaryText:"var(--muted-foreground)", mutedText:"var(--text-muted)",
-  border:"var(--border)", section:"var(--muted)", divider:"var(--border)",
+  border:"var(--border)", section:"var(--muted)", divider:"#E4E4E7",
 };
 const T = { primary:"var(--foreground)", body:"var(--muted-foreground)", muted:"var(--text-muted)", light:"var(--text-light)", white:"var(--primary-foreground)", dim:"#d1d5dc" };
 const A = {
@@ -66,6 +66,51 @@ const OV = {
 const FONT  = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 const FONT2 = FONT; /* v1.2: FONT2 removed, aliased to FONT (Golos Text dropped) */
 const TYPE = { xs:11, sm:12, base:13, md:14, lg:16, xl:20, xxl:26, normal:400, medium:500, semibold:600, bold:700, extrabold:600 };
+const WARN_BANNER_TEXT = "#ca8a04";
+const WARN_BANNER_BG = "#fefce8";
+const ALERT_BANNER_RED = "#DC2626";
+const ALERT_BANNER_BG = "#FEF2F2";
+const BOX_RADIUS = 12;
+const SECTION_TITLE_COLOR = "#1D2837";
+const SECTION_BODY_COLOR = "#57534E";
+const SECTION_HELPER_COLOR = "#8B8B8B";
+const DARK_HEADER_TITLE = "#FFFFFF";
+const DARK_HEADER_SUBTITLE = "rgba(255,255,255,0.8)";
+const DARK_HEADER_LABEL = "rgba(255,255,255,0.6)";
+/* Spacing rhythm aligned to architecture.md (4px base) */
+const SP = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
+};
+const LAYER_BG = "#F8F8F8";
+const LAYER_BG_STRONG = "#F4F4F5";
+const SECTION_PAD_X = 20;
+const SECTION_PAD_BOTTOM = 20;
+const GROUP_GAP = 16;
+const INNER_GAP = 12;
+/* Typography hierarchy (token-driven + reusable) */
+const TYPO = {
+  stepTitle: { size: 16, weight: 700, color: T.primary },
+  stepDescription: { size: 12, weight: 400, color: T.body },
+  sectionTitle: { size: 16, weight: 600, color: SECTION_TITLE_COLOR },
+  sectionDescription: { size: 14, weight: 400, color: SECTION_BODY_COLOR },
+  inputLabel: { size: 14, weight: 500, color: T.primary },
+  inputValue: { size: 14, weight: 400, color: T.primary },
+  hint: { size: 12, weight: 400, color: SECTION_HELPER_COLOR },
+};
+const TABLE_DIVIDER = "1px solid rgba(212,212,212,0.38)";
+const TABLE = {
+  panel: { background: "#FFFFFF", borderRadius: 10, padding: 8 },
+  base: { width: "100%", borderCollapse: "collapse", fontFamily: FONT, tableLayout: "fixed", background: "#FFFFFF" },
+  head: { padding: "12px 12px", fontSize: 14, fontWeight: 500, color: T.muted, lineHeight: "20px", borderBottom: TABLE_DIVIDER, textAlign: "left", background: "#FFFFFF" },
+  label: { padding: "14px 12px", fontSize: 14, fontWeight: 500, color: T.muted, lineHeight: "20px", borderBottom: TABLE_DIVIDER, verticalAlign: "middle", background: "#FFFFFF" },
+  value: { padding: "14px 12px", fontSize: 14, fontWeight: 400, color: T.primary, lineHeight: "20px", borderBottom: TABLE_DIVIDER, verticalAlign: "middle", background: "#FFFFFF" },
+  valueStrong: { padding: "14px 12px", fontSize: 14, fontWeight: 500, color: T.primary, lineHeight: "20px", borderBottom: TABLE_DIVIDER, verticalAlign: "middle", background: "#FFFFFF" },
+  numeric: { textAlign: "right" },
+};
 const WIDGET_HDR = `linear-gradient(135deg, ${G.darkest} 0%, ${G.deep} 100%)`;
 
 /* ─── Institutional SVG Icons (Feather-style, 16×16 stroke) ─── */
@@ -488,7 +533,7 @@ const inputSt = {
   width: "100%", boxSizing: "border-box",
   padding: "0 14px", height: 44,
   borderRadius: 8, border: "1px solid var(--border)",
-  fontSize: 14, fontFamily: FONT, color: "var(--foreground)",
+  fontSize: TYPO.inputValue.size, fontWeight: TYPO.inputValue.weight, fontFamily: FONT, color: TYPO.inputValue.color,
   background: "var(--card)", outline: "none",
   boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
   transition: "border-color 0.15s, box-shadow 0.15s",
@@ -507,12 +552,12 @@ if (typeof window !== "undefined" && !document.getElementById("stax-v1-styles"))
   s.id = "stax-v1-styles";
   s.textContent = `
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-    .stax-input:focus { outline:none; background:var(--card) !important; border-color:var(--primary) !important; box-shadow:0 0 0 3px color-mix(in srgb, var(--primary) 10%, transparent) !important; }
+    .stax-input:focus { outline:none; background:var(--card) !important; border-color:var(--primary) !important; box-shadow:0 0 0 1px color-mix(in srgb, var(--primary) 10%, transparent) !important; }
     .stax-input::placeholder { color:var(--text-light); font-weight:400; }
-    .stax-input.has-error { border-color:var(--destructive) !important; box-shadow:0 0 0 3px color-mix(in srgb, var(--destructive) 10%, transparent) !important; }
-    .stax-input.is-valid { border-color:var(--success) !important; box-shadow:0 0 0 3px color-mix(in srgb, var(--success) 10%, transparent) !important; }
-    .stax-select:focus { outline:none; background:var(--card) !important; border-color:var(--primary) !important; box-shadow:0 0 0 3px color-mix(in srgb, var(--primary) 10%, transparent) !important; }
-    .stax-select.has-error { border-color:var(--destructive) !important; box-shadow:0 0 0 3px color-mix(in srgb, var(--destructive) 10%, transparent) !important; }
+    .stax-input.has-error { border-color:var(--destructive) !important; box-shadow:0 0 0 1px color-mix(in srgb, var(--destructive) 10%, transparent) !important; }
+    .stax-input.is-valid { border-color:var(--success) !important; box-shadow:0 0 0 1px color-mix(in srgb, var(--success) 10%, transparent) !important; }
+    .stax-select:focus { outline:none; background:var(--card) !important; border-color:var(--primary) !important; box-shadow:0 0 0 1px color-mix(in srgb, var(--primary) 10%, transparent) !important; }
+    .stax-select.has-error { border-color:var(--destructive) !important; box-shadow:0 0 0 1px color-mix(in srgb, var(--destructive) 10%, transparent) !important; }
     .stax-card-hover:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(12,21,32,0.18) !important; }
     .stax-btn-primary:hover:not(:disabled) { background-color:var(--primary) !important; filter:brightness(0.9); }
     .stax-btn-secondary:hover { background-color:var(--secondary) !important; }
@@ -563,30 +608,44 @@ const Pill = ({ label, value, sub }) => (
 
 const FlagAlert = ({ type, msg, detail }) => {
   const [expanded, setExpanded] = useState(false);
+  const grayBanner = {
+    bg: "#F4F4F5",
+    border: "#F4F4F5",
+    text: "#1D2837",
+    subText: "#57534E",
+    title: "For Your Information",
+  };
   const styles = {
     block: { bg: C.errorBg, border: C.errorBorder, icon: "\u{1F6AB}", text: C.error, label: "Must Resolve" },
     warn:  { bg: C.warningBg, border: C.warningBorder, icon: "\u26A0\uFE0F", text: C.warning, label: "Review Required" },
     flag:  { bg: N.bgAlt, border: N.border, icon: "\u2139\uFE0F", text: NAVY[600], label: "For Your Information" },
   };
   const s = styles[type] || styles.flag;
+  const isGrayFlag = type === "flag";
   return (
-    <div role="alert" style={{ padding: "10px 14px", borderRadius: 8, background: s.bg,
-      border: `1px solid ${s.border}`, marginBottom: 8 }}>
+    <div role="alert" style={{ padding: "16px", borderRadius: 8, background: isGrayFlag ? grayBanner.bg : s.bg,
+      border: `1px solid ${isGrayFlag ? grayBanner.border : s.border}`, marginBottom: 8 }}>
       <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
         <span style={{ fontSize: 14, flexShrink: 0 }}>{s.icon}</span>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
-            <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", color: s.text, fontFamily: FONT }}>{s.label}</span>
+            <span style={{
+              fontSize: isGrayFlag ? 14 : 9,
+              fontWeight: isGrayFlag ? 500 : 700,
+              textTransform: isGrayFlag ? "none" : "uppercase",
+              color: isGrayFlag ? grayBanner.text : s.text,
+              fontFamily: FONT,
+            }}>{isGrayFlag ? grayBanner.title : s.label}</span>
           </div>
-          <span style={{ fontSize: 12, color: s.text, fontFamily: FONT, lineHeight: 1.6 }}>{msg}</span>
+          <span style={{ fontSize: 12, fontWeight: 400, color: isGrayFlag ? grayBanner.subText : s.text, fontFamily: FONT, lineHeight: "20px" }}>{msg}</span>
           {detail && (
             <button onClick={() => setExpanded(!expanded)} style={{
               background: "none", border: "none", cursor: "pointer", fontSize: 10,
-              color: s.text, fontFamily: FONT, fontWeight: 600, marginLeft: 4, textDecoration: "underline",
+              color: isGrayFlag ? grayBanner.subText : s.text, fontFamily: FONT, fontWeight: 600, marginLeft: 4, textDecoration: "underline",
             }}>{expanded ? "Less" : "More"}</button>
           )}
           {expanded && detail && (
-            <div style={{ fontSize: 11, color: s.text, fontFamily: FONT, marginTop: 6, lineHeight: 1.6, opacity: 0.85 }}>{detail}</div>
+            <div style={{ fontSize: 12, color: isGrayFlag ? grayBanner.subText : s.text, fontFamily: FONT, marginTop: INNER_GAP, lineHeight: "20px", opacity: 0.9 }}>{detail}</div>
           )}
         </div>
       </div>
@@ -594,7 +653,7 @@ const FlagAlert = ({ type, msg, detail }) => {
   );
 };
 
-const SectionCard = ({ title, icon, children, noPad, collapsible = false, defaultOpen = true }) => {
+const SectionCard = ({ title, icon, children, noPad, collapsible = false, defaultOpen = true, headerVariant = "gray", subtitle }) => {
   const [open, setOpen] = useState(defaultOpen);
   const cardRef = useRef(null);
   const handleToggle = () => {
@@ -612,57 +671,68 @@ const SectionCard = ({ title, icon, children, noPad, collapsible = false, defaul
   };
   return (
     <div ref={cardRef} style={{
-      background: N.card, borderRadius: 12, border: `1px solid ${N.border}`,
-      marginBottom: 24, overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+      background: LAYER_BG,
+      borderRadius: BOX_RADIUS,
+      marginBottom: GROUP_GAP,
+      overflow: "hidden",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
     }}>
       <div
         onClick={collapsible ? handleToggle : undefined}
         style={{
-          padding: "16px 20px",
-          borderBottom: open ? `1px solid ${N.border}` : "none",
-          display: "flex", alignItems: "center", gap: 10,
-          background: N.section,
+          padding: `16px ${SECTION_PAD_X}px`,
+          display: "flex", alignItems: "center", gap: SP.md,
+          background: LAYER_BG_STRONG,
           cursor: collapsible ? "pointer" : "default", userSelect: "none",
         }}
       >
         {icon && <span style={{ color: T.muted, display:"flex", alignItems:"center", flexShrink:0 }}>{icon}</span>}
-        <span style={{ fontSize: 14, fontWeight: 700, color: T.primary, fontFamily: FONT, flex: 1, letterSpacing: "-0.01em" }}>{title}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 16, fontWeight: 600, color: SECTION_TITLE_COLOR, fontFamily: FONT, lineHeight: 1.4 }}>
+            {title}
+          </div>
+          {subtitle && (
+            <div style={{ fontSize: 14, fontWeight: 400, color: SECTION_BODY_COLOR, fontFamily: FONT, lineHeight: 1.5, marginTop: INNER_GAP, maxWidth: 660 }}>
+              {subtitle}
+            </div>
+          )}
+        </div>
         {collapsible && (
           <svg width="14" height="14" viewBox="0 0 14 14" style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }}>
             <path d="M3 5L7 9L11 5" stroke={T.muted} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
           </svg>
         )}
       </div>
-      {open && <div style={noPad ? {} : { padding: "20px", display: "flex", flexDirection: "column", gap: 16 }}>{children}</div>}
+      {open && <div style={noPad ? {} : { padding: `16px ${SECTION_PAD_X}px ${SECTION_PAD_BOTTOM}px`, display: "flex", flexDirection: "column", gap: INNER_GAP, background: N.card }}>{children}</div>}
     </div>
   );
 };
 
 const StepSection = ({ step, title, subtitle, children }) => (
-  <div style={{ background: N.card, borderRadius: 12, border: `1px solid ${N.border}`, overflow:"hidden", boxShadow:"0 1px 4px rgba(0,0,0,0.06)" }}>
-    <div style={{ background: N.section, padding:"16px 20px", borderBottom:`1px solid ${N.border}`, display:"flex", alignItems:"center", gap:14 }}>
+  <div style={{ background: LAYER_BG, borderRadius: BOX_RADIUS, overflow:"hidden", boxShadow:"0 1px 4px rgba(0,0,0,0.06)" }}>
+    <div style={{ background: LAYER_BG_STRONG, padding:`16px ${SECTION_PAD_X}px`, display:"flex", alignItems:"center", gap:GROUP_GAP }}>
       <div style={{ width:28, height:28, borderRadius:"50%", background:NAVY[700], display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
         <span style={{ fontSize:13, fontWeight:700, color:T.white, fontFamily:FONT }}>{step}</span>
       </div>
       <div>
-        <div style={{ fontSize:15, fontWeight:700, color:T.primary, fontFamily:FONT, letterSpacing:"-0.01em", lineHeight:1.2 }}>{title}</div>
-        <div style={{ fontSize:12, color:T.body, fontFamily:FONT, marginTop:2, lineHeight:1.3 }}>{subtitle}</div>
+        <div style={{ fontSize: 16, fontWeight: 600, color: SECTION_TITLE_COLOR, fontFamily:FONT, lineHeight:1.4 }}>{title}</div>
+        <div style={{ fontSize: 14, fontWeight: 400, color: SECTION_BODY_COLOR, fontFamily:FONT, marginTop:INNER_GAP, lineHeight:1.5, maxWidth:660 }}>{subtitle}</div>
       </div>
     </div>
-    <div style={{ padding:"20px", display:"flex", flexDirection:"column", gap:16 }}>
+    <div style={{ padding:`16px ${SECTION_PAD_X}px ${SECTION_PAD_BOTTOM}px`, display:"flex", flexDirection:"column", gap:INNER_GAP, background: N.card }}>
       {children}
     </div>
   </div>
 );
 
 /* ─── Form Primitives ─── */
-const FormField = ({ label, required, sublabel, tooltip, children, mb = 16 }) => {
+const FormField = ({ label, required, sublabel, tooltip, children, mb = GROUP_GAP }) => {
   const [focused, setFocused] = React.useState(false);
   return (
     <div style={{ marginBottom: mb }}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}>
-      <label style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: T.primary, marginBottom: 6, letterSpacing: "0.01em" }}>
+      <label style={{ display: "flex", alignItems: "center", gap: INNER_GAP, fontSize: TYPO.inputLabel.size, fontWeight: TYPO.inputLabel.weight, color: TYPO.inputLabel.color, marginBottom: INNER_GAP, letterSpacing: "0.01em" }}>
         <span>{label} {required && <span style={{ color: A.coral }}>*</span>}</span>
         {tooltip && (
           <span title={tooltip} style={{ display:"inline-flex", alignItems:"center", cursor:"help", color:T.light, flexShrink:0 }}>
@@ -675,8 +745,8 @@ const FormField = ({ label, required, sublabel, tooltip, children, mb = 16 }) =>
       {children}
       {sublabel && (
         <div style={{
-          fontSize: 11, color: T.muted, lineHeight: 1.5, fontFamily: FONT,
-          marginTop: 4,
+          fontSize: TYPO.hint.size, fontWeight: TYPO.hint.weight, color: TYPO.hint.color, lineHeight: 1.5, fontFamily: FONT,
+          marginTop: INNER_GAP,
           maxHeight: focused ? 40 : 0,
           overflow: "hidden",
           opacity: focused ? 1 : 0,
@@ -690,11 +760,33 @@ const FormField = ({ label, required, sublabel, tooltip, children, mb = 16 }) =>
 };
 
 const Hint = ({ text, error }) => text ? (
-  <div role={error ? "alert" : undefined} style={{ fontSize: 11, marginTop: 4, fontFamily: FONT,
-    color: error ? C.error : T.muted, display: "flex", alignItems: "center", gap: 4 }}>
+  <div role={error ? "alert" : undefined} style={{ fontSize: TYPO.hint.size, fontWeight: TYPO.hint.weight, marginTop: INNER_GAP, fontFamily: FONT,
+    color: error ? C.error : TYPO.hint.color, display: "flex", alignItems: "center", gap: 6 }}>
     {error && <span>&#9888;</span>}{text}
   </div>
 ) : null;
+
+const SELECTED_CARD_BG = "#DDF9EB";
+const SELECTED_CARD_BORDER = "#3E8669";
+const SELECTABLE_CARD_RADIUS = 8;
+const SELECTABLE_CARD_PADDING = "16px";
+const SELECTABLE_CARD_GAP = INNER_GAP;
+
+const selectableCardStyle = ({ selected, hovered, disabled }) => ({
+  display: "flex",
+  alignItems: "flex-start",
+  gap: SELECTABLE_CARD_GAP,
+  cursor: disabled ? "not-allowed" : "pointer",
+  padding: SELECTABLE_CARD_PADDING,
+  borderRadius: SELECTABLE_CARD_RADIUS,
+  width: "100%",
+  boxSizing: "border-box",
+  background: selected ? SELECTED_CARD_BG : (hovered ? LAYER_BG : "#FAFAFA"),
+  border: "none",
+  boxShadow: selected ? `inset 0 0 0 1px ${SELECTED_CARD_BORDER}` : "inset 0 0 0 1px rgba(212,212,212,0.45)",
+  transition: "background 0.15s ease, box-shadow 0.15s ease",
+  opacity: disabled ? 0.6 : 1,
+});
 
 const TInput = ({ label, value, onChange, placeholder, type = "text", required, disabled, sublabel, maxLength, style: extraStyle }) => {
   const validated = React.useContext(ValidationCtx);
@@ -727,79 +819,71 @@ const TSelect = ({ label, value, onChange, options, required, placeholder, subla
   );
 };
 
-const CheckBox = ({ checked, onChange, label, description, darkMode }) => (
-  <label style={{
-    display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer",
-    marginBottom: 8, padding: "12px 16px", borderRadius: 8,
-    background: darkMode
-      ? (checked ? "rgba(52,211,153,0.18)" : "rgba(255,255,255,0.08)")
-      : (checked ? G.mint : N.bgAlt),
-    border: darkMode
-      ? `1px solid ${checked ? "rgba(52,211,153,0.45)" : "rgba(255,255,255,0.18)"}`
-      : `1px solid ${checked ? G.forest : N.border}`,
-    transition: "all 0.15s",
-    width: "100%", boxSizing: "border-box",
-  }}>
-    <input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)}
-      style={{ position: "absolute", opacity: 0, width: 0, height: 0, pointerEvents: "none" }}/>
-    <span style={{
-      width: 18, height: 18, borderRadius: 4, flexShrink: 0, marginTop: 1,
-      display: "flex", alignItems: "center", justifyContent: "center",
-      background: darkMode
-        ? (checked ? G.forest : "rgba(255,255,255,0.12)")
-        : (checked ? G.forest : N.card),
-      border: darkMode
-        ? `2px solid ${checked ? G.forest : "rgba(255,255,255,0.3)"}`
-        : `2px solid ${checked ? G.forest : N.border}`,
-      transition: "all 0.15s",
-    }}>
-      {checked && (
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M20 6L9 17L4 12"/></svg>
-      )}
-    </span>
-    <div>
-      <div style={{ fontSize: 13, fontWeight: 500, color: darkMode ? "rgba(255,255,255,0.9)" : T.primary, fontFamily: FONT }}>{label}</div>
-      {description && <div style={{ fontSize: 11, color: darkMode ? "rgba(255,255,255,0.55)" : T.muted, fontFamily: FONT, marginTop: 2, lineHeight: 1.5 }}>{description}</div>}
-    </div>
-  </label>
-);
+const CheckBox = ({ checked, onChange, label, description, darkMode }) => {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <label
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={selectableCardStyle({ selected: checked, hovered, disabled: false })}
+    >
+      <input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)}
+        style={{ position: "absolute", opacity: 0, width: 0, height: 0, pointerEvents: "none" }}/>
+      <span style={{
+        width: 16, height: 16, borderRadius: 4, flexShrink: 0, marginTop: 2,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        background: N.card,
+        border: `1px solid ${checked ? SELECTED_CARD_BORDER : N.border}`,
+        transition: "all 0.15s",
+      }}>
+        {checked && (
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={SELECTED_CARD_BORDER} strokeWidth="3"><path d="M20 6L9 17L4 12"/></svg>
+        )}
+      </span>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: 14, fontWeight: 500, color: T.primary, fontFamily: FONT, lineHeight: "20px" }}>{label}</div>
+        {description && <div style={{ fontSize: 12, fontWeight: 400, color: T.muted, fontFamily: FONT, marginTop: INNER_GAP, lineHeight: "16px" }}>{description}</div>}
+      </div>
+    </label>
+  );
+};
 
 const RadioGroup = ({ label, name, value, onChange, options, required, sublabel }) => {
   const validated = React.useContext(ValidationCtx);
   const hasErr = validated && required && !value;
+  const [hoveredVal, setHoveredVal] = useState(null);
   return (
   <FormField label={label} required={required} sublabel={sublabel}>
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }} data-field-error={hasErr ? "true" : undefined}>
+    <div style={{ display: "flex", flexDirection: "column", gap: SP.md }} data-field-error={hasErr ? "true" : undefined}>
       {options.map(o => {
         const val = typeof o === "string" ? o : o.value;
         const lbl = typeof o === "string" ? o : o.label;
         const desc = typeof o === "object" ? o.description : null;
         const selected = value === val;
         return (
-          <label key={val} style={{
-            display: "flex", alignItems: "center", gap: 12, cursor: "pointer",
-            padding: "12px 16px", borderRadius: 8, width: "100%", boxSizing: "border-box",
-            background: selected ? G.mint : N.bgAlt,
-            border: `1px solid ${selected ? G.forest : N.border}`,
-            transition: "all 0.15s",
-          }}>
+          <label
+            key={val}
+            onMouseEnter={() => setHoveredVal(val)}
+            onMouseLeave={() => setHoveredVal(null)}
+            style={selectableCardStyle({ selected, hovered: hoveredVal === val, disabled: false })}
+          >
             <input type="radio" name={name || label} value={val} checked={selected}
               onChange={() => onChange(val)}
               style={{ position: "absolute", opacity: 0, width: 0, height: 0, pointerEvents: "none" }}/>
             <span style={{
-              width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
+              width: 16, height: 16, borderRadius: "50%", flexShrink: 0, marginTop: 2,
               display: "flex", alignItems: "center", justifyContent: "center",
-              background: selected ? G.forest : N.card,
-              border: `2px solid ${selected ? G.forest : N.border}`,
+              background: N.card,
+              border: `1px solid ${selected ? SELECTED_CARD_BORDER : N.border}`,
               transition: "all 0.15s",
             }}>
               {selected && (
-                <span style={{ width: 7, height: 7, borderRadius: "50%", background: N.card, display: "block" }}/>
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: SELECTED_CARD_BORDER, display: "block" }}/>
               )}
             </span>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: selected ? 600 : 400, color: T.primary, fontFamily: FONT }}>{lbl}</div>
-              {desc && <div style={{ fontSize: 12, color: T.muted, fontFamily: FONT, marginTop: 2, lineHeight: 1.5 }}>{desc}</div>}
+              <div style={{ fontSize: 14, fontWeight: 500, color: T.primary, fontFamily: FONT, lineHeight: "20px" }}>{lbl}</div>
+              {desc && <div style={{ fontSize: 12, fontWeight: 400, color: T.muted, fontFamily: FONT, marginTop: INNER_GAP, lineHeight: "16px" }}>{desc}</div>}
             </div>
           </label>
         );
@@ -850,7 +934,7 @@ const CurrencyInput = ({ label, value, onChange, disabled, sublabel, required, m
   );
 };
 
-const CartAmountInput = ({ value, onCommit }) => {
+const CartAmountInput = ({ value, onCommit, inputStyle }) => {
   const inputRef = useRef(null);
   const isFocused = useRef(false);
   useEffect(() => {
@@ -869,7 +953,7 @@ const CartAmountInput = ({ value, onCommit }) => {
         e.target.value = n > 0 ? n.toLocaleString() : "";
       }}
       onChange={e => { const n = parseInt(e.target.value.replace(/[^0-9]/g, "")) || 0; onCommit(n); }}
-      style={{ ...inputSt, width: 140, paddingLeft: 10, fontSize: 13, fontWeight: 600, color: G.forest, background: G.mint, border: `1px solid ${G.forest}30` }}/>
+      style={{ ...inputSt, width: 140, paddingLeft: 10, fontSize: 13, fontWeight: 600, color: G.forest, background: G.mint, border: `1px solid ${G.forest}30`, ...inputStyle }}/>
   );
 };
 
@@ -1058,19 +1142,46 @@ const BtnDark = ({ onClick, children, disabled, style = {} }) => (
 );
 
 const InfoCallout = ({ children, type = "info", title }) => {
+  const grayBanner = {
+    bg: "#F4F4F5",
+    border: "#F4F4F5",
+    title: "#1D2837",
+    body: "#57534E",
+    padding: 16,
+  };
   const colors = {
     info:      { line: NAVY[600],  bg: "rgba(43,55,73,0.08)"  },
     success:   { line: G.forest,   bg: C.successBg       },
-    warning:   { line: C.warning,  bg: C.warningBg       },
-    important: { line: C.error,    bg: C.errorBg         },
+    warning:   { line: WARN_BANNER_TEXT,  bg: WARN_BANNER_BG       },
+    important: { line: ALERT_BANNER_RED, bg: ALERT_BANNER_BG },
   };
   const s = colors[type] || colors.info;
+  const isWarning = type === "warning";
+  const isImportant = type === "important";
+  const isInfo = type === "info";
   return (
-    <div style={{ borderLeft: `3px solid ${s.line}`, paddingLeft: 12, paddingRight: 12,
-      paddingTop: 10, paddingBottom: 10, background: s.bg,
-      borderRadius: "0 8px 8px 0", marginBottom: 12 }}>
-      {title && <div style={{ fontSize: 13, fontWeight: 600, color: T.primary, fontFamily: FONT, marginBottom: 4 }}>{title}</div>}
-      <div style={{ fontSize: 12, color: T.body, fontFamily: FONT, lineHeight: 1.6 }}>{children}</div>
+    <div style={{
+      borderLeft: isInfo ? "none" : `3px solid ${s.line}`,
+      padding: isInfo ? grayBanner.padding : "14px 14px 14px 12px",
+      background: isInfo ? grayBanner.bg : s.bg,
+      border: isInfo ? `1px solid ${grayBanner.border}` : "none",
+      borderRadius: isInfo ? 8 : "0 8px 8px 0",
+      margin: "16px 0",
+    }}>
+      {title && <div style={{
+        fontSize: isInfo ? 14 : (isWarning ? 12 : 14),
+        fontWeight: 500,
+        color: isInfo ? grayBanner.title : (isWarning ? WARN_BANNER_TEXT : (isImportant ? ALERT_BANNER_RED : T.primary)),
+        fontFamily: FONT,
+        marginBottom: SP.sm,
+      }}>{title}</div>}
+      <div style={{
+        fontSize: 12,
+        fontWeight: 400,
+        color: isInfo ? grayBanner.body : (isWarning ? WARN_BANNER_TEXT : (isImportant ? ALERT_BANNER_RED : T.body)),
+        fontFamily: FONT,
+        lineHeight: "20px",
+      }}>{children}</div>
     </div>
   );
 };
@@ -1124,13 +1235,13 @@ const DocumentUploader = ({ label, sublabel, required, accept = "image/*,applica
   const removeFile = (fileId) => { const f = files.find(x => x.id === fileId); if (f?.preview) URL.revokeObjectURL(f.preview); onFilesChange(files.filter(x => x.id !== fileId)); setErrors([]); };
   const fmtSize = (bytes) => bytes < 1024 ? `${bytes}B` : bytes < 1048576 ? `${(bytes/1024).toFixed(0)}KB` : `${(bytes/1048576).toFixed(1)}MB`;
   return (
-    <div style={{ marginTop: 4, marginBottom: 4 }} data-field-error={hasFieldErr ? "true" : undefined}>
+    <div style={{ marginTop: 0, marginBottom: 0 }} data-field-error={hasFieldErr ? "true" : undefined}>
       <div style={{ fontSize: 12, fontWeight: 600, color: T.primary, marginBottom: 8, fontFamily: FONT, letterSpacing: "0.01em" }}>{label} {required && <span style={{ color: A.coral }}>*</span>}</div>
       {files.length < maxFiles && (
         <div onDrop={e => { e.preventDefault(); setDragOver(false); processFiles(e.dataTransfer.files); }}
           onDragOver={e => { e.preventDefault(); setDragOver(true); }} onDragLeave={e => { e.preventDefault(); setDragOver(false); }}
           onClick={() => fileRef.current?.click()}
-          style={{ border: `2px dashed ${dragOver ? G.forest : N.border}`, borderRadius: 12, padding: "24px 16px", textAlign: "center", cursor: "pointer", background: dragOver ? `${G.forest}08` : N.section, transition: "all 0.2s" }}>
+          style={{ border: `1px dashed ${dragOver ? G.forest : N.border}`, borderRadius: 12, padding: "24px 16px", textAlign: "center", cursor: "pointer", background: dragOver ? `${G.forest}08` : N.section, transition: "all 0.2s" }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: dragOver ? G.forest : T.body, fontFamily: FONT, marginBottom: 3 }}>
             {dragOver ? "Drop file here" : "Drag & drop file here, or click to browse"}
           </div>
@@ -1245,7 +1356,7 @@ const FsSection = ({ id, icon, title, color, subtotal, children, open, onToggle,
       aria-expanded={open}
       onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(); } }}
       style={{
-        padding: "16px 20px", display: "flex", alignItems: "center", gap: 12, cursor: "pointer",
+        padding: `16px ${SECTION_PAD_X}px`, display: "flex", alignItems: "center", gap: INNER_GAP, cursor: "pointer",
         background: open ? `${color}08` : N.card,
         borderBottom: open ? `1px solid ${color}20` : "none",
         transition: "background 0.2s", userSelect: "none", outline: "none",
@@ -1261,11 +1372,11 @@ const FsSection = ({ id, icon, title, color, subtotal, children, open, onToggle,
       </svg>
     </div>
     {open && (
-      <div style={{ padding: "20px" }}>
-        <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+      <div style={{ padding: `16px ${SECTION_PAD_X}px ${SECTION_PAD_BOTTOM}px` }}>
+        <div style={{ display:"flex", flexDirection:"column", gap:GROUP_GAP }}>
           {children}
         </div>
-        <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8, marginTop:24, paddingTop:16, borderTop:`1px solid ${N.border}` }}>
+        <div style={{ display:"flex", justifyContent:"flex-end", alignItems:"center", gap:INNER_GAP, marginTop:GROUP_GAP, paddingTop:GROUP_GAP, borderTop:`1px solid ${N.divider}` }}>
           <button onClick={onCancel || onToggle} style={{
             padding:"8px 12px", height:32, borderRadius:8,
             border:`1px solid ${N.border}`, background: N.card,
@@ -1414,7 +1525,7 @@ const DetailModal = ({ dst, inCart, onToggle, onClose }) => {
             <div style={{ marginBottom: 20 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: T.primary, fontFamily: FONT, marginBottom: 8 }}>Key Risk Factors</div>
               {dst.riskFactors.map((r, i) => (
-                <div key={i} style={{ fontSize: 11, color: T.body, fontFamily: FONT, lineHeight: 1.6, marginBottom: 4, paddingLeft: 12, borderLeft: `2px solid ${A.red}20` }}>{r}</div>
+                <div key={i} style={{ fontSize: 11, color: T.body, fontFamily: FONT, lineHeight: 1.6, marginBottom: 4, paddingLeft: 12, borderLeft: `1px solid ${A.red}20` }}>{r}</div>
               ))}
             </div>
           )}
@@ -1422,18 +1533,18 @@ const DetailModal = ({ dst, inCart, onToggle, onClose }) => {
           {dst.cashFlows && dst.cashFlows.length > 0 && (
             <div style={{ marginBottom: 20 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: T.primary, fontFamily: FONT, marginBottom: 8 }}>Projected Cash Flows</div>
-              <div style={{ background: N.section, borderRadius: 10, overflow: "hidden" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11, fontFamily: FONT }}>
-                  <thead><tr style={{ background: N.divider }}>
+              <div style={{ ...TABLE.panel, overflow: "hidden" }}>
+                <table style={TABLE.base}>
+                  <thead><tr style={{ background: LAYER_BG_STRONG }}>
                     {["Year", "NCF", "Yield"].map(h => (
-                      <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontSize: 10, fontWeight: 600, color: T.muted }}>{h}</th>
+                      <th key={h} style={TABLE.head}>{h}</th>
                     ))}
                   </tr></thead>
                   <tbody>{dst.cashFlows.map((cf, i) => (
-                    <tr key={i} style={{ borderTop: `1px solid ${N.divider}` }}>
-                      <td style={{ padding: "8px 12px", fontWeight: 600 }}>Yr {cf.yr}</td>
-                      <td style={{ padding: "8px 12px", color: G.forest, fontWeight: 600 }}>{fmtFull(cf.ncf)}</td>
-                      <td style={{ padding: "8px 12px" }}>{pct(cf.yld)}</td>
+                    <tr key={i}>
+                      <td style={TABLE.valueStrong}>Yr {cf.yr}</td>
+                      <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, color: G.forest }}>{fmtFull(cf.ncf)}</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric }}>{pct(cf.yld)}</td>
                     </tr>
                   ))}</tbody>
                 </table>
@@ -1458,20 +1569,20 @@ const DetailModal = ({ dst, inCart, onToggle, onClose }) => {
           {dst.scoringModules && dst.scoringModules.length > 0 && (
             <div style={{ marginBottom: 20 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: T.primary, fontFamily: FONT, marginBottom: 8 }}>Due Diligence Scoring</div>
-              <div style={{ background: N.section, borderRadius: 10, overflow: "hidden" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11, fontFamily: FONT }}>
-                  <thead><tr style={{ background: N.divider }}>
+              <div style={{ ...TABLE.panel, overflow: "hidden" }}>
+                <table style={TABLE.base}>
+                  <thead><tr style={{ background: LAYER_BG_STRONG }}>
                     {["Module", "Weight", "Score", "Rating", "Weighted"].map(h => (
-                      <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontSize: 10, fontWeight: 600, color: T.muted }}>{h}</th>
+                      <th key={h} style={TABLE.head}>{h}</th>
                     ))}
                   </tr></thead>
                   <tbody>{dst.scoringModules.map((mod, i) => (
-                    <tr key={i} style={{ borderTop: `1px solid ${N.divider}` }}>
-                      <td style={{ padding: "8px 12px", fontWeight: 600 }}>{mod.name}</td>
-                      <td style={{ padding: "8px 12px" }}>{mod.weight}</td>
-                      <td style={{ padding: "8px 12px", fontWeight: 600, color: scoreColor(mod.score) }}>{mod.score.toFixed(2)}</td>
-                      <td style={{ padding: "8px 12px" }}>{mod.rating}</td>
-                      <td style={{ padding: "8px 12px", fontWeight: 600 }}>{mod.wtd.toFixed(3)}</td>
+                    <tr key={i}>
+                      <td style={TABLE.valueStrong}>{mod.name}</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric }}>{mod.weight}</td>
+                      <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, color: scoreColor(mod.score) }}>{mod.score.toFixed(2)}</td>
+                      <td style={TABLE.value}>{mod.rating}</td>
+                      <td style={{ ...TABLE.valueStrong, ...TABLE.numeric }}>{mod.wtd.toFixed(3)}</td>
                     </tr>
                   ))}</tbody>
                 </table>
@@ -1709,7 +1820,10 @@ function AppFooter() {
    `vite build` — the dead-code eliminator strips the
    entire button + quickFill() from production bundles.
    ════════════════════════════════════════════════════════ */
-const QUICK_FILL_ENABLED = import.meta.env.DEV;
+const QUICK_FILL_ENABLED =
+  import.meta.env.DEV ||
+  (typeof window !== "undefined" &&
+    ["localhost", "127.0.0.1"].includes(window.location.hostname));
 
 /* ════════════════════════════════════════════════════════
    MAIN COMPONENT
@@ -2489,9 +2603,9 @@ export default function DSTOnboarding() {
   };
 
   /* ── DEV: Quick Fill ── */
-  const quickFill = () => {
+  const quickFill = (targetStep = step) => {
     /* ── Step 0: Offerings — fill cart with min investments ── */
-    if (step === 0) {
+    if (targetStep === 0) {
       const newCart = {};
       ["passco-prism","nexpoint-outlook","pg-manchester"].forEach(id => {
         const dst = DST_OFFERINGS.find(d => d.id === id);
@@ -2501,7 +2615,7 @@ export default function DSTOnboarding() {
     }
 
     /* ── Step 1: 1031 Exchange Setup ── */
-    if (step === 1) {
+    if (targetStep === 1) {
       setAcct(p => ({ ...p,
         exchangeBusiness: true, directBusiness: false, brokenBusiness: false,
         taxDisclaimerAck: true,
@@ -2567,7 +2681,7 @@ export default function DSTOnboarding() {
     }
 
     /* ── Step 2: Cart Review — allocate proceeds across DSTs ── */
-    if (step === 2) {
+    if (targetStep === 2) {
       const proceeds = fs.exchange1031 || 849000;
       const activeItems = cartItems.length > 0 ? cartItems : DST_OFFERINGS.filter(d => ["passco-prism","nexpoint-outlook","pg-manchester"].includes(d.id));
       if (activeItems.length > 0) {
@@ -2583,7 +2697,7 @@ export default function DSTOnboarding() {
     }
 
     /* ── Step 3: Financial Statement ── */
-    if (step === 3) {
+    if (targetStep === 3) {
       setFs(p => ({ ...p,
         name: "Jonathan A. Smith",
         /* Liquid assets */
@@ -2625,7 +2739,7 @@ export default function DSTOnboarding() {
     }
 
     /* ── Step 4: Account Opening — fill ALL sub-steps ── */
-    if (step === 4) {
+    if (targetStep === 4) {
       /* Build full primaryExperience map for all INVESTMENT_TYPES */
       const expMap = {};
       INVESTMENT_TYPES.forEach((t, i) => { expMap[t] = i < 3 ? "5+" : i < 6 ? "1-5" : "0"; });
@@ -2714,8 +2828,6 @@ export default function DSTOnboarding() {
         concentrationAcknowledged: true,
         emergencyFunds: "6+ months",
       }));
-      setSubStep(5);
-
       /* ── Mock document uploads — marks all relevant doc slots as uploaded ── */
       const mockDoc = (name, type = "application/pdf") => ({
         id: `dev-${Math.random().toString(36).slice(2, 9)}`,
@@ -2742,7 +2854,7 @@ export default function DSTOnboarding() {
     }
 
     /* ── Step 5: Disclosures — check every box ── */
-    if (step === 5) {
+    if (targetStep === 5) {
       setDisc({
         materialReviewed: true, offering: true, illiquidity: true,
         risk: true, noGuarantee: true, exchange1031: true,
@@ -2853,23 +2965,23 @@ export default function DSTOnboarding() {
           </div>
         </div>
         <h1 style={{ fontSize: 24, fontWeight: 700, color: T.primary, fontFamily: FONT, marginBottom: 8 }}>Investor Account Opening</h1>
-        <p style={{ fontSize: 14, color: T.muted, fontFamily: FONT }}>Select your workflow to begin the account opening process.</p>
+        <p style={{ fontSize: TYPO.stepDescription.size, fontWeight: TYPO.stepDescription.weight, color: T.muted, fontFamily: FONT }}>Select your workflow to begin the account opening process.</p>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: SP.xl }}>
         {[
           { type: "rep-initiated", title: "Rep-Initiated Workflow", desc: "Stax representative creates and pre-configures the application for their client.", caption: "FINRA Registered Representatives Only", icon: IC.briefcase },
           { type: "css", title: "Client Self-Service", desc: "Investor completes the application independently with Stax Capital support.", caption: "Secure · Encrypted · FINRA Supervised", icon: IC.user },
         ].map(w => (
           <button key={w.type} onClick={() => { setWorkflowType(w.type); setView(w.type === "rep-initiated" ? "rep-console" : "app"); addAudit("workflow", `Workflow selected: ${w.type}`); }}
-            style={{ padding: "32px 24px", background: N.card, border: `2px solid ${N.border}`, borderRadius: 28, cursor: "pointer", textAlign: "left", transition: "all 0.2s" }}>
+            style={{ padding: "32px 24px", background: N.card, border: `1px solid ${N.border}`, borderRadius: 28, cursor: "pointer", textAlign: "left", transition: "all 0.2s" }}>
             <div style={{ marginBottom: 16, color: G.forest, display:"flex" }}>{React.cloneElement(w.icon, { width:28, height:28, strokeWidth:1.5 })}</div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: T.primary, fontFamily: FONT, marginBottom: 6 }}>{w.title}</div>
-            <div style={{ fontSize: 12, color: T.muted, fontFamily: FONT, lineHeight: 1.6 }}>{w.desc}</div>
+            <div style={{ fontSize: TYPO.stepTitle.size, fontWeight: TYPO.stepTitle.weight, color: TYPO.stepTitle.color, fontFamily: FONT, marginBottom: 6 }}>{w.title}</div>
+            <div style={{ fontSize: TYPO.sectionDescription.size, fontWeight: TYPO.sectionDescription.weight, color: T.muted, fontFamily: FONT, lineHeight: 1.6 }}>{w.desc}</div>
             {w.caption && <div style={{ fontSize: 10, fontWeight: 600, color: G.forest, fontFamily: FONT, marginTop: 8, letterSpacing: "0.5px", textTransform: "uppercase" }}>{w.caption}</div>}
           </button>
         ))}
       </div>
-      <div style={{ marginTop: 24, padding:"14px 20px", background:N.card, borderRadius:14, border:"1px solid " + N.border, display:"flex", gap:16, justifyContent:"center", flexWrap:"wrap" }}>
+      <div style={{ marginTop: 24, padding:"14px 20px", background:N.card, borderRadius:BOX_RADIUS, border:"1px solid " + N.border, display:"flex", gap:16, justifyContent:"center", flexWrap:"wrap" }}>
         {["256-bit Encryption","FINRA Member","SEC Registered","SIPC Member"].map(item => (
           <span key={item} style={{ fontSize:10, fontWeight:600, color:T.muted, fontFamily:FONT, display:"flex", alignItems:"center", gap:4 }}>{item}</span>
         ))}
@@ -2887,8 +2999,8 @@ export default function DSTOnboarding() {
 
     return (
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: T.primary, fontFamily: FONT, marginBottom: 4 }}>REP Console — Application Setup</h2>
-        <p style={{ fontSize: 13, color: T.muted, fontFamily: FONT, marginBottom: 20 }}>Configure the client application before generating their invite link.</p>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: T.primary, fontFamily: FONT, marginBottom: SP.sm }}>REP Console — Application Setup</h2>
+        <p style={{ fontSize: TYPO.sectionDescription.size, fontWeight: TYPO.sectionDescription.weight, color: T.muted, fontFamily: FONT, marginBottom: SP.lg }}>Configure the client application before generating their invite link.</p>
         <SectionCard title="Investor Workflow Type" icon={IC.exchange}>
           {[
             { val: "1031", label: "1031 Exchange", desc: "Tax-deferred reinvestment of proceeds under IRC §1031", key: "exchangeBusiness" },
@@ -2957,7 +3069,7 @@ export default function DSTOnboarding() {
             Generate Client Application Link
           </BtnPrimary>
         ) : (
-          <div style={{ padding: "20px 24px", background: G.mint, border: `2px solid ${G.forest}40`, borderRadius: 12, textAlign: "center", marginTop: 12 }}>
+          <div style={{ padding: "20px 24px", background: G.mint, border: `1px solid ${G.forest}40`, borderRadius: 12, textAlign: "center", marginTop: 12 }}>
             <div style={{ fontSize: 16, fontWeight: 700, color: G.forest, fontFamily: FONT, marginBottom: 6 }}>Link Generated Successfully</div>
             <div style={{ fontSize: 12, color: T.muted, fontFamily: FONT, marginBottom: 12 }}>Session token created for {repCtx.clientName}.</div>
             <BtnPrimary onClick={() => { setView("app"); addAudit("navigation", "Entered investor workflow from REP console"); }}>
@@ -2974,12 +3086,12 @@ export default function DSTOnboarding() {
      ══════════════════════════════════════════════════════ */
   const CSSEntry = () => (
     <div style={{ maxWidth: 560, margin: "60px auto" }}>
-      <div style={{ textAlign:"center", marginBottom:28 }}>
-        <div style={{ display:"inline-flex", background:`linear-gradient(135deg, ${G.darkest} 0%, ${G.deep} 100%)`, borderRadius:14, padding:"16px 28px", marginBottom:16, boxShadow:"0 6px 24px rgba(0,0,0,0.15)" }}>
+      <div style={{ textAlign:"center", marginBottom:32 }}>
+        <div style={{ display:"inline-flex", background:`linear-gradient(135deg, ${G.darkest} 0%, ${G.deep} 100%)`, borderRadius:BOX_RADIUS, padding:"16px 28px", marginBottom:16, boxShadow:"0 6px 24px rgba(0,0,0,0.15)" }}>
           <img src={STAX_AI_LOGO} alt="StaxAI" style={{ width:132, height:32, objectFit:"contain" }}/>
         </div>
-        <h2 style={{ fontSize: 20, fontWeight: 700, color: T.primary, fontFamily: FONT, marginBottom: 4 }}>DST Account Application</h2>
-        <p style={{ fontSize: 13, color: T.muted, fontFamily: FONT }}>Tell us a little about your investment goals to get started.</p>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: T.primary, fontFamily: FONT, marginBottom: SP.sm }}>DST Account Application</h2>
+        <p style={{ fontSize: TYPO.sectionDescription.size, fontWeight: TYPO.sectionDescription.weight, color: T.muted, fontFamily: FONT }}>Tell us a little about your investment goals to get started.</p>
       </div>
       <SectionCard title="Investment Intent">
         <RadioGroup label="What type of investment are you considering?" name="cssIntent" value={cssEntry.intent}
@@ -3004,7 +3116,7 @@ export default function DSTOnboarding() {
     if (!workflowType) return null;
     const exAmt = workflowType === "rep-initiated" ? repCtx.exchangeAmount : cssEntry.amount;
     return (
-      <div style={{ background: `linear-gradient(135deg, ${G.darkest}, ${G.deep})`, borderRadius: 10, padding: "10px 18px", marginBottom: 16, display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center" }}>
+      <div style={{ background: `linear-gradient(135deg, ${G.darkest}, ${G.deep})`, borderRadius: 10, padding: "12px 24px", marginBottom: SP.lg, display: "flex", flexWrap: "wrap", gap: SP.lg, alignItems: "center" }}>
         {workflowType === "rep-initiated" && repCtx.clientName && (
           <div><div style={{ fontSize: 8, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", fontFamily: FONT }}>Advisor</div><div style={{ fontSize: 12, fontWeight: 700, color: T.white, fontFamily: FONT }}>{repCtx.clientName}</div></div>
         )}
@@ -3031,11 +3143,11 @@ export default function DSTOnboarding() {
       <div style={{ maxWidth: 960, margin: "0 auto" }}>
 
         {/* ── Page Header ── */}
-        <div style={{ marginBottom: 20 }}>
-          <h1 style={{ fontSize:24, fontWeight:700, color:T.primary, fontFamily:FONT, lineHeight:1.2, marginBottom:8, letterSpacing:"-0.02em" }}>
+        <div style={{ marginBottom: SP.xl }}>
+          <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, lineHeight:1.2, margin:"0 0 8px" }}>
             Selected DST Investments
           </h1>
-          <p style={{ fontSize:13, color:T.body, fontFamily:FONT, lineHeight:1.6, maxWidth:560, margin:0 }}>
+          <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, lineHeight:1.6, maxWidth:660, margin:0 }}>
             Review and adjust your investment selections before beginning the account opening process. Once you proceed, your selections will be locked for this application.
           </p>
         </div>
@@ -3070,7 +3182,7 @@ export default function DSTOnboarding() {
         })()}
 
         {/* ── Offering Cards ── */}
-        <div id="stax-cart-grid" style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:20 }}>
+        <div id="stax-cart-grid" style={{ display:"flex", flexDirection:"column", gap:SP.lg, marginBottom:SP.xl }}>
           {curatedOfferings.map((dst) => {
             const isSelected = (cart[dst.id] || 0) > 0;
             const typeColorMap = { Multifamily:"#3B82F6", Industrial:"#F59E0B", Office:"#8B5CF6", Retail:"#EF4444", "Net Lease":"#10B981", Mixed:"#6366F1" };
@@ -3079,23 +3191,20 @@ export default function DSTOnboarding() {
 
             return (
               <div key={dst.id} style={{
-                display:"flex", alignItems:"stretch",
-                background: N.card, borderRadius: 12,
-                border: `1px solid ${N.border}`,
-                boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                overflow: "hidden", transition: "border-color 0.2s, box-shadow 0.2s",
-                minHeight: 96,
+                display:"flex", alignItems:"center",
+                background:"#FFFFFF", borderRadius:8,
+                border:"1px solid #D4D4D4",
+                overflow:"hidden",
+                minHeight:112,
               }}>
 
                 {/* ── Property image + sponsor overlay ── */}
-                <div style={{ position:"relative", width:168, minWidth:168, flexShrink:0, overflow:"hidden" }}>
+                <div style={{ position:"relative", width:175, minWidth:175, flexShrink:0, overflow:"hidden", alignSelf:"stretch" }}>
                   <img src={dst.image} alt={dst.name}
                     style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
-                  {/* Gradient overlay */}
-                  <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.08) 60%, rgba(0,0,0,0) 100%)" }}/>
-                  {/* Sponsor badge */}
+                  <div style={{ position:"absolute", inset:0, background:"linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%)" }}/>
                   <div style={{ position:"absolute", bottom:8, left:8 }}>
-                    <span style={{ fontSize:10, fontWeight:700, color:T.white, fontFamily:FONT,
+                    <span style={{ fontSize:10, fontWeight:700, color:"#FFFFFF", fontFamily:FONT,
                       background:"rgba(255,255,255,0.18)", backdropFilter:"blur(4px)",
                       padding:"3px 8px", borderRadius:4, letterSpacing:"0.04em" }}>
                       {dst.sponsor}
@@ -3103,84 +3212,86 @@ export default function DSTOnboarding() {
                   </div>
                 </div>
 
-                {/* ── Product info ── */}
-                <div style={{ flex:1, padding:"14px 16px", display:"flex", flexDirection:"column", justifyContent:"center", minWidth:0 }}>
-                  <div style={{ fontSize:15, fontWeight:600, color:T.primary, fontFamily:FONT, marginBottom:5, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", letterSpacing:"-0.01em" }}>
-                    {dst.name}
-                  </div>
-                  <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
-                    {/* Property type pill */}
-                    <span style={{ fontSize:10, fontWeight:700, color:tColor, fontFamily:FONT,
-                      background:tColor+"18", padding:"2px 8px", borderRadius:4, letterSpacing:"0.03em" }}>
-                      {dst.propertyTypeShort.toUpperCase()}
-                    </span>
-                    {/* Location */}
-                    <div style={{ display:"flex", alignItems:"center", gap:3 }}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T.body} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                      </svg>
-                      <span style={{ fontSize:11, color:T.body, fontFamily:FONT }}>{dst.location}</span>
+                <div style={{ flex:1, minWidth:0, display:"grid", gridTemplateColumns:"minmax(190px,1fr) 100px 100px 190px 192px", alignItems:"center" }}>
+                  {/* ── Product info ── */}
+                  <div style={{ minWidth:0, display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"stretch", gap:8, padding:"12px 12px" }}>
+                    <div style={{ fontSize:14, fontWeight:500, color:"#0B111A", fontFamily:FONT, lineHeight:"1.4285em", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
+                      {dst.name}
+                    </div>
+                    <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"nowrap", overflow:"hidden" }}>
+                      <span style={{ fontSize:12, fontWeight:600, color:"#0B111A", fontFamily:FONT,
+                        background:"#F9FAFB", border:"1px solid #D4D4D4", padding:"2px 8px", borderRadius:8, whiteSpace:"nowrap", flexShrink:0 }}>
+                        {dst.propertyTypeShort}
+                      </span>
+                      <div style={{ display:"flex", alignItems:"center", gap:4, overflow:"hidden" }}>
+                        <svg style={{ flexShrink:0 }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#57534E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <span style={{ fontSize:12, fontWeight:500, color:"#57534E", fontFamily:FONT, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{dst.location}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* ── Cash Flow ── */}
-                <div style={{ width:90, flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"12px 10px" }}>
-                  <div style={{ fontSize:9, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:4 }}>Cash Flow</div>
-                  <div style={{ fontSize:17, fontWeight:700, color:G.forest, fontFamily:FONT }}>{pct(dst.cashOnCash)}</div>
-                </div>
+                  {/* ── Cash Flow ── */}
+                  <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"12px 12px", gap:4 }}>
+                    <div style={{ fontSize:12, fontWeight:400, color:"#57534E", fontFamily:FONT, lineHeight:"1.333em" }}>Cash Flow</div>
+                    <div style={{ fontSize:14, fontWeight:600, color:"#0B111A", fontFamily:FONT, lineHeight:"1.4285em" }}>{pct(dst.cashOnCash)}</div>
+                  </div>
 
-                {/* ── LTV ── */}
-                <div style={{ width:80, flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"12px 10px" }}>
-                  <div style={{ fontSize:9, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:4 }}>LTV</div>
-                  <div style={{ fontSize:17, fontWeight:700, color:T.primary, fontFamily:FONT }}>{dst.leverage.toFixed(2)}%</div>
-                </div>
+                  {/* ── LTV ── */}
+                  <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"12px 12px", gap:4 }}>
+                    <div style={{ fontSize:12, fontWeight:400, color:"#57534E", fontFamily:FONT, lineHeight:"1.333em" }}>LTV</div>
+                    <div style={{ fontSize:14, fontWeight:600, color:"#0B111A", fontFamily:FONT, lineHeight:"1.4285em" }}>{dst.leverage.toFixed(2)}%</div>
+                  </div>
 
-                {/* ── Amount input ── */}
-                <div style={{ width:190, flexShrink:0, display:"flex", flexDirection:"column", justifyContent:"center", padding:"12px 14px" }}>
-                  <div style={{ fontSize:9, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:6 }}>Investment Amount</div>
-                  <CartAmountInput
-                    value={cart[dst.id] || 0}
-                    onCommit={v => setCart(p => ({ ...p, [dst.id]: v }))}
-                  />
-                  {belowMin && (
-                    <div style={{ fontSize:10, color:A.red, fontFamily:FONT, marginTop:4 }}>
-                      Min. {fmtFull(dst.minInvestment)}
-                    </div>
-                  )}
-                  {!isSelected && (
-                    <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginTop:4 }}>
-                      Min. {fmtFull(dst.minInvestment)}
-                    </div>
-                  )}
-                </div>
+                  {/* ── Amount input ── */}
+                  <div style={{ display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"stretch", padding:"12px 12px", width:190, gap:4 }}>
+                    <div style={{ fontSize:12, fontWeight:500, color:"#0B111A", fontFamily:FONT, marginBottom:0 }}>Investment Amount</div>
+                    <CartAmountInput
+                      value={cart[dst.id] || 0}
+                      onCommit={v => setCart(p => ({ ...p, [dst.id]: v }))}
+                      inputStyle={{ width:"100%", height:40, display:"flex", alignItems:"center", background:"#FFFFFF", border:"1px solid #E4E4E7", borderRadius:8, boxShadow:"0px 1px 2px 0px rgba(0,0,0,0.05)", padding:"6px 12px", fontSize:14, fontWeight:600, color:"#0B111A", paddingLeft:12 }}
+                    />
+                    {belowMin && (
+                      <div style={{ fontSize:10, color:A.red, fontFamily:FONT, marginTop:4 }}>
+                        Min. {fmtFull(dst.minInvestment)}
+                      </div>
+                    )}
+                    {!isSelected && (
+                      <div style={{ fontSize:10, color:"#57534E", fontFamily:FONT, marginTop:4 }}>
+                        Min. {fmtFull(dst.minInvestment)}
+                      </div>
+                    )}
+                  </div>
 
-                {/* ── Add / Added button ── */}
-                <div style={{ width:148, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", padding:"12px 14px" }}>
-                  <button
-                    onClick={() => toggleCart(dst.id, dst.minInvestment)}
-                    style={{
-                      display:"flex", alignItems:"center", gap:7,
-                      padding:"9px 16px", borderRadius:8, cursor:"pointer",
-                      width:"100%", justifyContent:"center",
-                      background: isSelected ? G.forest : N.card,
-                      border: `1.5px solid ${isSelected ? G.forest : N.border}`,
-                      color: isSelected ? "white" : T.body,
-                      fontWeight:600, fontSize:12, fontFamily:FONT,
-                      transition:"all 0.15s",
-                      boxShadow: isSelected ? `0 2px 8px ${G.forest}35` : "none",
-                    }}
-                  >
-                    <span style={{
-                      width:14, height:14, borderRadius:3, flexShrink:0,
-                      display:"flex", alignItems:"center", justifyContent:"center",
-                      background: isSelected ? "rgba(255,255,255,0.22)" : "white",
-                      border: `1.5px solid ${isSelected ? "rgba(255,255,255,0.4)" : N.border}`,
-                    }}>
-                      {isSelected && <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5"><path d="M20 6L9 17L4 12"/></svg>}
-                    </span>
-                    {isSelected ? "Added to Plan" : "Add to Plan"}
-                  </button>
+                  {/* ── Add / Added button ── */}
+                  <div style={{ width:192, display:"flex", alignItems:"center", justifyContent:"center", padding:"12px 12px" }}>
+                    <button
+                      onClick={() => toggleCart(dst.id, dst.minInvestment)}
+                      style={{
+                        display:"flex", alignItems:"center", gap:8,
+                        padding:"8px 16px", height:36, borderRadius:8, cursor:"pointer",
+                        justifyContent:"center",
+                        background: isSelected ? "#3E8669" : "#FFFFFF",
+                        border: `1px solid ${isSelected ? "#DDF9EB" : "#E4E4E7"}`,
+                        color: isSelected ? "#DDF9EB" : "#0B111A",
+                        fontWeight:500, fontSize:14, fontFamily:FONT,
+                        boxShadow:"0px 1px 2px 0px rgba(0,0,0,0.05)",
+                        transition:"all 0.15s",
+                      }}
+                    >
+                      <span style={{
+                        width:16, height:16, borderRadius:4, flexShrink:0,
+                        display:"flex", alignItems:"center", justifyContent:"center",
+                        background: isSelected ? "rgba(255,255,255,0.15)" : "#FFFFFF",
+                        border: isSelected ? "1px solid rgba(221,249,235,0.6)" : "1px solid #E4E4E7",
+                        boxShadow: isSelected ? "none" : "0px 1px 2px -1px rgba(0,0,0,0.1), 0px 1px 3px 0px rgba(0,0,0,0.1)",
+                      }}>
+                        {isSelected && <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#DDF9EB" strokeWidth="3"><path d="M20 6L9 17L4 12"/></svg>}
+                      </span>
+                      {isSelected ? "Added to Plan" : "Add to Plan"}
+                    </button>
+                  </div>
                 </div>
 
               </div>
@@ -3224,15 +3335,15 @@ export default function DSTOnboarding() {
 
         {/* ── Header ── */}
         <div style={{ marginBottom:28 }}>
-          <h1 style={{ fontSize:28, fontWeight:700, color:T.primary, fontFamily:FONT, margin:"0 0 8px", letterSpacing:"-0.02em" }}>How Are You Investing?</h1>
-          <p style={{ fontSize:15, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:640 }}>
+          <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>How Are You Investing?</h1>
+          <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>
             If you're completing a 1031 exchange, we'll walk you through each step. If you're investing cash directly, just confirm below and move on — it only takes a moment.
           </p>
         </div>
 
         {/* ── Investment type selector ── */}
-        <div id="stax-investment-type" style={{ background: N.card, borderRadius: 14, border: `1px solid ${N.border}`, padding: "24px", marginBottom: 20 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: T.body, fontFamily: FONT, marginBottom: 16, textTransform: "uppercase", letterSpacing: "1px" }}>Investment Funding</div>
+        <div id="stax-investment-type" style={{ background: N.card, borderRadius: BOX_RADIUS, border: `1px solid ${N.border}`, padding: "20px", marginBottom: 20 }}>
+          <div style={{ fontSize: 16, fontWeight: 600, color: SECTION_TITLE_COLOR, fontFamily: FONT, marginBottom: 16, lineHeight: 1.4 }}>Investment Funding</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {[
               { val: "yes_1031", label: "1031 Exchange", desc: "Tax-deferred reinvestment of relinquished property proceeds under IRC §1031", icon: IC.exchange },
@@ -3243,24 +3354,26 @@ export default function DSTOnboarding() {
                 <button key={opt.val}
                   onClick={() => { updAcct("exchangeBusiness", opt.val === "yes_1031"); updAcct("directBusiness", opt.val === "no_direct"); }}
                   style={{
-                    padding: "20px", borderRadius: 12, cursor: "pointer", textAlign: "left",
-                    background: selected ? `${G.forest}08` : N.section,
-                    border: `2px solid ${selected ? G.forest : N.border}`,
+                    padding: "16px", borderRadius: 8, cursor: "pointer", textAlign: "left",
+                    background: selected ? SELECTED_CARD_BG : "#ffffff",
+                    border: `1px solid ${selected ? SELECTED_CARD_BORDER : N.border}`,
                     transition: "all 0.15s",
                   }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                    <span style={{ color: selected ? G.forest : T.muted, display:"flex", alignItems:"center" }}>{opt.icon}</span>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 0 }}>
                     <span style={{
-                      width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
+                      width: 16, height: 16, borderRadius: "50%", flexShrink: 0, marginTop: 2,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      background: selected ? G.forest : N.card,
-                      border: `2px solid ${selected ? G.forest : N.border}`,
+                      background: N.card,
+                      border: `1px solid ${selected ? SELECTED_CARD_BORDER : N.border}`,
                     }}>
-                      {selected && <span style={{ width: 7, height: 7, borderRadius: "50%", background: N.card, display: "block" }}/>}
+                      {selected && <span style={{ width: 6, height: 6, borderRadius: "50%", background: SELECTED_CARD_BORDER, display: "block" }}/>}
                     </span>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: T.primary, fontFamily: FONT }}>{opt.label}</span>
+                    <span style={{ color: selected ? SELECTED_CARD_BORDER : T.muted, display:"flex", alignItems:"center" }}>{opt.icon}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14, fontWeight: 500, color: SECTION_TITLE_COLOR, fontFamily: FONT, lineHeight: "20px" }}>{opt.label}</div>
+                      <div style={{ fontSize: 12, fontWeight: 400, color: T.muted, fontFamily: FONT, lineHeight: "16px", marginTop: 6 }}>{opt.desc}</div>
+                    </div>
                   </div>
-                  <div style={{ fontSize: 12, color: T.muted, fontFamily: FONT, lineHeight: 1.6, paddingLeft: 32 }}>{opt.desc}</div>
                 </button>
               );
             })}
@@ -3276,8 +3389,8 @@ export default function DSTOnboarding() {
 
             {/* Important Disclosures — acknowledgment before forms */}
             <SectionCard title="Before We Begin — Important Notice" icon={IC.alertTriangle}>
-              <div style={{ borderLeft:`3px solid ${N.border}`, paddingLeft:14, marginBottom:12 }}>
-                <div style={{ fontSize:14, fontWeight:600, color:T.primary, fontFamily:FONT, marginBottom:6 }}>Stax Capital Does Not Provide Tax Advice</div>
+              <div style={{ borderLeft:`3px solid ${N.border}`, paddingLeft:14, marginBottom:16 }}>
+                <div style={{ fontSize:14, fontWeight:600, color:T.primary, fontFamily:FONT, marginBottom:8 }}>Stax Capital Does Not Provide Tax Advice</div>
                 <div style={{ fontSize:13, color:T.body, fontFamily:FONT, lineHeight:1.8 }}>
                   The information and tools on this page are for general guidance only — not tax, legal, or accounting advice. Your situation is unique. Please consult your own CPA, tax attorney, and/or estate planning advisor before completing or relying on any 1031 exchange transaction.
                 </div>
@@ -3290,8 +3403,8 @@ export default function DSTOnboarding() {
             <StepSection step={1} title="Sale Logistics" subtitle="Closing dates, escrow status, and your Qualified Intermediary">
 
                 {/* ── Property Status ── */}
-                <div style={{ fontSize:14, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:4 }}>Property Status</div>
-                <div style={{ fontSize:13, color:T.muted, fontFamily:FONT, lineHeight:1.6, marginBottom:14 }}>
+                <div style={{ fontSize:14, fontWeight:600, color:SECTION_TITLE_COLOR, fontFamily:FONT, marginBottom:4 }}>Property Status</div>
+                <div style={{ fontSize:14, fontWeight:400, color:SECTION_BODY_COLOR, fontFamily:FONT, lineHeight:1.6, marginBottom:14, maxWidth:660 }}>
                   Where are you in the sale process? Your answer determines what information we need right now.
                 </div>
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:10, marginBottom:20 }}>
@@ -3304,14 +3417,14 @@ export default function DSTOnboarding() {
                     const sel = acct.propertyStatus === opt.value;
                     return (
                       <button key={opt.value} onClick={() => updAcct("propertyStatus", opt.value)} style={{
-                        padding:"16px 12px", borderRadius:10, cursor:"pointer", textAlign:"center", border:`2px solid ${sel ? G.forest : N.border}`,
-                        background: sel ? `${G.forest}08` : N.section, transition:"all 0.15s",
+                        padding:"16px 12px", borderRadius:BOX_RADIUS, cursor:"pointer", textAlign:"center", border:`1px solid ${sel ? G.forest : N.border}`,
+                        background: sel ? SELECTED_CARD_BG : N.card, transition:"all 0.15s",
                       }}>
-                        <div style={{ display:"flex", justifyContent:"center", marginBottom:8, color: sel ? G.forest : T.muted }}>
-                          {React.cloneElement(opt.icon, { width:20, height:20, strokeWidth:1.5 })}
+                        <div style={{ display:"flex", justifyContent:"center", marginBottom:8, color: sel ? SELECTED_CARD_BORDER : T.muted }}>
+                          {React.cloneElement(opt.icon, { width:16, height:16, strokeWidth:1.5 })}
                         </div>
-                        <div style={{ fontSize:12, fontWeight:700, color: sel ? G.forest : T.primary, fontFamily:FONT, lineHeight:1.3 }}>{opt.label}</div>
-                        <div style={{ fontSize:11, color:T.muted, fontFamily:FONT, marginTop:3 }}>{opt.sub}</div>
+                        <div style={{ fontSize:14, fontWeight:500, color: SECTION_TITLE_COLOR, fontFamily:FONT, lineHeight:1.3 }}>{opt.label}</div>
+                        <div style={{ fontSize:12, fontWeight:400, color:SECTION_HELPER_COLOR, fontFamily:FONT, marginTop:3 }}>{opt.sub}</div>
                       </button>
                     );
                   })}
@@ -3357,7 +3470,7 @@ export default function DSTOnboarding() {
                     }
                     return (
                       <>
-                        <div style={{ borderLeft:`3px solid ${N.border}`, paddingLeft:14, marginBottom:16 }}>
+                        <div style={{ borderLeft:`3px solid ${N.border}`, paddingLeft:14, marginBottom:12 }}>
                           <div style={{ fontSize:13, fontWeight:600, color:T.primary, fontFamily:FONT, marginBottom:4 }}>You're Planning Ahead — That's Smart</div>
                           <div style={{ fontSize:13, color:T.body, fontFamily:FONT, lineHeight:1.8 }}>
                             The best time to start your 1031 exchange planning is <strong>before you list</strong>. Enter your estimated listing date below and we'll map out your full exchange timeline so you know exactly what to expect.
@@ -3373,7 +3486,7 @@ export default function DSTOnboarding() {
                         </Row2>
                         {listDate && (
                           <div style={{ marginTop:16 }}>
-                            <div style={{ fontSize:12, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"1px", marginBottom:10 }}>Your Estimated Exchange Timeline</div>
+                            <div style={{ fontSize:16, fontWeight:600, color:SECTION_TITLE_COLOR, fontFamily:FONT, lineHeight:1.4, marginBottom:10 }}>Your Estimated Exchange Timeline</div>
                             <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:8 }}>
                               <MilestoneCard label="Est. Listing"     dateObj={listDate}   tag="You go live"      dim />
                               <MilestoneCard label="Est. Escrow Open" dateObj={escrowOpen} tag="Offer accepted"   dim />
@@ -3412,7 +3525,7 @@ export default function DSTOnboarding() {
                           placeholder="MM/DD/YYYY" sublabel="When you expect to accept an offer and open escrow"/>
                         {escrowOpen && (
                           <div style={{ marginTop:16 }}>
-                            <div style={{ fontSize:12, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"1px", marginBottom:10 }}>Your Estimated Exchange Timeline</div>
+                            <div style={{ fontSize:16, fontWeight:600, color:SECTION_TITLE_COLOR, fontFamily:FONT, lineHeight:1.4, marginBottom:10 }}>Your Estimated Exchange Timeline</div>
                             <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
                               <MilestoneCard label="Est. Escrow Open" dateObj={escrowOpen} tag="Offer accepted"   dim />
                               <MilestoneCard label="Est. Close · Day 0" dateObj={closeDate} tag="30-day escrow assumption" />
@@ -3448,7 +3561,7 @@ export default function DSTOnboarding() {
                           placeholder="MM/DD/YYYY" sublabel="Day 0 (estimated) — your 45 and 180-day IRS clocks start here"/>
                         {closeDate && (
                           <div style={{ marginTop:16 }}>
-                            <div style={{ fontSize:12, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"1px", marginBottom:10 }}>Your Exchange Timeline</div>
+                            <div style={{ fontSize:16, fontWeight:600, color:SECTION_TITLE_COLOR, fontFamily:FONT, lineHeight:1.4, marginBottom:10 }}>Your Exchange Timeline</div>
                             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8 }}>
                               <MilestoneCard label="Est. Close · Day 0" dateObj={closeDate} tag="Your Day 0" />
                               <MilestoneCard label="Day 45 — ID Deadline" dateObj={day45} tag="Identify properties in writing" urgent={d45left !== null && d45left < 15} />
@@ -3483,21 +3596,21 @@ export default function DSTOnboarding() {
                         {closeDate && (
                           <>
                             {expired45 && (
-                              <div style={{ marginTop:16 }}>
+                              <div style={{ marginTop:12 }}>
                                 <InfoCallout type="important" title="DO NOT PROCEED — 45-Day Identification Period Has Expired">
                                   The IRS 45-day identification deadline has passed. A failed exchange may result in the <strong>full capital gains tax bill becoming due immediately</strong>. Please stop and contact your CPA and tax attorney before taking any further action.
                                 </InfoCallout>
                               </div>
                             )}
                             {urgent45 && (
-                              <div style={{ marginTop:16 }}>
+                              <div style={{ marginTop:12 }}>
                                 <InfoCallout type="important" title={`Urgent — Only ${d45left} Day${d45left !== 1 ? "s" : ""} Left to Identify Properties`}>
                                   You must submit a written identification list to your QI <strong>by {fmtDateObj(day45)}</strong>. The 45-day deadline cannot be extended for any reason. Contact your exchange coordinator immediately.
                                 </InfoCallout>
                               </div>
                             )}
-                            <div style={{ marginTop:16 }}>
-                              <div style={{ fontSize:12, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"1px", marginBottom:10 }}>Your Exchange Timeline</div>
+                            <div style={{ marginTop:12 }}>
+                              <div style={{ fontSize:16, fontWeight:600, color:SECTION_TITLE_COLOR, fontFamily:FONT, lineHeight:1.4, marginBottom:10 }}>Your Exchange Timeline</div>
                               <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8 }}>
                                 <MilestoneCard label="Closed · Day 0" dateObj={closeDate} tag="Exchange started" />
                                 <MilestoneCard label="Day 45 — ID Deadline" dateObj={day45}
@@ -3510,7 +3623,7 @@ export default function DSTOnboarding() {
                             </div>
                           </>
                         )}
-                        <div style={{ marginTop:20, padding:"14px 16px", background:N.section, borderRadius:10, border:`1px solid ${N.border}` }}>
+                        <div style={{ marginTop:16, padding:"14px 16px", background:N.section, borderRadius:10, border:`1px solid ${N.border}` }}>
                           <div style={{ fontSize:12, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:2 }}>
                             Closing Statement <span style={{ color:A.red }}>*</span>
                           </div>
@@ -3598,29 +3711,29 @@ export default function DSTOnboarding() {
                       </>
                     )}
                     {acct.hasQI === "no" && acct.propertyStatus === "closed" && (
-                      <div style={{ padding:"20px 22px", background:C.errorBg, borderRadius:12, border:`2px solid ${C.errorBorder}`, marginTop:8 }}>
+                      <div style={{ borderLeft:`3px solid ${ALERT_BANNER_RED}`, padding:12, background:ALERT_BANNER_BG, borderRadius:"0 8px 8px 0", marginTop:8 }}>
                         <div style={{ display:"flex", alignItems:"flex-start", gap:12 }}>
-                          <span style={{ color:C.error, display:"flex", alignItems:"center", flexShrink:0, marginTop:1 }}>{React.cloneElement(IC.alertTriangle, { width:20, height:20, strokeWidth:2 })}</span>
+                          <span style={{ color:ALERT_BANNER_RED, display:"flex", alignItems:"center", flexShrink:0, marginTop:1 }}>{React.cloneElement(IC.alertTriangle, { width:20, height:20, strokeWidth:2 })}</span>
                           <div>
-                            <div style={{ fontSize:15, fontWeight:600, color:C.error, fontFamily:FONT, marginBottom:6 }}>
+                            <div style={{ fontSize:14, fontWeight:500, color:ALERT_BANNER_RED, fontFamily:FONT, marginBottom:6, lineHeight:"20px" }}>
                               Do Not Proceed — A Qualified Intermediary Is Required
                             </div>
-                            <div style={{ fontSize:13, color:C.error, fontFamily:FONT, lineHeight:1.8, marginBottom:12 }}>
+                            <div style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px", marginBottom:12 }}>
                               You have indicated that your property has <strong>already closed</strong> and that you do not have a Qualified Intermediary in place. <strong>A QI must be engaged before the sale closes</strong> — IRS rules do not permit a retroactive appointment after funds have been received by the seller.
                             </div>
-                            <div style={{ fontSize:13, color:C.error, fontFamily:FONT, lineHeight:1.8, marginBottom:16 }}>
+                            <div style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px", marginBottom:16 }}>
                               If your QI was engaged prior to closing and you simply haven't entered their information yet, please update your answer above and provide their contact details. Otherwise, <strong>contact your CPA or tax attorney immediately</strong> before taking any further action — a failed exchange may result in the full capital gains tax liability becoming due.
                             </div>
                             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
                               <button onClick={() => updAcct("hasQI", "yes")} style={{
                                 padding:"11px 16px", borderRadius:8, cursor:"pointer", fontFamily:FONT,
-                                background:C.error, border:"none", color:T.white, fontSize:13, fontWeight:700,
+                                background:ALERT_BANNER_RED, border:"none", color:T.white, fontSize:13, fontWeight:700,
                                 display:"flex", alignItems:"center", justifyContent:"center", gap:8,
                               }}>
                                 {React.cloneElement(IC.edit, { width:14, height:14, strokeWidth:2 })}
                                 I have a QI — Enter Their Info
                               </button>
-                              <div style={{ padding:"11px 16px", borderRadius:8, background:"rgba(153,27,27,0.08)", border:`1px solid ${C.errorBorder}`, fontSize:12, color:C.error, fontFamily:FONT, lineHeight:1.5, display:"flex", alignItems:"center", gap:8 }}>
+                              <div style={{ padding:"11px 16px", borderRadius:8, background:ALERT_BANNER_BG, border:`1px solid ${ALERT_BANNER_RED}`, fontSize:12, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:1.5, display:"flex", alignItems:"center", gap:8 }}>
                                 {React.cloneElement(IC.phone, { width:14, height:14, strokeWidth:2 })}
                                 Contact your CPA or tax attorney before proceeding further.
                               </div>
@@ -3699,16 +3812,16 @@ export default function DSTOnboarding() {
                     setTimeout(() => updAcct("rp_accumulatedDepreciation", estDep), 0);
                   }
                   return (
-                    <div style={{ marginTop:12, borderRadius:10, overflow:"hidden", border:`1px solid ${N.border}` }}>
+                    <div style={{ marginTop:12, background:N.section }}>
                       {/* ── Dark header ── */}
-                      <div style={{ background: WIDGET_HDR, padding:"16px 20px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+                      <div style={{ background: N.card, padding:"16px 20px", display:"flex", alignItems:"center", justifyContent:"space-between", borderBottom:`1px solid ${N.divider}` }}>
                         <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                          <span style={{ color:"rgba(255,255,255,0.7)", display:"flex", alignItems:"center" }}>{React.cloneElement(IC.calculator, { width:14, height:14 })}</span>
-                          <span style={{ fontSize:12, fontWeight:700, color:T.white, letterSpacing:"1px", textTransform:"uppercase", fontFamily:FONT }}>Estimated Depreciation</span>
+                          <span style={{ color:T.muted, display:"flex", alignItems:"center" }}>{React.cloneElement(IC.calculator, { width:14, height:14 })}</span>
+                          <span style={{ fontSize:12, fontWeight:700, color:T.primary, letterSpacing:"1px", textTransform:"uppercase", fontFamily:FONT }}>Estimated Depreciation</span>
                           {acct.rp_depreciationOverridden && <span style={{ fontSize:10, color:A.amber, fontFamily:FONT }}>(overridden)</span>}
                         </div>
                         <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                          <span style={{ fontSize:18, fontWeight:700, color:T.white, fontFamily:FONT }}>{fmtFull(estDep)}</span>
+                          <span style={{ fontSize:18, fontWeight:700, color:T.primary, fontFamily:FONT }}>{fmtFull(estDep)}</span>
                           {acct.rp_depreciationOverridden && (
                             <button onClick={() => { updAcct("rp_depreciationOverridden", false); updAcct("rp_accumulatedDepreciation", estDep); }}
                               style={{ fontSize:11, fontWeight:600, color:"rgba(255,255,255,0.8)", fontFamily:FONT, background:"rgba(255,255,255,0.12)", border:"1px solid rgba(255,255,255,0.25)", borderRadius:6, padding:"3px 10px", cursor:"pointer" }}>
@@ -3762,9 +3875,9 @@ export default function DSTOnboarding() {
                   );
                 })()}
 
-                <div style={{ borderTop:`1px solid ${N.divider}`, paddingTop:18, marginTop:12 }}>
-                  <div style={{ fontSize:14, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:4 }}>Financial Details of the Sale</div>
-                  <div style={{ fontSize:12, color:T.muted, fontFamily:FONT, lineHeight:1.6, marginBottom:14 }}>
+                <div style={{ borderTop:`1px solid ${N.divider}`, paddingTop:12, marginTop:12 }}>
+                  <div style={{ fontSize:14, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:8 }}>Financial Details of the Sale</div>
+                  <div style={{ fontSize:12, color:T.muted, fontFamily:FONT, lineHeight:1.6, marginBottom:16 }}>
                     Enter the numbers from your closing statement. Your CPA can help if you're unsure about any of these — estimates are fine at this stage.
                   </div>
                   <div style={{ display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:16 }}>
@@ -3791,16 +3904,16 @@ export default function DSTOnboarding() {
 
             {/* STEP 3 — Exchange Timeline (visual + SectionCard combined) */}
             <StepSection step={3} title="Your Exchange Deadlines" subtitle="The IRS gives you two strict, non-waivable deadlines">
-                <div style={{ borderLeft:`3px solid ${N.border}`, paddingLeft:14, marginBottom:16 }}>
-                  <div style={{ fontSize:13, fontWeight:600, color:T.primary, fontFamily:FONT, marginBottom:4 }}>Two Deadlines to Know</div>
-                  <div style={{ fontSize:13, color:T.body, fontFamily:FONT, lineHeight:1.8 }}>
+                <div style={{ borderLeft:`3px solid ${N.border}`, paddingLeft:14, marginBottom:SP.lg }}>
+                  <div style={{ fontSize: TYPO.sectionTitle.size, fontWeight: TYPO.sectionTitle.weight, color: TYPO.sectionTitle.color, fontFamily:FONT, marginBottom:SP.sm }}>Two Deadlines to Know</div>
+                  <div style={{ fontSize: TYPO.sectionDescription.size, fontWeight: TYPO.sectionDescription.weight, color:T.body, fontFamily:FONT, lineHeight:1.8 }}>
                     <strong>45 days:</strong> You must tell your exchange coordinator (QI) which replacement properties you want — in writing.<br/>
                     <strong>180 days:</strong> You must close on those replacement properties. Missing either deadline means the exchange fails and the full tax bill comes due.
                   </div>
                 </div>
                 {startDate ? (
                   <>
-                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10, marginBottom:16 }}>
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:SP.md, marginBottom:SP.lg }}>
                       <div style={{ padding:"14px", background:N.section, borderRadius:10, border:`1px solid ${N.border}`, textAlign:"center" }}>
                         <div style={{ fontSize:10, color:T.light, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:4 }}>Exchange Started</div>
                         <div style={{ fontSize:14, fontWeight:700, color:T.primary, fontFamily:FONT }}>{fmtDateObj(startDate)}</div>
@@ -3825,7 +3938,7 @@ export default function DSTOnboarding() {
                         </div>
                       </div>
                     </div>
-                    <div style={{ marginBottom:16 }}>
+                    <div style={{ marginBottom:SP.lg }}>
                       <div style={{ height:10, background:N.border, borderRadius:5, overflow:"hidden", position:"relative" }}>
                         <div style={{ position:"absolute", left:"25%", top:0, bottom:0, width:2, background:C.warningBorder, zIndex:1 }}/>
                         <div style={{ height:"100%", width:`${Math.min(100, timelineProgress())}%`,
@@ -3851,15 +3964,17 @@ export default function DSTOnboarding() {
                   </>
                 ) : (
                   <div style={{ padding:"14px 16px", background:N.section, borderRadius:10, textAlign:"center" }}>
-                    <div style={{ fontSize:13, color:T.muted, fontFamily:FONT }}>Enter the date your QI received proceeds in Step 1 (Sale Logistics) to see your exchange deadlines here.</div>
+                    <div style={{ fontSize: TYPO.sectionDescription.size, fontWeight: TYPO.sectionDescription.weight, color:T.muted, fontFamily:FONT }}>Enter the date your QI received proceeds in Step 1 (Sale Logistics) to see your exchange deadlines here.</div>
                   </div>
                 )}
-                <div style={{ borderTop:`1px solid ${N.divider}`, paddingTop:14, marginTop:12 }}>
-                  <CheckBox checked={acct.propertiesIdentified} onChange={v => updAcct("propertiesIdentified", v)}
-                    label="I have identified replacement properties in writing to my exchange coordinator"/>
-                  <CheckBox checked={acct.exchangeTimelineAck} onChange={v => updAcct("exchangeTimelineAck", v)}
-                    label="I understand the 45-day and 180-day deadlines and the consequences of missing them"
-                    description="Missing either deadline will result in a failed exchange and the full capital gains tax bill becoming due."/>
+                <div style={{ borderTop:`1px solid ${N.divider}`, paddingTop:SP.lg, marginTop:SP.lg }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                    <CheckBox checked={acct.propertiesIdentified} onChange={v => updAcct("propertiesIdentified", v)}
+                      label="I have identified replacement properties in writing to my exchange coordinator"/>
+                    <CheckBox checked={acct.exchangeTimelineAck} onChange={v => updAcct("exchangeTimelineAck", v)}
+                      label="I understand the 45-day and 180-day deadlines and the consequences of missing them"
+                      description="Missing either deadline will result in a failed exchange and the full capital gains tax bill becoming due."/>
+                  </div>
                 </div>
             </StepSection>
 
@@ -3895,9 +4010,9 @@ export default function DSTOnboarding() {
                   const totalEstTax = fedCapGainTax + depRecaptureTax + stateTax + niitTax;
                   if (acct.estimatedTaxLiability !== totalEstTax && totalEstTax > 0) { setTimeout(() => updAcct("estimatedTaxLiability", totalEstTax), 0); }
                   return (
-                    <div style={{ padding:"16px 18px", background:N.section, borderRadius:12, border:`1px solid ${N.border}` }}>
-                      <div style={{ padding:"10px 14px", background:C.errorBg, borderRadius:8, border:`1px solid ${C.errorBorder}`, marginBottom:14 }}>
-                        <div style={{ fontSize:12, fontWeight:700, color:C.error, fontFamily:FONT }}>Rough Estimate Only — Not Tax Advice. Consult your CPA for your actual figures.</div>
+                    <div style={{ padding:"16px 18px", background:N.section }}>
+                      <div style={{ borderLeft:`3px solid ${ALERT_BANNER_RED}`, padding:12, background:ALERT_BANNER_BG, borderRadius:"0 8px 8px 0", marginBottom:14 }}>
+                        <div style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>Rough Estimate Only — Not Tax Advice. Consult your CPA for your actual figures.</div>
                       </div>
                       <Row2>
                         <TSelect label="Filing Status" value={acct.tc_filingStatus} onChange={v => updAcct("tc_filingStatus", v)}
@@ -3941,7 +4056,7 @@ export default function DSTOnboarding() {
                     </div>
                   );
                 })()}
-                <div style={{ borderTop:`1px solid ${N.divider}`, paddingTop:14, marginTop:12 }}>
+                <div style={{ background: LAYER_BG, borderRadius: 10, padding: 16, marginTop: 16 }}>
                   <RadioGroup label="How much are tax savings influencing your decision to invest?" name="taxImpact" required
                     value={acct.taxImpactOnRisk} onChange={v => updAcct("taxImpactOnRisk", v)}
                     options={[
@@ -3960,14 +4075,14 @@ export default function DSTOnboarding() {
 
             {/* RIGHT COLUMN — sticky results widget */}
             <div style={{ width: 308, flexShrink: 0, position: "sticky", top: 90, alignSelf: "flex-start" }}>
-              <div style={{ background: N.card, borderRadius: 14, border: `1px solid ${N.border}`, overflow: "hidden" }}>
+              <div style={{ background: N.card, borderRadius: BOX_RADIUS, border: `1px solid ${N.border}`, overflow: "hidden" }}>
                 {/* Widget header */}
                 <div style={{ background: WIDGET_HDR, padding: "16px 20px" }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.45)", fontFamily: FONT, textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 4 }}>1031 Exchange</div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: T.white, fontFamily: FONT, letterSpacing: "-0.01em" }}>Tax Deferral Overview</div>
                 </div>
                 {/* Three key highlights */}
-                <div style={{ padding: "18px 20px", background: `${G.forest}06`, borderBottom: `1px solid ${N.border}` }}>
+                <div style={{ padding: "18px 20px", background: `${G.forest}06`, borderBottom: `1px solid ${N.divider}` }}>
                   {[
                     { label: "Exchange Proceeds", value: exchangeProceeds > 0 ? fmtFull(exchangeProceeds) : "—" },
                     { label: "Estimated Tax Deferred", value: estDeferral > 0 ? `~${fmtFull(estDeferral)}` : "—" },
@@ -4008,7 +4123,7 @@ export default function DSTOnboarding() {
 
         {/* ── Direct investment confirmation ── */}
         {isDirect && (
-          <div style={{ background: N.card, borderRadius: 14, border: `1px solid ${N.border}`, padding: "24px" }}>
+          <div style={{ background: N.card, borderRadius: BOX_RADIUS, border: `1px solid ${N.border}`, padding: "24px" }}>
             <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
               <span style={{ flexShrink: 0, color: G.forest, display:"flex", alignItems:"center" }}>{IC.dollarSign}</span>
               <div>
@@ -4060,34 +4175,24 @@ export default function DSTOnboarding() {
     const cashBootOk = fsCalcs.unallocated === 0 || !is1031;
     const allocPct = is1031 && exchangeProceeds > 0 ? Math.min(100, (cartTotal / exchangeProceeds) * 100) : 100;
     const estAnnualIncome = cartItems.reduce((s, i) => s + (cart[i.id] || 0) * (i.distributionRate / 100), 0);
+    const SUCCESS_GREEN = "#3E8669";
+    const SUCCESS_GREEN_BG = "#DDF9EB";
 
     return (
-    <div style={{ maxWidth:900, margin:"0 auto" }}>
-
+    <div style={{ maxWidth:960, margin:"0 auto" }}>
 
       {/* ── Page header ── */}
-      <div style={{ marginBottom:20, display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:16 }}>
-        <div>
-          <h1 style={{ fontSize:24, fontWeight:600, color:T.primary, fontFamily:FONT, margin:"0 0 6px", letterSpacing:"-0.01em" }}>
+      <div style={{ marginBottom:32, display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:16 }}>
+        <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+          <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:0 }}>
             Confirm Your Investment Plan
           </h1>
-          <p style={{ fontSize:14, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6 }}>
+          <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:"1.4285em", maxWidth:660 }}>
             {is1031 && exchangeProceeds > 0
               ? "Review the amounts invested in each DST below. To avoid taxable boot, your full exchange proceeds should be allocated."
               : "Review and adjust your investment details before continuing."}
           </p>
         </div>
-        {is1031 && exchangeProceeds > 0 && (
-          <button onClick={autoAllocate} style={{
-            padding:"8px 16px", borderRadius:8, cursor:"pointer",
-            background:G.forest, border:`1px solid ${G.medium || G.forest}`,
-            color:T.white, fontWeight:600, fontSize:12, fontFamily:FONT,
-            display:"flex", alignItems:"center", gap:6, flexShrink:0, marginTop:4,
-          }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-            Split Evenly
-          </button>
-        )}
       </div>
 
       {/* Single-column main content */}
@@ -4095,22 +4200,26 @@ export default function DSTOnboarding() {
 
         {/* ── 1031 proceeds bar ── */}
         {is1031 && exchangeProceeds > 0 && (
-          <div style={{ padding:"16px 18px", background:N.card, borderRadius:12, border:`1px solid ${N.border}`, boxShadow:"0 1px 3px rgba(0,0,0,0.05)" }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:8 }}>
-              <span style={{ fontSize:13, fontWeight:700, color:T.primary, fontFamily:FONT }}>Exchange Proceeds Allocated</span>
-              <span style={{ fontSize:15, fontWeight:600, color: cashBootOk ? G.forest : A.red, fontFamily:FONT }}>
+          <div style={{ padding:"16px 20px 28px", background:"#ffffff", borderRadius:8, overflow:"hidden", display:"flex", flexDirection:"column", gap:20 }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:0 }}>
+              <span style={{ fontSize:16, fontWeight:600, color:"#1d2837", fontFamily:FONT, lineHeight:"24px" }}>Exchange Proceeds Allocated</span>
+              <span style={{ fontSize:15, fontWeight:600, color: cashBootOk ? SUCCESS_GREEN : A.red, fontFamily:FONT }}>
                 {fmtFull(cartTotal)}
                 <span style={{ fontSize:13, fontWeight:500, color:T.muted }}> of {fmtFull(exchangeProceeds)}</span>
               </span>
             </div>
-            <div style={{ height:8, background:N.neutral, borderRadius:5, overflow:"hidden", marginBottom:12 }}>
+            <div style={{ height:8, background:N.neutral, borderRadius:9999, overflow:"hidden", marginBottom:0 }}>
               <div style={{ height:"100%", width:`${allocPct}%`, borderRadius:5, transition:"width 0.4s ease",
-                background: cashBootOk ? G.forest : A.red }}/>
+                background: cashBootOk ? SUCCESS_GREEN : A.red }}/>
             </div>
             {(() => {
-              const warnings = [
+              // Financial warnings (boot/debt) — control red vs green banner
+              const financialWarnings = [
                 ...(!cashBootOk ? [`${fmtFull(fsCalcs.unallocated)} not yet allocated — taxable cash boot may apply`] : []),
                 ...(debtRetired > 0 && !debtBootOk ? [`Debt shortfall of ${fmtFull(debtDelta)} — mortgage boot may apply`] : []),
+              ];
+              // Timeline warnings — shown separately as amber, do NOT turn banner red
+              const timelineWarnings = [
                 ...(days45Left !== null && days45Left < 20 ? [`${days45Left < 0 ? "Expired" : `${days45Left} days remaining`} to identify properties (45-day IRS deadline)`] : []),
               ];
               const successes = [
@@ -4118,172 +4227,89 @@ export default function DSTOnboarding() {
                 ...(debtRetired > 0 && debtBootOk ? [`Debt replacement satisfied — DST debt exceeds retired mortgage by ${fmtFull(debtDelta)}`] : []),
                 ...(days45Left !== null && days45Left >= 20 ? [`${days45Left} days remaining on 45-day IRS identification deadline`] : []),
               ];
-              if (warnings.length === 0 && successes.length === 0) return null;
-              if (warnings.length === 0) {
-                return (
-                  <div style={{ borderLeft:`3px solid ${G.forest}`, paddingLeft:12, paddingRight:12, paddingTop:10, paddingBottom:10, background:`${G.forest}06`, borderRadius:"0 6px 6px 0", marginBottom:0 }}>
-                    <div style={{ fontSize:12, fontWeight:600, color:G.forest, fontFamily:FONT, marginBottom:successes.length > 1 ? 6 : 0 }}>Exchange Status</div>
-                    {successes.map((msg, i) => (
-                      <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:6, marginTop: i > 0 ? 4 : (successes.length > 1 ? 0 : 0) }}>
-                        <span style={{ color:G.forest, fontSize:11, marginTop:1, flexShrink:0 }}>✓</span>
-                        <span style={{ fontSize:12, color:G.forest, fontFamily:FONT }}>{msg}</span>
-                      </div>
-                    ))}
-                  </div>
-                );
-              }
+              const hasAnyContent = financialWarnings.length > 0 || timelineWarnings.length > 0 || successes.length > 0;
+              if (!hasAnyContent) return null;
               return (
-                <div style={{ borderLeft:`3px solid ${A.coral}`, paddingLeft:12, paddingRight:12, paddingTop:10, paddingBottom:10, background:C.errorBg, borderRadius:"0 6px 6px 0", marginBottom:0 }}>
-                  <div style={{ fontSize:12, fontWeight:700, color:C.error, fontFamily:FONT, marginBottom:6 }}>Exchange Alerts</div>
-                  {warnings.map((msg, i) => (
-                    <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:6, marginTop: i > 0 ? 4 : 0 }}>
-                      <span style={{ color:A.coral, fontSize:11, marginTop:1, flexShrink:0 }}>!</span>
-                      <span style={{ fontSize:12, color:C.error, fontFamily:FONT }}>{msg}</span>
-                    </div>
-                  ))}
-                  {successes.length > 0 && (
-                    <div style={{ borderTop:`1px solid #fca5a530`, marginTop:8, paddingTop:8 }}>
-                      {successes.map((msg, i) => (
-                        <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:6, marginTop: i > 0 ? 4 : 0 }}>
-                          <span style={{ color:G.forest, fontSize:11, marginTop:1, flexShrink:0 }}>✓</span>
-                          <span style={{ fontSize:12, color:G.forest, fontFamily:FONT }}>{msg}</span>
+                <>
+                  {/* Financial state banner — green if resolved, red if not */}
+                  {(financialWarnings.length > 0 || successes.length > 0) && (
+                    financialWarnings.length === 0 ? (
+                      <div style={{ borderLeft:`3px solid ${SUCCESS_GREEN}`, paddingLeft:12, paddingRight:12, paddingTop:10, paddingBottom:10, background:SUCCESS_GREEN_BG, borderRadius:"0 6px 6px 0", marginBottom: timelineWarnings.length > 0 ? 16 : 0 }}>
+                        <div style={{ fontSize:12, fontWeight:600, color:SUCCESS_GREEN, fontFamily:FONT, marginBottom:successes.length > 1 ? 6 : 0 }}>Exchange Status</div>
+                        {successes.map((msg, i) => (
+                          <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:6, marginTop: i > 0 ? 4 : 0 }}>
+                            <span style={{ color:SUCCESS_GREEN, fontSize:11, marginTop:1, flexShrink:0 }}>✓</span>
+                            <span style={{ fontSize:12, color:SUCCESS_GREEN, fontFamily:FONT }}>{msg}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div style={{ borderLeft:`3px solid ${ALERT_BANNER_RED}`, padding:12, background:ALERT_BANNER_BG, borderRadius:"0 8px 8px 0", marginBottom: timelineWarnings.length > 0 ? 16 : 0 }}>
+                        <div style={{ fontSize:14, fontWeight:500, color:ALERT_BANNER_RED, fontFamily:FONT, marginBottom:6, lineHeight:"20px" }}>Exchange Alerts</div>
+                        {financialWarnings.map((msg, i) => (
+                          <div key={i} style={{ marginTop: i > 0 ? 4 : 0 }}>
+                            <span style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>{msg}</span>
+                          </div>
+                        ))}
+                        {successes.length > 0 && (
+                          <div style={{ borderTop:`1px solid #fca5a530`, marginTop:8, paddingTop:8 }}>
+                            {successes.map((msg, i) => (
+                              <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:6, marginTop: i > 0 ? 4 : 0 }}>
+                                <span style={{ color:SUCCESS_GREEN, fontSize:11, marginTop:1, flexShrink:0 }}>✓</span>
+                                <span style={{ fontSize:12, color:SUCCESS_GREEN, fontFamily:FONT }}>{msg}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  )}
+                  {/* Timeline warnings — amber, independent of financial state */}
+                  {timelineWarnings.length > 0 && (
+                    <div style={{ borderLeft:`3px solid ${WARN_BANNER_TEXT}`, padding:12, background:WARN_BANNER_BG, borderRadius:"0 6px 6px 0", marginBottom:0 }}>
+                      <div style={{ fontSize:12, fontWeight:500, color:WARN_BANNER_TEXT, fontFamily:FONT, marginBottom: timelineWarnings.length > 1 ? 6 : 0 }}>Timeline Notice</div>
+                      {timelineWarnings.map((msg, i) => (
+                        <div key={i} style={{ marginTop: i > 0 ? 4 : 0 }}>
+                          <span style={{ fontSize:12, fontWeight:400, color:WARN_BANNER_TEXT, fontFamily:FONT }}>{msg}</span>
                         </div>
                       ))}
                     </div>
                   )}
-                </div>
+                </>
               );
             })()}
             {/* KPI cards inside the allocation card */}
-            <div style={{ display:"flex", gap:10, marginTop:16, flexWrap:"wrap" }}>
+            <div style={{ display:"flex", gap:16, marginTop:0, flexWrap:"wrap" }}>
               {[
                 { label:"Total Invested", value:fmtFull(cartTotal), sub:`across ${cartItems.length} DST${cartItems.length !== 1 ? "s" : ""}`, color:T.primary },
                 ...(is1031 && exchangeProceeds > 0 ? [{
                   label: cashBootOk ? "Nothing Left Over" : "Not Yet Allocated",
                   value: fmtFull(fsCalcs.unallocated),
                   sub: cashBootOk ? "No taxable boot" : "Consider allocating",
-                  color: cashBootOk ? G.forest : A.red,
+                  color: cashBootOk ? SUCCESS_GREEN : A.red,
                 }] : []),
-                { label:"Est. Year 1 Income", value:fmtFull(estAnnualIncome), sub:"from DST distributions", color:G.forest },
-                { label:"Est. Monthly Income", value:fmtFull(estAnnualIncome / 12), sub:"avg per month", color:G.forest },
+                { label:"Est. Year 1 Income", value:fmtFull(estAnnualIncome), sub:"from DST distributions", color:SUCCESS_GREEN },
+                { label:"Est. Monthly Income", value:fmtFull(estAnnualIncome / 12), sub:"avg per month", color:SUCCESS_GREEN },
               ].map(({ label, value, sub, color }) => (
-                <div key={label} style={{ flex:"1 1 140px", padding:"12px 14px", borderRadius:8, background:N.section, border:`1px solid ${N.border}` }}>
-                  <div style={{ fontSize:9, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:4 }}>{label}</div>
-                  <div style={{ fontSize:18, fontWeight:700, color, fontFamily:FONT, letterSpacing:"-0.02em", marginBottom:2 }}>{value}</div>
-                  <div style={{ fontSize:10, color:T.muted, fontFamily:FONT }}>{sub}</div>
+                <div key={label} style={{ flex:"1 1 140px", padding:"16px 12px", borderRadius:8, background:N.section, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:8, textAlign:"center" }}>
+                  <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:2 }}>
+                    <div style={{ fontSize:16, fontWeight:700, color:T.primary, fontFamily:FONT, lineHeight:"24px" }}>{value}</div>
+                    <div style={{ fontSize:11, fontWeight:500, color:T.primary, fontFamily:FONT }}>{sub}</div>
+                  </div>
+                  <div style={{ fontSize:14, fontWeight:400, color:T.muted, fontFamily:FONT, lineHeight:"20px" }}>{label}</div>
                 </div>
               ))}
             </div>
           </div>
         )}
       {cartItems.length === 0 ? (
-        <div style={{ padding:60, textAlign:"center", background:N.section, borderRadius:14, border:`1px dashed ${N.border}` }}>
+        <div style={{ padding:60, textAlign:"center", background:N.section, borderRadius:BOX_RADIUS, border:`1px dashed ${N.border}` }}>
           <div style={{ marginBottom:12, color: T.muted, display:"flex", justifyContent:"center" }}>{React.cloneElement(IC.cart, {width:36, height:36, strokeWidth:1.5})}</div>
           <div style={{ fontSize:15, fontWeight:600, color:T.body, fontFamily:FONT }}>Cart is empty</div>
           <BtnSecondary onClick={goBack} style={{ marginTop:16 }}>← Back to Marketplace</BtnSecondary>
         </div>
       ) : (
         <>
-          {/* ── Cart Item Cards ── */}
-          <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:16 }}>
-            {cartItems.map(item => {
-              const concPct = cartTotal > 0 ? ((cart[item.id] / cartTotal) * 100) : 0;
-              const belowMin = cart[item.id] > 0 && cart[item.id] < item.minInvestment;
-              // Derive property type color
-              const typeColorMap = { Multifamily:"#3B82F6", Industrial:"#F59E0B", Office:"#8B5CF6", Retail:"#EF4444", "Net Lease":"#10B981", Mixed:"#6366F1" };
-              const typeColor = typeColorMap[item.propertyTypeShort] || "#6B7280";
-              return (
-                <div key={item.id} style={{
-                  display:"flex", alignItems:"stretch",
-                  background:N.card, borderRadius:10,
-                  border:`1.5px solid ${belowMin ? A.red+"50" : N.border}`,
-                  overflow:"hidden", boxShadow:"0 1px 3px rgba(0,0,0,0.05)",
-                  minHeight:96,
-                }}>
-                  {/* ── Property image + sponsor overlay ── */}
-                  <div style={{ position:"relative", width:168, minWidth:168, flexShrink:0, overflow:"hidden" }}>
-                    <img src={item.image} alt={item.name}
-                      style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
-                    {/* Gradient overlay */}
-                    <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.08) 60%, rgba(0,0,0,0) 100%)" }}/>
-                    {/* Sponsor badge bottom-left */}
-                    <div style={{ position:"absolute", bottom:8, left:8 }}>
-                      <span style={{ fontSize:10, fontWeight:700, color:T.white, fontFamily:FONT,
-                        background:"rgba(255,255,255,0.18)", backdropFilter:"blur(4px)",
-                        padding:"3px 8px", borderRadius:4, letterSpacing:"0.04em" }}>
-                        {item.sponsor}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* ── Product info ── */}
-                  <div style={{ flex:1, padding:"12px 14px", display:"flex", flexDirection:"column", justifyContent:"center", minWidth:0 }}>
-                    <div style={{ fontSize:14, fontWeight:600, color:T.primary, fontFamily:FONT, marginBottom:4, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
-                      {item.name}
-                    </div>
-                    <div style={{ display:"flex", alignItems:"center", gap:6, flexWrap:"wrap" }}>
-                      {/* Location */}
-                      <div style={{ display:"flex", alignItems:"center", gap:3 }}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T.body} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                        </svg>
-                        <span style={{ fontSize:11, color:T.body, fontFamily:FONT, whiteSpace:"nowrap" }}>{item.location}</span>
-                      </div>
-                      {/* Property type pill */}
-                      <span style={{ fontSize:10, fontWeight:600, color:typeColor, fontFamily:FONT,
-                        background:typeColor+"18", padding:"2px 7px", borderRadius:4, whiteSpace:"nowrap" }}>
-                        {item.propertyTypeShort.toUpperCase()}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* ── Cash Flow ── */}
-                  <div style={{ width:90, flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"12px 10px" }}>
-                    <div style={{ fontSize:9, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:4 }}>Cash Flow</div>
-                    <div style={{ fontSize:16, fontWeight:700, color:G.forest, fontFamily:FONT }}>{pct(item.cashOnCash)}</div>
-                  </div>
-
-                  {/* ── LTV ── */}
-                  <div style={{ width:80, flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"12px 10px" }}>
-                    <div style={{ fontSize:9, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:4 }}>LTV</div>
-                    <div style={{ fontSize:16, fontWeight:700, color:T.primary, fontFamily:FONT }}>{item.leverage.toFixed(2)}%</div>
-                  </div>
-
-                  {/* ── Amount input ── */}
-                  <div style={{ width:190, flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"12px 14px" }}>
-                    <div style={{ fontSize:9, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:6, alignSelf:"flex-start" }}>Investment Amount</div>
-                    <CartAmountInput value={cart[item.id]} onCommit={v => setCart(p => ({ ...p, [item.id]: v }))}/>
-                    {belowMin && (
-                      <div style={{ fontSize:10, color:A.red, fontFamily:FONT, marginTop:4, alignSelf:"flex-start" }}>
-                        Min. {fmtFull(item.minInvestment)}
-                      </div>
-                    )}
-                    {cartTotal > 0 && (
-                      <div style={{ fontSize:10, color: concPct > 50 ? A.red : concPct > 30 ? A.amber : T.muted, fontFamily:FONT, marginTop:3, alignSelf:"flex-start" }}>
-                        {concPct.toFixed(1)}% of total
-                      </div>
-                    )}
-                  </div>
-
-                  {/* ── Remove ── */}
-                  <div style={{ width:48, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <button onClick={() => setCart(p => ({ ...p, [item.id]: 0 }))}
-                      title="Remove from plan"
-                      style={{ background:"none", border:"none", cursor:"pointer", color:T.light, padding:8, borderRadius:6, display:"flex", alignItems:"center", justifyContent:"center",
-                        transition:"color 0.15s" }}
-                      onMouseEnter={e => e.currentTarget.style.color = A.red}
-                      onMouseLeave={e => e.currentTarget.style.color = "#9CA3AF"}>
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-
           {/* ── Portfolio Economics ── */}
           {(() => {
             const portfolioItems = cartItems.map(item => {
@@ -4305,81 +4331,136 @@ export default function DSTOnboarding() {
             const blendedLTV = totals.equity > 0 ? (totals.debt / totals.totalValue) * 100 : 0;
             const blendedYield = totals.equity > 0 ? (totals.cashFlow / totals.equity) * 100 : 0;
 
+            const peInputStyle = {
+              width: "100%",
+              background: "#ffffff",
+              border: "1px solid #e4e4e7",
+              borderRadius: 8,
+              height: 44,
+              padding: "6px 14px",
+              boxShadow: "0px 1px 2px 0px rgba(0,0,0,0.05)",
+              fontSize: 14, fontWeight: 400, fontFamily: FONT,
+              color: "#0b111a",
+              textAlign: "right",
+              outline: "none",
+              boxSizing: "border-box",
+            };
+            const peTh = (align = "right") => ({
+              height: 40, padding: "0 8px",
+              fontSize: 14, fontWeight: 500, color: "#57534e",
+              textAlign: align, whiteSpace: "nowrap",
+              background: "#f5f3f2",
+              borderBottom: "1px solid #E4E4E7",
+            });
+            const peTd = (align = "right") => ({
+              height: 72, padding: "16px 8px",
+              textAlign: align,
+              borderBottom: "1px solid #E4E4E7",
+              verticalAlign: "middle",
+            });
+            const peTotalTd = (align = "right") => ({
+              height: 40, padding: "0 8px",
+              textAlign: align,
+              background: "#f5f3f2",
+              verticalAlign: "middle",
+            });
+
             return (
-              <div style={{ marginBottom: 16 }}>
-                <div style={{ background:`linear-gradient(135deg, ${G.darkest} 0%, ${G.deep} 100%)`, borderRadius: "12px 12px 0 0", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ marginBottom: 16, borderRadius: BOX_RADIUS, overflow: "hidden" }}>
+                {/* Header — flat #1d2837, no gradient */}
+                <div style={{ background: "#1d2837", padding: "16px 20px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 700, color:"rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: FONT, marginBottom: 2 }}>Portfolio Economics</div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color:T.white, fontFamily: FONT }}>Investor Equity · Debt Allocation · Total Value · Cash Flow</div>
+                    <div style={{ fontSize: 12, fontWeight: 500, color: DARK_HEADER_LABEL, textTransform: "uppercase", letterSpacing: "0.05em", lineHeight: "16px", marginBottom: 4, fontFamily: FONT }}>
+                      PORTFOLIO ECONOMICS
+                    </div>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: DARK_HEADER_TITLE, lineHeight: "24px", fontFamily: FONT }}>
+                      Investor Equity · Debt Allocation · Total Value · Cash Flow
+                    </div>
                   </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: 10, color:"rgba(255,255,255,0.45)", fontFamily: FONT, textTransform: "uppercase", letterSpacing: 1 }}>Total RE Value Controlled</div>
-                    <div style={{ fontSize: 18, fontWeight: 700, color:T.white, fontFamily: FONT }}>{fmtFull(totals.totalValue)}</div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{ fontSize: 12, fontWeight: 500, color: DARK_HEADER_LABEL, textTransform: "uppercase", letterSpacing: "0.05em", lineHeight: "16px", marginBottom: 4, whiteSpace: "nowrap", fontFamily: FONT }}>
+                      TOTAL RE VALUE CONTROLLED
+                    </div>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: DARK_HEADER_TITLE, lineHeight: "24px", fontFamily: FONT }}>
+                      {fmtFull(totals.totalValue)}
+                    </div>
                   </div>
                 </div>
 
-                <div style={{ background: N.card, border: `1px solid ${N.border}`, borderTop: "none", borderRadius: "0 0 12px 12px", overflowX: "auto" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: FONT }}>
+                {/* Table */}
+                <div style={{ background: "#ffffff", overflowX: "auto" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: FONT, tableLayout: "fixed" }}>
+                    <colgroup>
+                      <col /><col /><col style={{ width: 180 }} /><col /><col /><col />
+                    </colgroup>
                     <thead>
-                      <tr style={{ background: N.section }}>
-                        {[
-                          { label: "Offering", align: "left", color: T.muted },
-                          { label: "Ownership %", align: "right", color: T.muted },
-                          { label: "Investor Equity", align: "right", color: G.forest },
-                          { label: "Total Value", align: "right", color: T.muted },
-                          { label: "Annual Cash Flow", align: "right", color: G.forest },
-                          { label: "Monthly Income", align: "right", color: G.medium || G.forest },
-                        ].map(h => (
-                          <th key={h.label} style={{ padding: "10px 14px", fontSize: 9, fontWeight: 700, color: h.color, textTransform: "uppercase", letterSpacing: "1px", textAlign: h.align, whiteSpace: "nowrap" }}>{h.label}</th>
-                        ))}
+                      <tr>
+                        <th style={peTh("left")}>Offering</th>
+                        <th style={peTh("right")}>Ownership</th>
+                        <th style={peTh("right")}>Investor Equity</th>
+                        <th style={peTh("right")}>Total Value</th>
+                        <th style={peTh("right")}>Annual Cashflow</th>
+                        <th style={peTh("right")}>Monthly Income</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {portfolioItems.map(({ item, investorEquity, investorDebtShare, investorTotalValue, annualCashFlow, monthlyCashFlow, ownershipPct }) => (
-                        <tr key={item.id}>
-                          <td style={{ padding: "12px 14px" }}>
-                            <div style={{ fontSize: 12, fontWeight: 700, color: T.primary }}>{item.shortName || item.name}</div>
-                            <div style={{ fontSize: 10, color: T.muted, marginTop: 2 }}>{item.propertyTypeShort}</div>
+                      {portfolioItems.map(({ item, investorEquity, investorTotalValue, annualCashFlow, monthlyCashFlow, ownershipPct }) => (
+                        <tr key={item.id} style={{ background: "#ffffff" }}>
+                          <td style={peTd("left")}>
+                            <div style={{ fontSize: 14, fontWeight: 500, color: "#0b111a", lineHeight: "20px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.shortName || item.name}</div>
+                            <div style={{ fontSize: 12, fontWeight: 400, color: "#57534e", lineHeight: 1, marginTop: 4 }}>{item.propertyTypeShort}</div>
                           </td>
-                          <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                            <div style={{ fontSize: 12, fontWeight: 600, color: T.body }}>{ownershipPct.toFixed(3)}%</div>
-                            <div style={{ fontSize: 9, color: T.muted }}>of {fmtM(item.offeringEquity)} equity</div>
+                          <td style={peTd("right")}>
+                            <div style={{ fontSize: 14, fontWeight: 500, color: "#0b111a", lineHeight: "20px" }}>{ownershipPct.toFixed(3)}%</div>
+                            <div style={{ fontSize: 12, fontWeight: 400, color: "#57534e", lineHeight: 1, marginTop: 4 }}>of {fmtM(item.offeringEquity)} equity</div>
                           </td>
-                          <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: G.forest }}>{fmtFull(investorEquity)}</div>
+                          <td style={peTd("right")}>
+                            <input
+                              key={investorEquity}
+                              type="text"
+                              style={peInputStyle}
+                              defaultValue={fmtFull(investorEquity)}
+                              onFocus={e => { e.target.value = String(investorEquity); e.target.select(); }}
+                              onBlur={e => {
+                                const raw = Number(e.target.value.replace(/[^0-9]/g, ""));
+                                if (!isNaN(raw)) {
+                                  setCart(p => ({ ...p, [item.id]: raw }));
+                                  e.target.value = fmtFull(raw);
+                                }
+                              }}
+                            />
                           </td>
-                          <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: T.primary }}>{fmtFull(investorTotalValue)}</div>
+                          <td style={peTd("right")}>
+                            <div style={{ fontSize: 14, fontWeight: 500, color: "#0b111a", lineHeight: "20px" }}>{fmtFull(investorTotalValue)}</div>
                           </td>
-                          <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: G.forest }}>{fmtFull(annualCashFlow)}</div>
-                            <div style={{ fontSize: 9, color: T.muted }}>{pct(item.distributionRate)} dist. rate</div>
+                          <td style={peTd("right")}>
+                            <div style={{ fontSize: 14, fontWeight: 500, color: "#0b111a", lineHeight: "20px" }}>{fmtFull(annualCashFlow)}</div>
+                            <div style={{ fontSize: 12, fontWeight: 400, color: "#57534e", lineHeight: 1, marginTop: 4 }}>{pct(item.distributionRate)} dist. rate</div>
                           </td>
-                          <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                            <div style={{ fontSize: 12, fontWeight: 600, color: G.light }}>{fmtFull(monthlyCashFlow)}</div>
+                          <td style={peTd("right")}>
+                            <div style={{ fontSize: 14, fontWeight: 500, color: "#0b111a", lineHeight: "20px" }}>{fmtFull(monthlyCashFlow)}</div>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                     <tfoot>
-                      <tr style={{ background:N.section, borderTop:`1px solid ${N.border}` }}>
-                        <td style={{ padding: "12px 14px" }}>
-                          <div style={{ fontSize: 10, fontWeight: 700, color:T.muted, textTransform: "uppercase", letterSpacing: "1.5px", fontFamily: FONT }}>Portfolio Total</div>
+                      {/* Portfolio Total row — #f5f3f2 bg, bold #0b111a, no dash in Ownership */}
+                      <tr>
+                        <td style={peTotalTd("left")}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#0b111a" }}>Portfolio Total</div>
                         </td>
-                        <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                          <div style={{ fontSize: 9, color:T.light, textTransform: "uppercase" }}>—</div>
+                        <td style={peTotalTd("right")} />
+                        <td style={peTotalTd("right")}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#0b111a" }}>{fmtFull(totals.equity)}</div>
                         </td>
-                        <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                          <div style={{ fontSize: 13, fontWeight: 700, color:G.forest, fontFamily: FONT }}>{fmtFull(totals.equity)}</div>
+                        <td style={peTotalTd("right")}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#0b111a" }}>{fmtFull(totals.totalValue)}</div>
                         </td>
-                        <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                          <div style={{ fontSize: 13, fontWeight: 700, color:T.primary, fontFamily: FONT }}>{fmtFull(totals.totalValue)}</div>
+                        <td style={peTotalTd("right")}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#0b111a" }}>{fmtFull(totals.cashFlow)}</div>
                         </td>
-                        <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                          <div style={{ fontSize: 13, fontWeight: 700, color:G.forest, fontFamily: FONT }}>{fmtFull(totals.cashFlow)}</div>
-                        </td>
-                        <td style={{ padding: "12px 14px", textAlign: "right" }}>
-                          <div style={{ fontSize: 13, fontWeight: 700, color:G.forest, fontFamily: FONT }}>{fmtFull(totals.cashFlow / 12)}</div>
+                        <td style={peTotalTd("right")}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: "#0b111a" }}>{fmtFull(totals.cashFlow / 12)}</div>
                         </td>
                       </tr>
                     </tfoot>
@@ -4405,81 +4486,106 @@ export default function DSTOnboarding() {
             const debtOk = debtRetired === 0 || dstDebtTotal >= debtRetired;
             const allGood = equityOk && debtOk;
 
+            const equityRetainedPct = equityNeeded > 0 ? ((equityAllocated / equityNeeded) * 100).toFixed(1) : "0.0";
+
             return (
-              <div style={{ background: N.card, borderRadius: 14, border: `1px solid ${N.border}`, overflow:"hidden", marginBottom:16 }}>
-                <div style={{ background:`linear-gradient(135deg, ${G.darkest} 0%, ${G.deep} 100%)`, padding:"14px 20px", display:"flex", alignItems:"center", gap:12 }}>
-                  <span style={{ color:"rgba(255,255,255,0.7)", display:"flex", alignItems:"center" }}>{allGood ? React.cloneElement(IC.shield, {width:18,height:18,strokeWidth:2}) : React.cloneElement(IC.alertTriangle, {width:18,height:18,strokeWidth:2})}</span>
+              <div style={{ background: "#ffffff", borderRadius: BOX_RADIUS, overflow:"hidden", marginBottom:16 }}>
+
+                {/* ── Dark header — flat #1d2837, no gradient ── */}
+                <div style={{ background:"#1d2837", padding:"16px 20px", display:"flex", alignItems:"center", gap:10 }}>
+                  <span style={{ color:DARK_HEADER_LABEL, display:"flex", alignItems:"center", flexShrink:0 }}>
+                    {React.cloneElement(IC.alertTriangle, {width:16, height:16, strokeWidth:2})}
+                  </span>
                   <div>
-                    <div style={{ fontSize:13, fontWeight:600, color:T.white, fontFamily:FONT }}>
-                      {allGood ? "Your 1031 Exchange Is On Track" : "Action Needed — Review Your Exchange Completion"}
+                    <div style={{ fontSize:16, fontWeight:600, color:DARK_HEADER_TITLE, fontFamily:FONT, lineHeight:"24px" }}>
+                      Investor Equity · Debt Allocation · Total Value · Cash Flow
                     </div>
-                    <div style={{ fontSize:11, color:"rgba(255,255,255,0.55)", fontFamily:FONT, marginTop:1 }}>
-                      {allGood
-                        ? "All exchange proceeds are allocated and debt replacement is satisfied. You're in good shape."
-                        : "Address the items below to minimize or eliminate taxable boot."}
+                    <div style={{ fontSize:14, fontWeight:400, color:DARK_HEADER_SUBTITLE, fontFamily:FONT, lineHeight:1.5 }}>
+                      {equityRetainedPct}% of equity retained
                     </div>
                   </div>
                 </div>
-                <div style={{ padding:"20px 24px" }}>
-                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
 
-                    {/* Equity check */}
-                    <div style={{ padding:"16px", borderRadius:10, background: equityOk ? G.mint : C.warningBg, border:`1px solid ${equityOk ? G.forest+"30" : C.warningBorder}` }}>
-                      <div style={{ fontSize:11, fontWeight:700, color: equityOk ? G.forest : C.warning, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:10 }}>
-                        {equityOk ? "✓ Equity Fully Reinvested" : "⚠ Unallocated Equity (Cash Boot)"}
-                      </div>
-                      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10 }}>
-                        {[
-                          { label:"Proceeds to Reinvest", value:fmtFull(equityNeeded) },
-                          { label:"Amount Allocated", value:fmtFull(equityAllocated) },
-                          { label: equityOk ? "Excess Equity" : "Unallocated (Boot)", value:fmtFull(Math.abs(equityNeeded - equityAllocated)), warn:!equityOk },
-                        ].map(({ label, value, warn }) => (
-                          <div key={label}>
-                            <div style={{ fontSize:10, color: warn ? C.warning : T.muted, fontFamily:FONT, marginBottom:2 }}>{label}</div>
-                            <div style={{ fontSize:15, fontWeight:700, color: warn ? A.red : G.forest, fontFamily:FONT }}>{value}</div>
-                          </div>
-                        ))}
-                      </div>
-                      {!equityOk && equityShortfall > 0 && (
-                        <div style={{ marginTop:10, fontSize:12, color:C.warning, fontFamily:FONT, lineHeight:1.7 }}>
-                          The unallocated <strong>{fmtFull(equityShortfall)}</strong> will likely be treated as taxable cash boot. Increase your DST allocations to fully reinvest your proceeds.
-                        </div>
-                      )}
-                    </div>
+                {/* ── Two-column body ── */}
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1px 1fr", padding:"20px 0 28px" }}>
 
-                    {/* Debt check */}
-                    <div style={{ padding:"16px", borderRadius:10, background: debtOk ? G.mint : C.warningBg, border:`1px solid ${debtOk ? G.forest+"30" : C.warningBorder}` }}>
-                      <div style={{ fontSize:11, fontWeight:700, color: debtOk ? G.forest : C.warning, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:10 }}>
-                        {debtRetired === 0 ? "No Debt Replacement Required" : debtOk ? "✓ Debt Replacement Satisfied" : "⚠ Debt Shortfall (Mortgage Boot)"}
-                      </div>
-                      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10 }}>
-                        {[
-                          { label:"Debt Retired at Sale", value: debtRetired > 0 ? fmtFull(debtRetired) : "None" },
-                          { label:"DST Debt Share", value:fmtFull(dstDebtTotal) },
-                          { label: debtOk ? "Debt Surplus" : "Debt Shortfall", value:fmtFull(Math.abs(dstDebtTotal - debtRetired)), warn: !debtOk && debtRetired > 0 },
-                        ].map(({ label, value, warn }) => (
-                          <div key={label}>
-                            <div style={{ fontSize:10, color: warn ? C.warning : T.muted, fontFamily:FONT, marginBottom:2 }}>{label}</div>
-                            <div style={{ fontSize:15, fontWeight:700, color: warn ? A.red : G.forest, fontFamily:FONT }}>{value}</div>
-                          </div>
-                        ))}
-                      </div>
-                      {!debtOk && debtShortfall > 0 && (
-                        <div style={{ marginTop:10, fontSize:12, color:C.warning, fontFamily:FONT, lineHeight:1.7 }}>
-                          Your DST debt share of {fmtFull(dstDebtTotal)} is {fmtFull(debtShortfall)} less than your retired mortgage. This shortfall may be treated as taxable mortgage boot. Consult your tax advisor.
-                        </div>
-                      )}
-                      {debtRetired === 0 && (
-                        <div style={{ marginTop:10, fontSize:12, color:T.muted, fontFamily:FONT, lineHeight:1.7 }}>
-                          You had no mortgage on the sold property, so there is no debt replacement requirement for your exchange.
-                        </div>
-                      )}
+                  {/* ── Left: Equity ── */}
+                  <div style={{ padding:"0 20px", display:"flex", flexDirection:"column", gap:16 }}>
+                    <div style={{ fontSize:16, fontWeight:600, color:"#1d2837", fontFamily:FONT }}>
+                      {equityOk ? "Equity Fully Reinvested" : "Unallocated Equity (Cash Boot)"}
                     </div>
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:16 }}>
+                      {[
+                        { label:"Proceeds to Reinvest",    value: fmtFull(equityNeeded) },
+                        { label:"Amount Allocated",         value: fmtFull(equityAllocated) },
+                        { label: equityOk ? "Excess Equity" : "Unallocated (Boot)", value: fmtFull(Math.abs(equityNeeded - equityAllocated)) },
+                      ].map(({ label, value }) => (
+                        <div key={label} style={{ background:"#f4f4f5", borderRadius:8, padding:"16px 12px", textAlign:"center" }}>
+                          <div style={{ fontSize:16, fontWeight:700, color:"#0b111a", fontFamily:FONT, lineHeight:"24px" }}>{value}</div>
+                          <div style={{ fontSize:14, fontWeight:400, color:"#57534e", fontFamily:FONT, lineHeight:"20px" }}>{label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {!equityOk && equityShortfall > 0 && (
+                      <div style={{ borderLeft:`1px solid ${WARN_BANNER_TEXT}`, background:WARN_BANNER_BG, padding:12, fontSize:12, fontWeight:400, color:WARN_BANNER_TEXT, fontFamily:FONT, lineHeight:"20px" }}>
+                        The unallocated {fmtFull(equityShortfall)} will likely be treated as taxable cash boot. Increase your DST allocations to fully reinvest your proceeds.
+                      </div>
+                    )}
+                    {equityOk && (
+                      <div style={{ borderLeft:`1px solid ${SUCCESS_GREEN}`, background:SUCCESS_GREEN_BG, padding:12, fontSize:14, fontWeight:400, color:SUCCESS_GREEN, fontFamily:FONT, lineHeight:"20px" }}>
+                        All proceeds fully invested — no cash boot expected.
+                      </div>
+                    )}
                   </div>
-                  <CheckBox checked={acct.debtReplacementAck} onChange={v => updAcct("debtReplacementAck", v)}
+
+                  {/* ── Vertical dashed divider ── */}
+                  <div style={{ borderLeft:"1px dashed #E4E4E7" }} />
+
+                  {/* ── Right: Debt ── */}
+                  <div style={{ padding:"0 20px", display:"flex", flexDirection:"column", gap:16 }}>
+                    <div style={{ fontSize:16, fontWeight:600, color:"#1d2837", fontFamily:FONT }}>
+                      {debtRetired === 0 ? "No Debt Replacement Required" : debtOk ? "Debt Replacement Satisfied" : "Debt Shortfall (Mortgage Boot)"}
+                    </div>
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:16 }}>
+                      {[
+                        { label:"Debt Retired at Sale",  value: debtRetired > 0 ? fmtFull(debtRetired) : "None" },
+                        { label:"DST Debt Share",         value: fmtFull(dstDebtTotal) },
+                        { label: debtOk ? "Debt Surplus" : "Debt Shortfall", value: fmtFull(Math.abs(dstDebtTotal - debtRetired)) },
+                      ].map(({ label, value }) => (
+                        <div key={label} style={{ background:"#f4f4f5", borderRadius:8, padding:"16px 12px", textAlign:"center" }}>
+                          <div style={{ fontSize:16, fontWeight:700, color:"#0b111a", fontFamily:FONT, lineHeight:"24px" }}>{value}</div>
+                          <div style={{ fontSize:14, fontWeight:400, color:"#57534e", fontFamily:FONT, lineHeight:"20px" }}>{label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {!debtOk && debtShortfall > 0 && (
+                      <div style={{ borderLeft:`1px solid ${WARN_BANNER_TEXT}`, background:WARN_BANNER_BG, padding:12, fontSize:12, fontWeight:400, color:WARN_BANNER_TEXT, fontFamily:FONT, lineHeight:"20px" }}>
+                        Your DST debt share of {fmtFull(dstDebtTotal)} is {fmtFull(debtShortfall)} less than your retired mortgage. This shortfall may be treated as taxable mortgage boot. Consult your tax advisor.
+                      </div>
+                    )}
+                    {debtRetired === 0 && (
+                      <div style={{ borderLeft:`1px solid ${SUCCESS_GREEN}`, background:SUCCESS_GREEN_BG, padding:12, fontSize:14, fontWeight:400, color:SUCCESS_GREEN, fontFamily:FONT, lineHeight:"20px" }}>
+                        No mortgage on the sold property — no debt replacement required.
+                      </div>
+                    )}
+                    {debtOk && debtRetired > 0 && (
+                      <div style={{ borderLeft:`1px solid ${SUCCESS_GREEN}`, background:SUCCESS_GREEN_BG, padding:12, fontSize:14, fontWeight:400, color:SUCCESS_GREEN, fontFamily:FONT, lineHeight:"20px" }}>
+                        Debt replacement satisfied — DST debt covers your retired mortgage.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* ── Checkbox ── */}
+                <div style={{ padding:"0 20px 20px" }}>
+                  <CheckBox
+                    checked={!!acct.debtReplacementAck}
+                    onChange={v => updAcct("debtReplacementAck", v)}
                     label="I understand the equity and debt replacement requirements for my 1031 exchange"
-                    description="Any unallocated equity or debt shortfall may be treated as taxable boot. I have reviewed this analysis with my tax advisor."/>
+                    description="Any unallocated equity or debt shortfall may be treated as taxable boot. I have reviewed this analysis with my tax advisor."
+                  />
                 </div>
+
               </div>
             );
           })()}
@@ -4515,112 +4621,164 @@ export default function DSTOnboarding() {
             const hasSaleData    = acct.rp_salePrice > 0;
             if (!hasSaleData && !hasIncomeData && dstAnnualCF === 0) return null;
             const cashFlowDelta = dstAnnualCF - oldNOI;
+            /* ── Tooltip wrapper for metric card sub-descriptions ── */
+            const InfoTooltip = ({ tip }) => {
+              const [show, setShow] = React.useState(false);
+              const [tooltipPos, setTooltipPos] = React.useState({ top: 0, left: 0 });
+              return (
+                <div style={{ position:"relative", display:"inline-flex", alignItems:"center" }}
+                  onMouseEnter={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const desiredWidth = 320;
+                    const half = desiredWidth / 2;
+                    const viewportPadding = 12;
+                    const centerX = rect.left + rect.width / 2;
+                    const clampedLeft = Math.max(
+                      viewportPadding + half,
+                      Math.min(window.innerWidth - viewportPadding - half, centerX)
+                    );
+                    setTooltipPos({
+                      left: clampedLeft,
+                      top: rect.top - 8,
+                    });
+                    setShow(true);
+                  }}
+                  onMouseLeave={() => setShow(false)}
+                >
+                  <span style={{ color:"#6c7785", display:"flex", alignItems:"center", cursor:"default" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="16" x2="12" y2="12"/>
+                      <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                  </span>
+                  {show && (
+                    <div style={{
+                      position:"fixed",
+                      left: tooltipPos.left,
+                      top: tooltipPos.top,
+                      transform:"translate(-50%, -100%)",
+                      background:"#1d2837", color:"#fafafa", padding:"6px 10px", borderRadius:6,
+                      fontSize:12, fontWeight:400, fontFamily:FONT, lineHeight:"18px",
+                      maxWidth:320, whiteSpace:"normal", textAlign:"center", zIndex:10000, pointerEvents:"none",
+                      boxShadow:"0 4px 12px rgba(0,0,0,0.15)",
+                    }}>
+                      {tip}
+                    </div>
+                  )}
+                </div>
+              );
+            };
+
+            const BENEFIT_GREEN = "#3e8669";
+            const BENEFIT_GREEN_BG = "#ddf9eb";
+            const BENEFIT_RED = "#dc2626";
+            const BENEFIT_RED_BG = "#fef2f2";
+
+            const cashFlowPositive = cashFlowDelta >= 0;
+            const shelteredCashFlow = Math.max(0, dstAnnualCF - dstTaxableIncome);
+            const depPositive = shelteredCashFlow > 0 || investorDstDep >= oldAnnualDep;
+            const taxDeferredPositive = taxDeferred > 0;
+
+            const statCard = ({ value, label, infoTip, color = "#0b111a", bg = "#f4f4f5" }) => (
+              <div style={{ flex:"1 0 0", minWidth:0, background:bg, borderRadius:8, padding:"16px 12px", display:"flex", flexDirection:"column", gap:8, alignItems:"center", justifyContent:"center", textAlign:"center" }}>
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:4, width:"100%" }}>
+                  <div style={{ fontSize:16, fontWeight:700, color, fontFamily:FONT, lineHeight:"24px", whiteSpace:"nowrap" }}>{value}</div>
+                  {infoTip && <InfoTooltip tip={infoTip} />}
+                </div>
+                <div style={{ fontSize:14, fontWeight:400, color, fontFamily:FONT, lineHeight:"20px", width:"100%" }}>{label}</div>
+              </div>
+            );
+
             return (
-              <div style={{ background: N.card, borderRadius: 14, border: `1px solid ${N.border}`, overflow:"hidden", marginBottom:16 }}>
-                <div style={{ background:`linear-gradient(135deg, ${G.darkest} 0%, ${G.deep} 100%)`, padding:"14px 20px", display:"flex", alignItems:"center", gap:12 }}>
-                  <span style={{ color:"rgba(255,255,255,0.7)", display:"flex", alignItems:"center" }}>{React.cloneElement(IC.trendingUp, { width:16, height:16, strokeWidth:2 })}</span>
-                  <div>
-                    <div style={{ fontSize:13, fontWeight:600, color:T.white, fontFamily:FONT }}>1031 Exchange Benefit Analysis</div>
-                    <div style={{ fontSize:11, color:"rgba(255,255,255,0.55)", fontFamily:FONT, marginTop:1 }}>
+              <div style={{ background:"#ffffff", borderRadius:BOX_RADIUS, overflow:"hidden", marginBottom:16 }}>
+
+                {/* ── Header — flat #1d2837 ── */}
+                <div style={{ background:"#1d2837", padding:"16px 20px", display:"flex", alignItems:"center", gap:10 }}>
+                  <span style={{ color:DARK_HEADER_LABEL, display:"flex", alignItems:"center", flexShrink:0 }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/>
+                    </svg>
+                  </span>
+                  <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
+                    <div style={{ fontSize:16, fontWeight:600, color:DARK_HEADER_TITLE, fontFamily:FONT, lineHeight:"24px" }}>1031 Exchange Benefit Analysis</div>
+                    <div style={{ fontSize:14, fontWeight:400, color:DARK_HEADER_SUBTITLE, fontFamily:FONT, lineHeight:1.5 }}>
                       Income, depreciation, and tax deferral comparison — before vs. after your exchange
                     </div>
                   </div>
                 </div>
-                <div style={{ padding:"20px 24px" }}>
 
-                  {/* ── Row 1: Cash Flow + Depreciation ── */}
-                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }}>
-
-                    {/* Cash Flow Comparison */}
-                    <div style={{ padding:"16px 18px", background: N.section, borderRadius:10, border:`1px solid ${N.border}` }}>
-                      <div style={{ fontSize:11, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:12 }}>Annual Cash Flow Comparison</div>
-                      {hasIncomeData ? (
-                        <>
-                          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }}>
-                            <div>
-                              <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginBottom:2 }}>Relinquished Property NOI</div>
-                              <div style={{ fontSize:18, fontWeight:600, color: oldNOI >= 0 ? T.primary : A.red, fontFamily:FONT }}>{fmtFull(oldNOI)}</div>
-                              <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginTop:1 }}>{fmtFull(acct.rp_annualIncome)} income · {fmtFull(acct.rp_annualExpenses)} expenses</div>
-                            </div>
-                            <div>
-                              <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginBottom:2 }}>DST Portfolio Cash Flow</div>
-                              <div style={{ fontSize:18, fontWeight:600, color:G.forest, fontFamily:FONT }}>{fmtFull(dstAnnualCF)}</div>
-                              <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginTop:1 }}>distributions from {cartItems.length} DST{cartItems.length !== 1 ? "s" : ""}</div>
-                            </div>
-                          </div>
-                          <div style={{ padding:"10px 12px", background: cashFlowDelta >= 0 ? `${G.forest}08` : C.errorBg, borderRadius:8, border:`1px solid ${cashFlowDelta >= 0 ? G.forest+"25" : C.errorBorder}` }}>
-                            <div style={{ fontSize:10, color: cashFlowDelta >= 0 ? G.forest : A.red, fontFamily:FONT, marginBottom:2 }}>{cashFlowDelta >= 0 ? "Annual Cash Flow Increase" : "Annual Cash Flow Decrease"}</div>
-                            <div style={{ fontSize:16, fontWeight:600, color: cashFlowDelta >= 0 ? G.forest : A.red, fontFamily:FONT }}>
-                              {cashFlowDelta >= 0 ? "+" : ""}{fmtFull(cashFlowDelta)}
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div style={{ marginBottom:10 }}>
-                            <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginBottom:2 }}>DST Portfolio Annual Cash Flow</div>
-                            <div style={{ fontSize:22, fontWeight:600, color:G.forest, fontFamily:FONT }}>{fmtFull(dstAnnualCF)}</div>
-                            <div style={{ fontSize:11, color:T.muted, fontFamily:FONT, marginTop:2 }}>{fmtFull(dstAnnualCF / 12)} / month estimated</div>
-                          </div>
-                          <div style={{ fontSize:11, color:T.light, fontFamily:FONT }}>
-                            Add Annual Gross Income and Expenses in Sale Property Details for a full comparison.
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    {/* Depreciation Shelter */}
-                    <div style={{ padding:"16px 18px", background: N.section, borderRadius:10, border:`1px solid ${N.border}` }}>
-                      <div style={{ fontSize:11, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:12 }}>Depreciation Shelter</div>
-                      <div style={{ display:"grid", gridTemplateColumns: oldAnnualDep > 0 ? "1fr 1fr" : "1fr", gap:12, marginBottom:12 }}>
-                        {oldAnnualDep > 0 && (
-                          <div>
-                            <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginBottom:2 }}>Old Property (est.)</div>
-                            <div style={{ fontSize:18, fontWeight:600, color:T.primary, fontFamily:FONT }}>{fmtFull(Math.round(oldAnnualDep))}</div>
-                            <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginTop:1 }}>annual straight-line dep.</div>
-                          </div>
-                        )}
-                        <div>
-                          <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginBottom:2 }}>DST Portfolio (est.)</div>
-                          <div style={{ fontSize:18, fontWeight:600, color:G.forest, fontFamily:FONT }}>{fmtFull(Math.round(investorDstDep))}</div>
-                          <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginTop:1 }}>your pro-rata dep. share</div>
-                        </div>
-                      </div>
-                      <div style={{ padding:"10px 12px", background:`${G.forest}08`, borderRadius:8, border:`1px solid ${G.forest}25` }}>
-                        <div style={{ fontSize:10, color:G.forest, fontFamily:FONT, marginBottom:2 }}>Est. Tax-Sheltered Cash Flow</div>
-                        <div style={{ fontSize:16, fontWeight:600, color:G.forest, fontFamily:FONT }}>{fmtFull(Math.max(0, dstAnnualCF - dstTaxableIncome))}</div>
-                        <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginTop:1 }}>of {fmtFull(dstAnnualCF)} annual distributions may be tax-deferred</div>
-                      </div>
+                {/* ── Body ── */}
+                <div style={{ padding:"20px 20px 28px", display:"flex", flexDirection:"column", gap:20 }}>
+                  <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                    <div style={{ fontSize:16, fontWeight:600, color:"#1d2837", fontFamily:FONT, lineHeight:"24px" }}>Annual Cash Flow Comparison</div>
+                    <div style={{ display:"flex", gap:16 }}>
+                      {statCard({
+                        value: fmtFull(hasIncomeData ? oldNOI : 0),
+                        infoTip: hasIncomeData ? `${fmtFull(acct.rp_annualIncome)} income / ${fmtFull(acct.rp_annualExpenses)} expenses` : "Add annual income/expenses in Sale Property Details",
+                        label: "Relinquished Property NOI",
+                        color: "#0b111a",
+                      })}
+                      {statCard({
+                        value: fmtFull(dstAnnualCF),
+                        infoTip: `distributions from ${cartItems.length} DST${cartItems.length !== 1 ? "s" : ""}`,
+                        label: "DST Portfolio Cash Flow",
+                        color: "#0b111a",
+                      })}
+                      {statCard({
+                        value: `${cashFlowDelta >= 0 ? "+" : ""}${fmtFull(cashFlowDelta)}`,
+                        label: `Annual Cash Flow ${cashFlowPositive ? "Increase" : "Decrease"}`,
+                        color: cashFlowPositive ? BENEFIT_GREEN : BENEFIT_RED,
+                        bg: cashFlowPositive ? BENEFIT_GREEN_BG : BENEFIT_RED_BG,
+                      })}
                     </div>
                   </div>
 
-                  {/* ── Row 2: Tax Deferral + Net Cash Flow ── */}
-                  <div style={{ display:"grid", gridTemplateColumns: taxDeferred > 0 ? "1fr 1fr" : "1fr", gap:12 }}>
+                  <div style={{ borderTop:"1px solid #E4E4E7" }} />
 
-                    {/* Tax Deferral */}
-                    {taxDeferred > 0 && (
-                      <div style={{ padding:"16px 18px", background:`${G.forest}06`, borderRadius:10, border:`1px solid ${G.forest}25` }}>
-                        <div style={{ fontSize:11, fontWeight:700, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:12 }}>Tax Deferral Benefit</div>
-                        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10, marginBottom:10 }}>
-                          {[
-                            { label:"Capital Gains Tax", value: fmtFull(fsCalcs.federalTax + fsCalcs.stateTax) },
-                            { label:"Depreciation Recapture", value: fmtFull(fsCalcs.depRecapture) },
-                            { label:"Total Tax Deferred", value: fmtFull(taxDeferred), highlight: true },
-                          ].map(({ label, value, highlight }) => (
-                            <div key={label} style={{ padding:"10px 12px", background: highlight ? `${G.forest}10` : "white", borderRadius:8, border:`1px solid ${G.forest}${highlight ? "30" : "15"}` }}>
-                              <div style={{ fontSize:9, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:3 }}>{label}</div>
-                              <div style={{ fontSize:14, fontWeight:600, color: highlight ? G.forest : T.primary, fontFamily:FONT }}>{value}</div>
-                            </div>
-                          ))}
-                        </div>
-                        <div style={{ fontSize:11, color:T.muted, fontFamily:FONT, lineHeight:1.7 }}>
-                          Deferred today — not eliminated. Tax becomes due when your DSTs are sold unless you do another 1031 or step-up at death.
-                        </div>
-                      </div>
-                    )}
-
+                  <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                    <div style={{ fontSize:16, fontWeight:600, color:"#1d2837", fontFamily:FONT, lineHeight:"24px" }}>Depreciation Shelter</div>
+                    <div style={{ display:"flex", gap:16 }}>
+                      {statCard({
+                        value: fmtFull(Math.round(oldAnnualDep)),
+                        infoTip: "annual straight-line dep.",
+                        label: "Old Property (est.)",
+                        color: "#0b111a",
+                      })}
+                      {statCard({
+                        value: fmtFull(Math.round(investorDstDep)),
+                        infoTip: "your pro-rata dep. share",
+                        label: "DST Portfolio (est.)",
+                        color: "#0b111a",
+                      })}
+                      {statCard({
+                        value: fmtFull(shelteredCashFlow),
+                        infoTip: `of ${fmtFull(dstAnnualCF)} annual distributions may be tax-deferred`,
+                        label: "Est. Tax-Sheltered Cash Flow",
+                        color: depPositive ? BENEFIT_GREEN : BENEFIT_RED,
+                        bg: depPositive ? BENEFIT_GREEN_BG : BENEFIT_RED_BG,
+                      })}
+                    </div>
                   </div>
 
+                  <div style={{ borderTop:"1px solid #E4E4E7" }} />
+
+                  <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                    <div style={{ fontSize:16, fontWeight:600, color:"#1d2837", fontFamily:FONT, lineHeight:"24px" }}>Tax Deferral Benefit</div>
+                    <div style={{ display:"flex", gap:16 }}>
+                      {statCard({ value: fmtFull(fsCalcs.federalTax + fsCalcs.stateTax), label:"Capital Gains Tax", color:"#0b111a" })}
+                      {statCard({ value: fmtFull(fsCalcs.depRecapture), label:"Depreciation Recapture", color:"#0b111a" })}
+                      {statCard({
+                        value: fmtFull(taxDeferred),
+                        label: taxDeferredPositive ? "Total Tax Deferred" : "No Tax Deferred",
+                        color: taxDeferredPositive ? BENEFIT_GREEN : BENEFIT_RED,
+                        bg: taxDeferredPositive ? BENEFIT_GREEN_BG : BENEFIT_RED_BG,
+                      })}
+                    </div>
+                    <div style={{ fontSize:14, fontWeight:400, color:"#57534e", fontFamily:FONT, lineHeight:"20px" }}>
+                      Deferred today — not eliminated. Tax becomes due when your DSTs are sold unless you do another 1031 or step-up at death.
+                    </div>
+                  </div>
                 </div>
               </div>
             );
@@ -4697,8 +4855,8 @@ export default function DSTOnboarding() {
 
         {/* ── Page header ── */}
         <div style={{ marginBottom:20 }}>
-          <h1 style={{ fontSize:24, fontWeight:600, color:T.primary, fontFamily:FONT, margin:"0 0 6px" }}>Your Financial Picture</h1>
-          <p style={{ fontSize:14, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6 }}>
+          <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>Your Financial Picture</h1>
+          <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>
             To recommend investments that are right for you, federal law requires us to understand your overall financial situation. Rough estimates are fine — this isn't a tax return. Everything you share is strictly confidential and used only to confirm this investment is appropriate for you.
           </p>
         </div>
@@ -4722,7 +4880,7 @@ export default function DSTOnboarding() {
             <FsSection id="liquid" icon={IC.dollarSign} title="Cash & Liquid Assets" color={SC.liquid}
               subtotal={fsCalcs.cashEquiv + fsCalcs.mktSec} open={openSection === "liquid"} onToggle={() => toggle("liquid")} complete={done.liquid}
               onSave={handleSectionSave} onCancel={handleSectionCancel} dirty={isSaveable("liquid", fsCalcs.cashEquiv + fsCalcs.mktSec > 0)}>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
                 <MoneyField label="Cash & Checking Accounts" hint="All bank checking accounts combined" value={fs.cash} onChange={v => setFsField("cash", v)}/>
                 <MoneyField label="Savings / Money Market / CDs" hint="High-yield savings, money market, certificates of deposit" value={fs.savings} onChange={v => setFsField("savings", v)}/>
                 <MoneyField label="Stocks, Bonds & ETFs" sublabel="Publicly traded, marketable securities" hint="Brokerage accounts — current market value" value={fs.stocks} onChange={v => setFsField("stocks", v)}/>
@@ -4737,7 +4895,7 @@ export default function DSTOnboarding() {
             <FsSection id="retire" icon={IC.landmark} title="Retirement Accounts" color={SC.retire}
               subtotal={fsCalcs.retAccounts} open={openSection === "retire"} onToggle={() => toggle("retire")} complete={done.retire}
               onSave={handleSectionSave} onCancel={handleSectionCancel} dirty={isSaveable("retire", fsCalcs.retAccounts > 0)}>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
                 <MoneyField label="401(k) / 403(b) / IRA / Roth IRA" sublabel="Tax-advantaged retirement investment accounts" hint="Combined current market value across all accounts" value={fs.retStocks} onChange={v => setFsField("retStocks", v)}/>
                 <MoneyField label="Pension — Lump Sum Value" sublabel="Estimated present value of defined benefit pensions" hint="If you receive monthly pension, multiply by 200–250× for rough lump-sum equivalent" value={fs.retPension} onChange={v => setFsField("retPension", v)}/>
               </div>
@@ -4748,7 +4906,7 @@ export default function DSTOnboarding() {
             <FsSection id="realty" icon={IC.home} title="Real Estate" color={SC.realty}
               subtotal={fs.primary + fs.investRE} open={openSection === "realty"} onToggle={() => toggle("realty")} complete={done.realty}
               onSave={handleSectionSave} onCancel={handleSectionCancel} dirty={isSaveable("realty", fs.primary > 0 || fs.investRE > 0)}>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
                 <MoneyField label="Primary Residence" sublabel="Current market value" hint="Excluded from NW for FINRA suitability — enter your best estimate" value={fs.primary} onChange={v => setFsField("primary", v)}/>
                 <MoneyField label="Investment Real Estate" sublabel="Rental properties, vacant land, commercial real estate" hint="Current fair market value — not original purchase price" value={fs.investRE} onChange={v => setFsField("investRE", v)}/>
               </div>
@@ -4774,7 +4932,7 @@ export default function DSTOnboarding() {
               <InfoCallout type="warning" title="Concentration sensitivity">
                 These holdings are used to calculate your illiquid asset concentration. DSTs will add to this total.
               </InfoCallout>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
                 <MoneyField label="Real Estate Securities" sublabel="DSTs, non-traded REITs, LPs, LLCs" hint="Current estimated value of all existing illiquid RE holdings" value={fs.reSec} onChange={v => setFsField("reSec", v)}/>
                 <MoneyField label="Non-Real Estate Alternatives" sublabel="Private equity, hedge funds, BDCs, venture capital" value={fs.nonReAlts} onChange={v => setFsField("nonReAlts", v)}/>
                 <MoneyField label="Interval Funds" sublabel="Semi-liquid, limited quarterly redemption funds" value={fs.intervalFunds} onChange={v => setFsField("intervalFunds", v)}/>
@@ -4806,7 +4964,7 @@ export default function DSTOnboarding() {
             <FsSection id="income" icon={IC.briefcase} title="Annual Income" color={SC.income}
               subtotal={fsCalcs.grossInc} open={openSection === "income"} onToggle={() => toggle("income")} complete={done.income}
               onSave={handleSectionSave} onCancel={handleSectionCancel} dirty={isSaveable("income", fsCalcs.grossInc > 0)}>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:14 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:16 }}>
                 <MoneyField label="Employment / Business Income" sublabel="Salary, wages, self-employment net income" hint="Annual gross — before taxes" value={fs.empInc} onChange={v => setFsField("empInc", v)}/>
                 <MoneyField label="Investment & Dividend Income" sublabel="Dividends, interest, rental income received" value={fs.invInc} onChange={v => setFsField("invInc", v)}/>
                 <MoneyField label="Retirement / Pension Income" sublabel="Social Security, pension distributions, annuity payments" value={fs.retInc} onChange={v => setFsField("retInc", v)}/>
@@ -4852,7 +5010,7 @@ export default function DSTOnboarding() {
             <FsSection id="liabs" icon={IC.fileText} title="Liabilities & Obligations" color={SC.liabs}
               subtotal={fsCalcs.totalLiab} open={openSection === "liabs"} onToggle={() => toggle("liabs")} complete={done.liabs}
               onSave={handleSectionSave} onCancel={handleSectionCancel} dirty={isSaveable("liabs", fs.curLiab > 0 || fs.notesPayable > 0)}>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
                 <MoneyField label="Current Liabilities" sublabel="Due within 12 months" hint="Credit card balances, short-term loans, outstanding bills" value={fs.curLiab} onChange={v => setFsField("curLiab", v)}/>
                 <MoneyField label="Notes Payable / Long-Term Debt" sublabel="Mortgage balances, business loans, student loans" hint="Remaining balance — not monthly payment" value={fs.notesPayable} onChange={v => setFsField("notesPayable", v)}/>
               </div>
@@ -4908,7 +5066,7 @@ export default function DSTOnboarding() {
 
           {/* ── Right: Sticky summary panel ── */}
           <div style={{ width:308, flexShrink:0, position:"sticky", top:90, alignSelf:"flex-start" }}>
-            <div style={{ background:N.card, borderRadius:14, border:`1px solid ${N.border}`, overflow:"hidden", boxShadow:"0 4px 24px rgba(0,0,0,0.08)" }}>
+            <div style={{ background:N.card, borderRadius:BOX_RADIUS, border:`1px solid ${N.border}`, overflow:"hidden", boxShadow:"0 4px 24px rgba(0,0,0,0.08)" }}>
               <div style={{ background: WIDGET_HDR, padding:"16px 18px" }}>
                 <div style={{ fontSize:12, fontWeight:700, color:T.white, letterSpacing:"1.5px", textTransform:"uppercase", fontFamily:FONT }}>Live Summary</div>
                 <div style={{ fontSize:12, color:"rgba(255,255,255,0.45)", fontFamily:FONT, marginTop:2 }}>Updates as you type</div>
@@ -5205,8 +5363,8 @@ export default function DSTOnboarding() {
         {subStep === 0 && (
           <>
             <div style={{ marginBottom:24 }}>
-              <h1 style={{ fontSize:28, fontWeight:700, color:T.primary, fontFamily:FONT, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Who is opening this account?</h1>
-              <p style={{ fontSize:15, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6 }}>Select your account type and tell us a little about how you'll be investing.</p>
+              <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>Who is opening this account?</h1>
+              <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>Select your account type and tell us a little about how you'll be investing.</p>
             </div>
 
         {/* ── SECTION 1: Account Status ── */}
@@ -5448,8 +5606,8 @@ export default function DSTOnboarding() {
         {subStep === 1 && (
           <>
             <div style={{ marginBottom:24 }}>
-              <h1 style={{ fontSize:28, fontWeight:700, color:T.primary, fontFamily:FONT, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Investor Accreditation</h1>
-              <p style={{ fontSize:15, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6 }}>DST investments are available exclusively to accredited investors under SEC Regulation D.</p>
+              <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>Investor Accreditation</h1>
+              <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>DST investments are available exclusively to accredited investors under SEC Regulation D.</p>
             </div>
 
         {/* ── ACCREDITED INVESTOR CERTIFICATION ── */}
@@ -5463,7 +5621,7 @@ export default function DSTOnboarding() {
             {acct.registrationCategory !== "entity" && (
               <div style={{ marginBottom:16 }}>
                 <div style={{ fontSize:12, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:10 }}>Qualification Basis <span style={{ color:A.red }}>*</span></div>
-                <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
                   {[
                     { value:"income_200k", rule:"501(a)(6)", label:"Income Threshold", desc:"Individual income exceeding $200,000 (or $300,000 with spouse) in each of the two most recent years." },
                     { value:"net_worth_1m", rule:"501(a)(5)", label:"Net Worth Threshold", desc:"Individual net worth (or joint) exceeding $1,000,000 excluding primary residence." },
@@ -5480,25 +5638,25 @@ export default function DSTOnboarding() {
                     const isSelected = acct.accreditedBasis === opt.value;
                     return (
                       <label key={opt.value} style={{
-                        display:"flex", gap:10, padding:"12px 14px", borderRadius:10,
+                        display:"flex", alignItems:"flex-start", gap:10, padding:"16px", borderRadius:8,
                         cursor: fails ? "not-allowed" : "pointer",
-                        border:`1.5px solid ${fails ? N.border : isSelected ? G.forest : N.border}`,
-                        background: fails ? N.section : isSelected ? G.mint : N.card,
+                        border:`1px solid ${fails ? N.border : isSelected ? SELECTED_CARD_BORDER : N.border}`,
+                        background: fails ? N.section : isSelected ? SELECTED_CARD_BG : "#ffffff",
                         opacity: fails ? 0.55 : 1, transition:"all 0.15s",
                       }} onClick={() => !fails && updAcct("accreditedBasis", opt.value)}>
-                        <div style={{ width:18, height:18, borderRadius:"50%", flexShrink:0, marginTop:1,
-                            border:`2px solid ${fails ? N.border : isSelected ? G.forest : N.border}`,
+                        <div style={{ width:16, height:16, borderRadius:"50%", flexShrink:0, marginTop:2,
+                            border:`1px solid ${fails ? N.border : isSelected ? SELECTED_CARD_BORDER : N.border}`,
                             display:"flex", alignItems:"center", justifyContent:"center",
-                            background: isSelected ? G.forest : "transparent" }}>
-                          {isSelected && <div style={{ width:6, height:6, borderRadius:"50%", background:N.card }}/>}
+                            background: N.card }}>
+                          {isSelected && <div style={{ width:6, height:6, borderRadius:"50%", background:SELECTED_CARD_BORDER }}/>}
                         </div>
                         <div style={{ flex:1 }}>
                           <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2, flexWrap:"wrap" }}>
-                            <span style={{ fontSize:12, fontWeight:600, color: fails ? T.light : T.primary, fontFamily:FONT }}>{opt.label}</span>
+                            <span style={{ fontSize:14, fontWeight:500, color: fails ? T.light : T.primary, fontFamily:FONT, lineHeight:"20px" }}>{opt.label}</span>
                             <span style={{ fontSize:10, fontWeight:600, color:G.forest, fontFamily:FONT, padding:"1px 6px", background:G.mint, borderRadius:4, border:`1px solid ${G.forest}20` }}>Rule {opt.rule}</span>
                             {fails && <span style={{ fontSize:10, fontWeight:600, color:T.muted, padding:"1px 6px", background:N.divider, borderRadius:4 }}>Not available — below threshold</span>}
                           </div>
-                          <div style={{ fontSize:11, color: fails ? T.light : T.muted, fontFamily:FONT, lineHeight:1.6 }}>{opt.desc}</div>
+                          <div style={{ fontSize:12, fontWeight:400, color: fails ? T.light : T.muted, fontFamily:FONT, marginTop:8, lineHeight:"16px" }}>{opt.desc}</div>
                           {fails && <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginTop:3 }}>
                             Financial statements show {opt.value === "income_200k" ? `income of ${fmtFull(fsCalcs.grossInc)} — below the $200,000 threshold` : `net worth of ${fmtFull(fsCalcs.netWorthExRes)} — below the $1,000,000 threshold`}.
                           </div>}
@@ -5529,31 +5687,31 @@ export default function DSTOnboarding() {
               return (
                 <div style={{ marginBottom:16 }}>
                   <div style={{ fontSize:12, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:10 }}>Entity Qualification Basis <span style={{ color:A.red }}>*</span></div>
-                  <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                  <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
                     {entityOpts.map(opt => {
                       const fails = hasFsData && opt.threshold !== null && opt.metric && opt.metric() < opt.threshold;
                       const isSelected = acct.accreditedBasis === opt.value;
                       return (
                         <label key={opt.value} style={{
-                          display:"flex", gap:10, padding:"12px 14px", borderRadius:10,
+                          display:"flex", alignItems:"flex-start", gap:10, padding:"16px", borderRadius:8,
                           cursor: fails ? "not-allowed" : "pointer",
-                          border:`1.5px solid ${fails ? N.border : isSelected ? G.forest : N.border}`,
-                          background: fails ? N.section : isSelected ? G.mint : N.card,
+                          border:`1px solid ${fails ? N.border : isSelected ? SELECTED_CARD_BORDER : N.border}`,
+                          background: fails ? N.section : isSelected ? SELECTED_CARD_BG : "#ffffff",
                           opacity: fails ? 0.55 : 1, transition:"all 0.15s",
                         }} onClick={() => !fails && updAcct("accreditedBasis", opt.value)}>
-                          <div style={{ width:18, height:18, borderRadius:"50%", flexShrink:0, marginTop:1,
-                              border:`2px solid ${fails ? N.border : isSelected ? G.forest : N.border}`,
+                          <div style={{ width:16, height:16, borderRadius:"50%", flexShrink:0, marginTop:2,
+                              border:`1px solid ${fails ? N.border : isSelected ? SELECTED_CARD_BORDER : N.border}`,
                               display:"flex", alignItems:"center", justifyContent:"center",
-                              background: isSelected ? G.forest : "transparent" }}>
-                            {isSelected && <div style={{ width:6, height:6, borderRadius:"50%", background:N.card }}/>}
+                              background: N.card }}>
+                            {isSelected && <div style={{ width:6, height:6, borderRadius:"50%", background:SELECTED_CARD_BORDER }}/>}
                           </div>
                           <div style={{ flex:1 }}>
                             <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2, flexWrap:"wrap" }}>
-                              <span style={{ fontSize:12, fontWeight:600, color: fails ? T.light : T.primary, fontFamily:FONT }}>{opt.label}</span>
+                              <span style={{ fontSize:14, fontWeight:500, color: fails ? T.light : T.primary, fontFamily:FONT, lineHeight:"20px" }}>{opt.label}</span>
                               <span style={{ fontSize:10, fontWeight:600, color:G.forest, fontFamily:FONT, padding:"1px 6px", background:G.mint, borderRadius:4, border:`1px solid ${G.forest}20` }}>Rule {opt.rule}</span>
                               {fails && <span style={{ fontSize:10, fontWeight:600, color:T.muted, padding:"1px 6px", background:N.divider, borderRadius:4 }}>Not available — below threshold</span>}
                             </div>
-                            <div style={{ fontSize:11, color: fails ? T.light : T.muted, fontFamily:FONT, lineHeight:1.6 }}>{opt.desc}</div>
+                            <div style={{ fontSize:12, fontWeight:400, color: fails ? T.light : T.muted, fontFamily:FONT, marginTop:8, lineHeight:"16px" }}>{opt.desc}</div>
                             {fails && <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginTop:3 }}>
                               Financial statements show {opt.metricLabel.toLowerCase()} of {fmtFull(opt.metric())} — below the $5,000,000 threshold.
                             </div>}
@@ -5713,7 +5871,7 @@ export default function DSTOnboarding() {
               return (
                 <div style={{ marginBottom:16 }}>
                   <div style={{ fontSize:12, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:10 }}>Verification Method <span style={{ color:A.red }}>*</span></div>
-                  <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                  <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
                     {[
                       { value:"min_investment", label:"Minimum Investment Threshold (March 2025)", desc:`Per SEC No-Action Letter: $200K (natural persons) or $1M (entities) with self-cert.`, tag:"NEW" },
                       { value:"third_party", label:"Third-Party Verification Letter", desc:"Written confirmation from attorney, CPA, RIA, or broker-dealer." },
@@ -5725,26 +5883,26 @@ export default function DSTOnboarding() {
                       const isSelected = acct.accreditedVerifyMethod === opt.value;
                       return (
                         <label key={opt.value} style={{
-                          display:"flex", gap:10, padding:"12px 14px", borderRadius:10,
+                          display:"flex", alignItems:"flex-start", gap:10, padding:"16px", borderRadius:8,
                           cursor: blocked ? "not-allowed" : "pointer",
-                          border:`1.5px solid ${blocked ? A.red+"40" : isSelected ? G.forest : N.border}`,
-                          background: blocked ? C.errorBg : isSelected ? G.mint : N.card,
+                          border:`1px solid ${blocked ? A.red+"40" : isSelected ? SELECTED_CARD_BORDER : N.border}`,
+                          background: blocked ? C.errorBg : isSelected ? SELECTED_CARD_BG : "#ffffff",
                           opacity: blocked ? 0.7 : 1, transition:"all 0.15s",
                         }} onClick={() => !blocked && updAcct("accreditedVerifyMethod", opt.value)}>
-                          <div style={{ width:18, height:18, borderRadius:"50%", flexShrink:0, marginTop:1,
-                              border:`2px solid ${blocked ? A.red+"60" : isSelected ? G.forest : N.border}`,
+                          <div style={{ width:16, height:16, borderRadius:"50%", flexShrink:0, marginTop:2,
+                              border:`1px solid ${blocked ? A.red+"60" : isSelected ? SELECTED_CARD_BORDER : N.border}`,
                               display:"flex", alignItems:"center", justifyContent:"center",
-                              background: isSelected ? G.forest : "transparent" }}>
-                            {isSelected && <div style={{ width:6, height:6, borderRadius:"50%", background:N.card }}/>}
+                              background: N.card }}>
+                            {isSelected && <div style={{ width:6, height:6, borderRadius:"50%", background:SELECTED_CARD_BORDER }}/>}
                           </div>
                           <div style={{ flex:1 }}>
                             <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2, flexWrap:"wrap" }}>
-                              <span style={{ fontSize:12, fontWeight:600, color: blocked ? C.error : T.primary, fontFamily:FONT }}>{opt.label}</span>
+                              <span style={{ fontSize:14, fontWeight:500, color: blocked ? C.error : T.primary, fontFamily:FONT, lineHeight:"20px" }}>{opt.label}</span>
                               {opt.tag && <span style={{ fontSize:8, fontWeight:700, color:T.white, padding:"2px 6px", background:A.blue, borderRadius:4 }}>{opt.tag}</span>}
                               {autoSelected && <span style={{ fontSize:8, fontWeight:700, color:T.white, padding:"2px 6px", background:G.forest, borderRadius:4 }}>✓ Auto-Qualified</span>}
                               {blocked && <span style={{ fontSize:8, fontWeight:700, color:T.white, padding:"2px 6px", background:A.red, borderRadius:4 }}>✗ Investment Too Low</span>}
                             </div>
-                            <div style={{ fontSize:11, color: blocked ? "#7F1D1D" : T.muted, fontFamily:FONT, lineHeight:1.6 }}>{opt.desc}</div>
+                            <div style={{ fontSize:12, fontWeight:400, color: blocked ? "#7F1D1D" : T.muted, fontFamily:FONT, marginTop:8, lineHeight:"16px" }}>{opt.desc}</div>
                             {isMinInvest && (
                               <div style={{ marginTop:5, display:"flex", gap:8 }}>
                                 <div style={{ padding:"4px 8px", background: meetsMinInvest ? G.mint : C.errorBg, borderRadius:6, border:`1px solid ${meetsMinInvest ? G.forest+"30" : A.red+"30"}` }}>
@@ -6041,8 +6199,8 @@ export default function DSTOnboarding() {
         {subStep === 2 && (
           <>
             <div style={{ marginBottom:24 }}>
-              <h1 style={{ fontSize:28, fontWeight:700, color:T.primary, fontFamily:FONT, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Your Personal Details</h1>
-              <p style={{ fontSize:15, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6 }}>Basic contact and address information.</p>
+              <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>Your Personal Details</h1>
+              <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>Basic contact and address information.</p>
             </div>
 
         {/* ── SECTION 3: Personal Information ── */}
@@ -6115,8 +6273,8 @@ export default function DSTOnboarding() {
         {subStep === 3 && (
           <>
             <div style={{ marginBottom:24 }}>
-              <h1 style={{ fontSize:28, fontWeight:700, color:T.primary, fontFamily:FONT, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Verify Your Identity</h1>
-              <p style={{ fontSize:15, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6 }}>Required by federal law to verify and record identifying information for all applicants.</p>
+              <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>Verify Your Identity</h1>
+              <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>Required by federal law to verify and record identifying information for all applicants.</p>
             </div>
 
         {/* ── SECTION 6: USA PATRIOT Act ── */}
@@ -6162,7 +6320,7 @@ export default function DSTOnboarding() {
                 <TInput label="City" value={acct.coCity} onChange={v => updAcct("coCity",v)}/>
                 <TSelect label="State" value={acct.coState} onChange={v => updAcct("coState",v)} options={US_STATES}/>
               </Row2>
-              <div style={{ borderTop:`1px solid ${N.border}`, paddingTop:10 }}>
+              <div style={{ borderTop:`1px solid ${N.divider}`, paddingTop:10 }}>
                 <div style={{ fontSize:11, fontWeight:700, color:T.muted, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:8, fontFamily:FONT }}>Co-Applicant USA PATRIOT Act</div>
                 <Row2>
                   <DateInput label="Date of Birth" value={acct.coDob} onChange={v => updAcct("coDob",v)}/>
@@ -6189,8 +6347,8 @@ export default function DSTOnboarding() {
         {subStep === 4 && (
           <>
             <div style={{ marginBottom:24 }}>
-              <h1 style={{ fontSize:28, fontWeight:700, color:T.primary, fontFamily:FONT, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Distribution &amp; Contacts</h1>
-              <p style={{ fontSize:15, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6 }}>Tell us where to send distributions and who to contact in an emergency.</p>
+              <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>Distribution &amp; Contacts</h1>
+              <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>Tell us where to send distributions and who to contact in an emergency.</p>
             </div>
 
         {/* ── SECTION 8: Distribution Instructions ── */}
@@ -6252,8 +6410,8 @@ export default function DSTOnboarding() {
         {subStep === 5 && (
           <>
             <div style={{ marginBottom:24 }}>
-              <h1 style={{ fontSize:28, fontWeight:700, color:T.primary, fontFamily:FONT, margin:"0 0 8px", letterSpacing:"-0.02em" }}>Suitability &amp; Experience</h1>
-              <p style={{ fontSize:15, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6 }}>A few questions required by FINRA to confirm this investment is appropriate for your situation.</p>
+              <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>Suitability &amp; Experience</h1>
+              <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>A few questions required by FINRA to confirm this investment is appropriate for your situation.</p>
             </div>
 
         {/* ── SECTION 10: Suitability ── */}
@@ -6329,14 +6487,14 @@ export default function DSTOnboarding() {
         {/* ── SECTION 11: Investment Experience ── */}
         <SectionCard title="Investment Experience" icon={IC.lightbulb} collapsible defaultOpen={true}>
           <div style={{ marginBottom:4 }}>
-            <div style={{ fontSize:12, fontWeight:700, color:T.body, fontFamily:FONT, marginBottom:10 }}>Primary Applicant — Investment Experience</div>
-            <div style={{ overflowX:"auto" }}>
-              <table style={{ width:"100%", borderCollapse:"collapse" }}>
+            <div style={{ fontSize:14, fontWeight:500, color:T.body, fontFamily:FONT, marginBottom:10 }}>Primary Applicant — Investment Experience</div>
+            <div style={{ overflowX:"auto", background: LAYER_BG, borderRadius: 10, padding: 8 }}>
+              <table style={TABLE.base}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign:"left", fontSize:11, fontWeight:700, color:T.muted, padding:"6px 8px", borderBottom:`1px solid ${N.border}`, fontFamily:FONT }}>Investment Type</th>
+                    <th style={{ textAlign:"left", fontSize:14, fontWeight:500, color:T.muted, padding:"12px 8px", borderBottom:`1px solid rgba(212,212,212,0.5)`, fontFamily:FONT }}>Investment Type</th>
                     {["0 yrs","1–5 yrs","5+ yrs"].map(h => (
-                      <th key={h} style={{ textAlign:"center", fontSize:11, fontWeight:700, color:T.muted, padding:"6px 12px", borderBottom:`1px solid ${N.border}`, fontFamily:FONT, width:80 }}>{h}</th>
+                      <th key={h} style={{ textAlign:"center", fontSize:14, fontWeight:500, color:T.muted, padding:"12px 12px", borderBottom:`1px solid rgba(212,212,212,0.5)`, fontFamily:FONT, width:80 }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -6344,10 +6502,10 @@ export default function DSTOnboarding() {
                   {INVESTMENT_TYPES.map(inv => {
                     const val = (acct.primaryExperience || {})[inv] || "";
                     return (
-                      <tr key={inv} style={{ borderBottom:`1px solid ${N.divider}` }}>
-                        <td style={{ fontSize:13, color:T.primary, padding:"8px 8px", fontFamily:FONT }}>{inv}</td>
+                      <tr key={inv} style={{ borderBottom:`1px solid rgba(212,212,212,0.35)` }}>
+                        <td style={{ fontSize:14, fontWeight:500, color:T.primary, padding:"12px 8px", fontFamily:FONT }}>{inv}</td>
                         {["0","1-5","5+"].map(opt => (
-                          <td key={opt} style={{ textAlign:"center", padding:"8px 12px" }}>
+                          <td key={opt} style={{ textAlign:"center", padding:"12px 12px" }}>
                             <div onClick={() => { const cur = acct.primaryExperience || {}; updAcct("primaryExperience", { ...cur, [inv]: opt }); }} style={{
                               width:56, height:30, margin:"0 auto", borderRadius:6, cursor:"pointer",
                               border:`1.5px solid ${val === opt ? G.forest : N.border}`,
@@ -6368,14 +6526,14 @@ export default function DSTOnboarding() {
 
           {acct.hasCoApplicant && (
             <div style={{ marginTop:16 }}>
-              <div style={{ fontSize:12, fontWeight:700, color:T.body, fontFamily:FONT, marginBottom:10 }}>Co-Applicant — Investment Experience</div>
-              <div style={{ overflowX:"auto" }}>
-                <table style={{ width:"100%", borderCollapse:"collapse" }}>
+              <div style={{ fontSize:14, fontWeight:500, color:T.body, fontFamily:FONT, marginBottom:10 }}>Co-Applicant — Investment Experience</div>
+              <div style={{ overflowX:"auto", background: LAYER_BG, borderRadius: 10, padding: 8 }}>
+                <table style={TABLE.base}>
                   <thead>
                     <tr>
-                      <th style={{ textAlign:"left", fontSize:11, fontWeight:700, color:T.muted, padding:"6px 8px", borderBottom:`1px solid ${N.border}`, fontFamily:FONT }}>Investment Type</th>
+                      <th style={{ textAlign:"left", fontSize:14, fontWeight:500, color:T.muted, padding:"12px 8px", borderBottom:`1px solid rgba(212,212,212,0.5)`, fontFamily:FONT }}>Investment Type</th>
                       {["0 yrs","1–5 yrs","5+ yrs"].map(h => (
-                        <th key={h} style={{ textAlign:"center", fontSize:11, fontWeight:700, color:T.muted, padding:"6px 12px", borderBottom:`1px solid ${N.border}`, fontFamily:FONT, width:80 }}>{h}</th>
+                        <th key={h} style={{ textAlign:"center", fontSize:14, fontWeight:500, color:T.muted, padding:"12px 12px", borderBottom:`1px solid rgba(212,212,212,0.5)`, fontFamily:FONT, width:80 }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -6383,10 +6541,10 @@ export default function DSTOnboarding() {
                     {INVESTMENT_TYPES.map(inv => {
                       const val = (acct.coExperience || {})[inv] || "";
                       return (
-                        <tr key={inv} style={{ borderBottom:`1px solid ${N.divider}` }}>
-                          <td style={{ fontSize:13, color:T.primary, padding:"8px 8px", fontFamily:FONT }}>{inv}</td>
+                        <tr key={inv} style={{ borderBottom:`1px solid rgba(212,212,212,0.35)` }}>
+                          <td style={{ fontSize:14, fontWeight:500, color:T.primary, padding:"12px 8px", fontFamily:FONT }}>{inv}</td>
                           {["0","1-5","5+"].map(opt => (
-                            <td key={opt} style={{ textAlign:"center", padding:"8px 12px" }}>
+                            <td key={opt} style={{ textAlign:"center", padding:"12px 12px" }}>
                               <div onClick={() => { const cur = acct.coExperience || {}; updAcct("coExperience", { ...cur, [inv]: opt }); }} style={{
                                 width:56, height:30, margin:"0 auto", borderRadius:6, cursor:"pointer",
                                 border:`1.5px solid ${val === opt ? G.forest : N.border}`,
@@ -6550,13 +6708,13 @@ export default function DSTOnboarding() {
 
             return (
               <div style={{ width:308, flexShrink:0, position:"sticky", top:90, alignSelf:"flex-start" }}>
-                <div style={{ background:N.card, borderRadius:14, border:`1px solid ${N.border}`, overflow:"hidden", boxShadow:"0 4px 24px rgba(0,0,0,0.08)" }}>
-                  <div style={{ background: WIDGET_HDR, padding:"16px 18px" }}>
-                    <div style={{ fontSize:12, fontWeight:700, color:T.white, letterSpacing:"1.5px", textTransform:"uppercase", fontFamily:FONT }}>{stepTitle}</div>
-                    <div style={{ fontSize:11, color:"rgba(255,255,255,0.45)", fontFamily:FONT, marginTop:4 }}>Account Opening · Step {subStep + 1} of 6</div>
+                <div style={{ overflow:"hidden", background:"#FFFFFF", borderRadius:12, boxShadow:"0 4px 20px rgba(0,0,0,0.06)", border:"1px solid #E4E4E7" }}>
+                  <div style={{ background: "#FFFFFF", padding:"16px 18px", borderBottom:`1px solid ${N.divider}` }}>
+                    <div style={{ fontSize:12, fontWeight:700, color:T.primary, letterSpacing:"1.5px", textTransform:"uppercase", fontFamily:FONT }}>{stepTitle}</div>
+                    <div style={{ fontSize:11, color:T.muted, fontFamily:FONT, marginTop:4 }}>Account Opening · Step {subStep + 1} of 6</div>
                   </div>
 
-                  <div style={{ padding:"16px 16px" }}>
+                  <div style={{ padding:"16px 16px", background:"#FFFFFF" }}>
 
                     {subStep === 0 && (<>
                       <SR label="Account Action" value={acct.accountStatus === "open" ? "Open New" : acct.accountStatus === "update" ? "Update Existing" : null}/>
@@ -6639,32 +6797,31 @@ export default function DSTOnboarding() {
         <div
           onClick={() => updDisc(discKey, !checked)}
           style={{
-            display:"flex", alignItems:"flex-start", gap:12,
-            padding:"14px 16px",
-            background:N.bgAlt,
-            border:`1px solid ${N.border}`,
-            borderRadius:14,
+            display:"flex", alignItems:"flex-start", gap:8,
+            padding:"16px",
+            background: checked ? SELECTED_CARD_BG : "#ffffff",
+            border:`1px solid ${checked ? SELECTED_CARD_BORDER : N.border}`,
+            borderRadius:8,
             cursor:"pointer",
             userSelect:"none",
           }}
         >
           <div style={{
-            width:18, height:18, borderRadius:4, flexShrink:0, marginTop:2,
-            border:`1.5px solid ${checked ? "#326b52" : "#c4c9d4"}`,
-            background: checked ? "#326b52" : "#ffffff",
+            width:16, height:16, borderRadius:4, flexShrink:0, marginTop:2,
+            border:`1px solid ${checked ? SELECTED_CARD_BORDER : N.border}`,
+            background: "#ffffff",
             display:"flex", alignItems:"center", justifyContent:"center",
             transition:"all 0.15s",
-            boxShadow:"0 1px 2px rgba(0,0,0,0.07)",
           }}>
             {checked && (
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <path d="M1.5 5L3.8 7.5L8.5 2" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M1.5 5L3.8 7.5L8.5 2" stroke={SELECTED_CARD_BORDER} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             )}
           </div>
           <div style={{ flex:1 }}>
-            <div style={{ fontSize:13, fontWeight:600, color:T.primary, fontFamily:FONT, lineHeight:1.4 }}>{label}</div>
-            {description && <div style={{ fontSize:11, color:T.muted, fontFamily:FONT, lineHeight:1.5, marginTop:3 }}>{description}</div>}
+            <div style={{ fontSize:14, fontWeight:500, color:T.primary, fontFamily:FONT, lineHeight:"20px" }}>{label}</div>
+            {description && <div style={{ fontSize:12, fontWeight:400, color:T.muted, fontFamily:FONT, lineHeight:"16px", marginTop:INNER_GAP }}>{description}</div>}
           </div>
         </div>
       );
@@ -6673,8 +6830,8 @@ export default function DSTOnboarding() {
     return (
       <div style={{ maxWidth:820, margin:"0 auto" }}>
         <div style={{ marginBottom:28 }}>
-          <h1 style={{ fontSize:24, fontWeight:600, color:T.primary, fontFamily:FONT, margin:"0 0 8px", letterSpacing:"-0.01em" }}>Almost There — A Few Important Acknowledgements</h1>
-          <p style={{ fontSize:14, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:640 }}>
+          <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>Almost There — A Few Important Acknowledgements</h1>
+          <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>
             These disclosures are required by federal securities law and help ensure you understand key risks and considerations. Review each section, then confirm all acknowledgements with a single action at the bottom of this page.
           </p>
         </div>
@@ -6778,7 +6935,7 @@ export default function DSTOnboarding() {
             padding:"18px 20px",
             background: isAllAcked ? "#f0fdf4" : "#ffffff",
             borderRadius:10,
-            border:`2px solid ${isAllAcked ? "#326b52" : "#2b3749"}`,
+            border:`1px solid ${isAllAcked ? "#326b52" : "#2b3749"}`,
             cursor:"pointer",
             userSelect:"none",
           }}
@@ -6788,7 +6945,7 @@ export default function DSTOnboarding() {
               {/* Checkbox */}
               <div style={{
                 width:22, height:22, borderRadius:6, flexShrink:0,
-                border:`2px solid ${isAllAcked ? "#326b52" : "#2b3749"}`,
+                border:`1px solid ${isAllAcked ? "#326b52" : "#2b3749"}`,
                 background: isAllAcked ? "#326b52" : "transparent",
                 display:"flex", alignItems:"center", justifyContent:"center",
                 transition:"all 0.15s",
@@ -6932,7 +7089,7 @@ td.v { color: #0A0A0A; font-weight: 500; }
   border: 1px solid #E5E7EB;
 }
 .sig-l {
-  border-bottom: 2px solid #1B5E3B;
+  border-bottom: 1px solid #1B5E3B;
   padding: 8px 0;
   font-family: Georgia, serif;
   font-size: 22px; font-style: italic;
@@ -6941,7 +7098,7 @@ td.v { color: #0A0A0A; font-weight: 500; }
 .sig-d { text-align: right; font-size: 8px; color: #9CA3AF; margin-top: 3px; }
 .ftr {
   margin-top: 24px; padding-top: 14px;
-  border-top: 2px solid #1B5E3B;
+  border-top: 1px solid #1B5E3B;
   text-align: center;
 }
 .ftr-b { font-size: 8px; font-weight: 600; letter-spacing: 3px; color: #0F3D25; text-transform: uppercase; margin-bottom: 3px; }
@@ -7222,7 +7379,7 @@ h3 { font-size: 11px; font-weight: 700; color: #374151; margin: 10px 0 4px; }
 table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 9.5px; }
 th {
   text-align: left; padding: 5px 8px;
-  background: #F9FAFB; border-bottom: 2px solid #E5E7EB;
+  background: #F9FAFB; border-bottom: 1px solid #E5E7EB;
   font-weight: 700; color: #374151;
   font-size: 9px; text-transform: uppercase; letter-spacing: 0.3px;
 }
@@ -7256,11 +7413,11 @@ td.val { color: #0A0A0A; font-weight: 500; }
   background: #F9FAFB; border-radius: 8px; border: 1px solid #E5E7EB;
 }
 .sig-area { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 12px; }
-.sig-line { border-bottom: 2px solid #1B5E3B; padding: 24px 0 4px; min-height: 44px; }
+.sig-line { border-bottom: 1px solid #1B5E3B; padding: 24px 0 4px; min-height: 44px; }
 .sig-label { font-size: 8px; color: #9CA3AF; margin-top: 2px; }
 .footer {
   margin-top: 24px; padding-top: 12px;
-  border-top: 2px solid #1B5E3B;
+  border-top: 1px solid #1B5E3B;
   text-align: center; font-size: 8px; color: #9CA3AF; line-height: 1.6;
 }
 .footer strong { color: #0F3D25; }
@@ -7603,36 +7760,36 @@ ${compFlags.length > 0 ? `
     /* ── Row helper for detail tables ── */
     const DR = ({ label, value }) => (
       <tr>
-        <td style={{ padding:"7px 14px 7px 0", verticalAlign:"top", width:"40%", fontSize:12, color:T.muted, fontFamily:FONT, borderBottom:`1px solid ${N.divider}`, whiteSpace:"nowrap" }}>{label}</td>
-        <td style={{ padding:"7px 0 7px 8px", verticalAlign:"top", fontSize:12, color:T.primary, fontFamily:FONT, fontWeight:500, borderBottom:`1px solid ${N.divider}` }}>{value || "—"}</td>
+        <td style={{ ...TABLE.label, width:"40%", whiteSpace:"nowrap", paddingLeft: 0 }}>{label}</td>
+        <td style={{ ...TABLE.value, paddingRight: 0 }}>{value || "—"}</td>
       </tr>
     );
 
     /* ── Section header with optional edit button ── */
     const ReviewSection = ({ title, onEdit, children }) => (
-      <div style={{ marginBottom:24, borderRadius:12, border:`1px solid ${N.border}`, overflow:"hidden" }}>
+      <div style={{ marginBottom:GROUP_GAP, borderRadius:12, overflow:"hidden", background:"#FFFFFF", boxShadow:"0 1px 3px rgba(0,0,0,0.05)", border:"1px solid rgba(212,212,212,0.45)" }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center",
-          background: N.section, padding:"16px 20px", borderBottom:`1px solid ${N.border}` }}>
-          <div style={{ fontSize:15, fontWeight:600, color:T.primary, fontFamily:FONT, letterSpacing:"-0.01em" }}>{title}</div>
+          background: "#FFFFFF", padding:`16px ${SECTION_PAD_X}px` }}>
+          <div style={{ fontSize:16, fontWeight:600, color:T.primary, fontFamily:FONT, letterSpacing:"-0.01em" }}>{title}</div>
           {onEdit && (
-            <button type="button" onClick={onEdit} style={{ background:"none", border:`1px solid ${N.border}`, borderRadius:6, padding:"4px 10px", fontSize:12, color:G.forest, fontFamily:FONT, cursor:"pointer", display:"flex", alignItems:"center", gap:4, fontWeight:600 }}>
+            <button type="button" onClick={onEdit} style={{ background:"#FFFFFF", border:"none", borderRadius:8, padding:"6px 12px", fontSize:12, color:G.forest, fontFamily:FONT, cursor:"pointer", display:"flex", alignItems:"center", gap:4, fontWeight:600, boxShadow:"inset 0 0 0 1px rgba(212,212,212,0.55)" }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               Edit
             </button>
           )}
         </div>
-        <div style={{ padding:"16px 20px" }}>{children}</div>
+        <div style={{ padding:`16px ${SECTION_PAD_X}px ${SECTION_PAD_BOTTOM}px`, display:"flex", flexDirection:"column", gap:INNER_GAP, background:"#FFFFFF" }}>{children}</div>
       </div>
     );
 
     /* ── Disclosure check row ── */
     const DiscRow = ({ id, label, docRef }) => (
-      <div style={{ display:"flex", alignItems:"flex-start", gap:10, padding:"8px 0", borderBottom:`1px solid ${N.divider}` }}>
+      <div style={{ display:"flex", alignItems:"center", gap:10, padding:"14px 12px", background:N.card, borderRadius:8, marginBottom:8, boxShadow:"inset 0 0 0 1px rgba(212,212,212,0.45)" }}>
         <input type="checkbox" checked={disc[id] || false}
           onChange={e => { updDisc(id, e.target.checked); if (!e.target.checked) setAgreeAll(false); }}
-          style={{ marginTop:2, width:14, height:14, accentColor:G.forest, cursor:"pointer", flexShrink:0 }}/>
+          style={{ width:16, height:16, accentColor:SELECTED_CARD_BORDER, cursor:"pointer", flexShrink:0 }}/>
         <div style={{ flex:1 }}>
-          <span style={{ fontSize:12, color:T.body, fontFamily:FONT, lineHeight:1.5 }}>{label}</span>
+          <span style={{ fontSize:14, fontWeight:500, color:T.body, fontFamily:FONT, lineHeight:"20px" }}>{label}</span>
           {docRef && <span style={{ marginLeft:6, fontSize:10, color:T.light, fontFamily:FONT }}>{docRef}</span>}
         </div>
       </div>
@@ -7705,8 +7862,13 @@ ${compFlags.length > 0 ? `
 
           {/* Alert Banners */}
           {cd.failCount > 0 && (
-            <div style={{ padding:"12px 16px", background:C.errorBg, borderRadius:10, border:`1px solid ${C.errorBorder}`, marginBottom:10 }}>
-              <div style={{ fontSize:12, fontWeight:700, color:C.error, fontFamily:FONT }}>🚫 BLOCKING ISSUES DETECTED: {cd.failCount} failure(s) must be resolved before trade execution.</div>
+            <div style={{ borderLeft:`3px solid ${ALERT_BANNER_RED}`, padding:12, background:ALERT_BANNER_BG, borderRadius:"0 8px 8px 0", marginBottom:10 }}>
+              <div style={{ fontSize:14, fontWeight:500, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>
+                BLOCKING ISSUES DETECTED
+              </div>
+              <div style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>
+                {cd.failCount} failure(s) must be resolved before trade execution.
+              </div>
             </div>
           )}
           {cd.flagCount > 0 && (
@@ -7724,8 +7886,8 @@ ${compFlags.length > 0 ? `
           <div style={{ marginTop:18, marginBottom:18 }}>
             <div style={{ fontSize:13, fontWeight:700, color:G.deep, fontFamily:FONT, padding:"8px 12px", background:C.successBg, borderLeft:`3px solid ${G.forest}`, borderRadius:"0 6px 6px 0", marginBottom:10 }}>Client Account & Trade Overview</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
-              <div style={{ background:N.card, borderRadius:10, border:`1px solid ${N.border}`, overflow:"hidden" }}>
-                <table style={{ width:"100%", borderCollapse:"collapse", fontSize:11, fontFamily:FONT }}>
+              <div style={TABLE.panel}>
+                <table style={TABLE.base}>
                   <tbody>
                     {[
                       ["Account Holder", cd.fullName],
@@ -7735,15 +7897,15 @@ ${compFlags.length > 0 ? `
                       ["Accredited", `${acct.accredited || "—"} ${acct.accreditedBasis ? `(${acct.accreditedBasis.replace(/_/g," ")})` : ""}`],
                     ].map(([l,v],i) => (
                       <tr key={i}>
-                        <td style={{ padding:"6px 10px", color:T.muted, borderBottom:`1px solid ${N.divider}`, width:"42%" }}>{l}</td>
-                        <td style={{ padding:"6px 10px", fontWeight:500, borderBottom:`1px solid ${N.divider}` }}>{v}</td>
+                        <td style={{ ...TABLE.label, width:"42%" }}>{l}</td>
+                        <td style={TABLE.value}>{v}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <div style={{ background:N.card, borderRadius:10, border:`1px solid ${N.border}`, overflow:"hidden" }}>
-                <table style={{ width:"100%", borderCollapse:"collapse", fontSize:11, fontFamily:FONT }}>
+              <div style={TABLE.panel}>
+                <table style={TABLE.base}>
                   <tbody>
                     {[
                       ["Risk Tolerance", (acct.riskTolerance||"—").replace(/_/g," ")],
@@ -7753,8 +7915,8 @@ ${compFlags.length > 0 ? `
                       ["Trusted Contact", acct.hasTrustedContact === "Yes" ? (acct.tcName || "Provided") : "Declined"],
                     ].map(([l,v],i) => (
                       <tr key={i}>
-                        <td style={{ padding:"6px 10px", color:T.muted, borderBottom:`1px solid ${N.divider}`, width:"42%" }}>{l}</td>
-                        <td style={{ padding:"6px 10px", fontWeight:500, borderBottom:`1px solid ${N.divider}` }}>{v}</td>
+                        <td style={{ ...TABLE.label, width:"42%" }}>{l}</td>
+                        <td style={TABLE.value}>{v}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -7766,31 +7928,31 @@ ${compFlags.length > 0 ? `
           {/* Trade Details */}
           <div style={{ marginBottom:18 }}>
             <div style={{ fontSize:13, fontWeight:700, color:G.deep, fontFamily:FONT, padding:"8px 12px", background:C.successBg, borderLeft:`3px solid ${G.forest}`, borderRadius:"0 6px 6px 0", marginBottom:10 }}>Investment / Trade Details</div>
-            <div style={{ background:N.card, borderRadius:10, border:`1px solid ${N.border}`, overflow:"hidden" }}>
-              <table style={{ width:"100%", borderCollapse:"collapse", fontSize:11, fontFamily:FONT }}>
+            <div style={TABLE.panel}>
+              <table style={TABLE.base}>
                 <thead>
-                  <tr style={{ background:N.section }}>
+                  <tr style={{ background:LAYER_BG_STRONG }}>
                     {["DST Property","Type","Sponsor","Investment","% of Total","Cash-on-Cash"].map((h,i) => (
-                      <th key={i} style={{ padding:"8px 10px", textAlign:"left", fontWeight:700, fontSize:10, color:T.muted, textTransform:"uppercase", letterSpacing:"0.3px", borderBottom:`2px solid ${N.border}` }}>{h}</th>
+                      <th key={i} style={{ ...TABLE.head }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {cartItems.map(item => (
                     <tr key={item.id}>
-                      <td style={{ padding:"7px 10px", fontWeight:600, borderBottom:`1px solid ${N.divider}` }}>{item.shortName}</td>
-                      <td style={{ padding:"7px 10px", borderBottom:`1px solid ${N.divider}` }}>{item.propertyTypeShort}</td>
-                      <td style={{ padding:"7px 10px", borderBottom:`1px solid ${N.divider}` }}>{item.sponsor || "—"}</td>
-                      <td style={{ padding:"7px 10px", fontWeight:600, color:G.forest, borderBottom:`1px solid ${N.divider}` }}>{fmtFull(cart[item.id])}</td>
-                      <td style={{ padding:"7px 10px", borderBottom:`1px solid ${N.divider}` }}>{(cart[item.id]/cartTotal*100).toFixed(1)}%</td>
-                      <td style={{ padding:"7px 10px", borderBottom:`1px solid ${N.divider}` }}>{item.cashOnCash}%</td>
+                      <td style={TABLE.valueStrong}>{item.shortName}</td>
+                      <td style={TABLE.value}>{item.propertyTypeShort}</td>
+                      <td style={TABLE.value}>{item.sponsor || "—"}</td>
+                      <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, color:G.forest }}>{fmtFull(cart[item.id])}</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric }}>{(cart[item.id]/cartTotal*100).toFixed(1)}%</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric }}>{item.cashOnCash}%</td>
                     </tr>
                   ))}
-                  <tr style={{ background:C.successBg, fontWeight:700 }}>
-                    <td style={{ padding:"8px 10px" }}>TOTAL</td><td/><td/>
-                    <td style={{ padding:"8px 10px", color:G.forest, fontSize:13 }}>{fmtFull(cartTotal)}</td>
-                    <td style={{ padding:"8px 10px" }}>100%</td>
-                    <td style={{ padding:"8px 10px" }}>{cd.avgYield.toFixed(2)}% wtd</td>
+                  <tr style={{ background:C.successBg }}>
+                    <td style={{ ...TABLE.valueStrong, borderBottom: "none" }}>TOTAL</td><td style={{ ...TABLE.value, borderBottom: "none" }}/><td style={{ ...TABLE.value, borderBottom: "none" }}/>
+                    <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, color:G.forest, borderBottom: "none" }}>{fmtFull(cartTotal)}</td>
+                    <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, borderBottom: "none" }}>100%</td>
+                    <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, borderBottom: "none" }}>{cd.avgYield.toFixed(2)}% wtd</td>
                   </tr>
                 </tbody>
               </table>
@@ -7801,8 +7963,8 @@ ${compFlags.length > 0 ? `
           <div style={{ marginBottom:18 }}>
             <div style={{ fontSize:13, fontWeight:700, color:G.deep, fontFamily:FONT, padding:"8px 12px", background:C.successBg, borderLeft:`3px solid ${G.forest}`, borderRadius:"0 6px 6px 0", marginBottom:10 }}>Financial Position Summary</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
-              <div style={{ background:N.card, borderRadius:10, border:`1px solid ${N.border}`, overflow:"hidden" }}>
-                <table style={{ width:"100%", borderCollapse:"collapse", fontSize:11, fontFamily:FONT }}>
+              <div style={TABLE.panel}>
+                <table style={TABLE.base}>
                   <tbody>
                     {[
                       ["Total Assets", fmtFull(fsCalcs.totalAssets)],
@@ -7812,15 +7974,15 @@ ${compFlags.length > 0 ? `
                       ["Total Liquid Assets", fmtFull(fsCalcs.totalLiquid)],
                     ].map(([l,v],i) => (
                       <tr key={i}>
-                        <td style={{ padding:"6px 10px", color:T.muted, borderBottom:`1px solid ${N.divider}`, width:"48%" }}>{l}</td>
-                        <td style={{ padding:"6px 10px", fontWeight: i >= 2 ? 700 : 500, color: i === 3 ? G.forest : T.primary, borderBottom:`1px solid ${N.divider}` }}>{v}</td>
+                        <td style={{ ...TABLE.label, width:"48%" }}>{l}</td>
+                        <td style={{ ...(i >= 2 ? TABLE.valueStrong : TABLE.value), color: i === 3 ? G.forest : T.primary }}>{v}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <div style={{ background:N.card, borderRadius:10, border:`1px solid ${N.border}`, overflow:"hidden" }}>
-                <table style={{ width:"100%", borderCollapse:"collapse", fontSize:11, fontFamily:FONT }}>
+              <div style={TABLE.panel}>
+                <table style={TABLE.base}>
                   <tbody>
                     {[
                       ["Gross Annual Income", fmtFull(fsCalcs.grossInc)],
@@ -7830,8 +7992,8 @@ ${compFlags.length > 0 ? `
                       ["Investment % of Liquid", `${fsCalcs.investAsLiquidPct.toFixed(1)}%`],
                     ].map(([l,v],i) => (
                       <tr key={i}>
-                        <td style={{ padding:"6px 10px", color:T.muted, borderBottom:`1px solid ${N.divider}`, width:"48%" }}>{l}</td>
-                        <td style={{ padding:"6px 10px", fontWeight:500, borderBottom:`1px solid ${N.divider}` }}>{v}</td>
+                        <td style={{ ...TABLE.label, width:"48%" }}>{l}</td>
+                        <td style={TABLE.value}>{v}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -7843,11 +8005,11 @@ ${compFlags.length > 0 ? `
           {/* Concentration Analysis Matrix */}
           <div style={{ marginBottom:18 }}>
             <div style={{ fontSize:13, fontWeight:700, color:G.deep, fontFamily:FONT, padding:"8px 12px", background:C.successBg, borderLeft:`3px solid ${G.forest}`, borderRadius:"0 6px 6px 0", marginBottom:10 }}>Concentration Analysis Matrix</div>
-            <div style={{ background:N.card, borderRadius:10, border:`1px solid ${N.border}`, overflow:"hidden" }}>
-              <table style={{ width:"100%", borderCollapse:"collapse", fontSize:10, fontFamily:FONT }}>
+            <div style={TABLE.panel}>
+              <table style={TABLE.base}>
                 <thead>
-                  <tr style={{ background:N.section }}>{["Category","Pre ($)","Pre %","Post ($)","Post %","Δ","Limit","Status"].map((h,i) => (
-                    <th key={i} style={{ padding:"7px 8px", textAlign:"left", fontWeight:700, fontSize:9, color:T.muted, textTransform:"uppercase", letterSpacing:"0.2px", borderBottom:`2px solid ${N.border}` }}>{h}</th>
+                  <tr style={{ background:LAYER_BG_STRONG }}>{["Category","Pre ($)","Pre %","Post ($)","Post %","Δ","Limit","Status"].map((h,i) => (
+                    <th key={i} style={{ ...TABLE.head }}>{h}</th>
                   ))}</tr>
                 </thead>
                 <tbody>
@@ -7859,14 +8021,14 @@ ${compFlags.length > 0 ? `
                     { label:"Single Offering", pre: null, prePct: null, post: cartTotal, postPct: fsCalcs.investAsNwPct, delta: null, limit:"≤25%", check: fsCalcs.investAsNwPct, thresh:25 },
                   ].map((r,i) => (
                     <tr key={i} style={{ background: r.bold ? N.section : "transparent", fontWeight: r.bold ? 700 : 400 }}>
-                      <td style={{ padding:"6px 8px", borderBottom:`1px solid ${N.divider}` }}>{r.label}</td>
-                      <td style={{ padding:"6px 8px", borderBottom:`1px solid ${N.divider}` }}>{r.pre !== null ? fmtA(r.pre) : "—"}</td>
-                      <td style={{ padding:"6px 8px", borderBottom:`1px solid ${N.divider}` }}>{r.prePct !== null ? `${r.prePct.toFixed(1)}%` : "—"}</td>
-                      <td style={{ padding:"6px 8px", borderBottom:`1px solid ${N.divider}` }}>{fmtA(r.post)}</td>
-                      <td style={{ padding:"6px 8px", borderBottom:`1px solid ${N.divider}` }}>{r.postPct.toFixed(1)}%</td>
-                      <td style={{ padding:"6px 8px", borderBottom:`1px solid ${N.divider}`, color: r.delta !== null && r.delta > 0 ? "#DC2626" : "#059669" }}>{r.delta !== null ? `+${r.delta.toFixed(1)}pp` : "—"}</td>
-                      <td style={{ padding:"6px 8px", borderBottom:`1px solid ${N.divider}` }}>{r.limit}</td>
-                      <td style={{ padding:"6px 8px", borderBottom:`1px solid ${N.divider}` }}><StatusBadge status={r.check <= r.thresh ? "PASS" : r.check <= r.thresh*1.5 ? "FLAG" : "WARNING"}/></td>
+                      <td style={TABLE.value}>{r.label}</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric }}>{r.pre !== null ? fmtA(r.pre) : "—"}</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric }}>{r.prePct !== null ? `${r.prePct.toFixed(1)}%` : "—"}</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric }}>{fmtA(r.post)}</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric }}>{r.postPct.toFixed(1)}%</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric, color: r.delta !== null && r.delta > 0 ? "#DC2626" : "#059669" }}>{r.delta !== null ? `+${r.delta.toFixed(1)}pp` : "—"}</td>
+                      <td style={{ ...TABLE.value, ...TABLE.numeric }}>{r.limit}</td>
+                      <td style={{ ...TABLE.value, textAlign:"center" }}><StatusBadge status={r.check <= r.thresh ? "PASS" : r.check <= r.thresh*1.5 ? "FLAG" : "WARNING"}/></td>
                     </tr>
                   ))}
                 </tbody>
@@ -7937,7 +8099,7 @@ ${compFlags.length > 0 ? `
           </div>
 
           {/* ── Supervisory Approval Block ── */}
-          <div style={{ padding:"20px 24px", background:N.section, borderRadius:12, border:`1px solid ${N.border}`, marginBottom:24 }}>
+          <div style={{ padding:"20px 24px", background:N.section, marginBottom:24 }}>
             <div style={{ fontSize:14, fontWeight:700, color:G.deep, fontFamily:FONT, marginBottom:6 }}>Supervisory Review & Approval</div>
             <p style={{ fontSize:11, color:T.muted, fontFamily:FONT, lineHeight:1.7, marginBottom:16 }}>
               I have reviewed this account opening application, the associated compliance checks, concentration analysis, and all flagged items. I have determined that this investment is suitable for the investor based on the information provided and the investor's stated financial situation, investment objectives, risk tolerance, and time horizon. All flagged items have been reviewed and appropriate documentation has been obtained.
@@ -7948,16 +8110,16 @@ ${compFlags.length > 0 ? `
                 { title:"Supervisory Principal", sub:"Print Name / CRD # / Date" },
               ].map((s,i) => (
                 <div key={i}>
-                  <div style={{ borderBottom:`2px solid ${G.forest}`, padding:"20px 0 4px", minHeight:44 }}/>
+                  <div style={{ borderBottom:`1px solid ${G.forest}`, padding:"20px 0 4px", minHeight:44 }}/>
                   <div style={{ fontSize:9, color:T.light, fontFamily:FONT, marginTop:4 }}>{s.title}</div>
-                  <div style={{ borderBottom:`2px solid ${G.forest}`, padding:"16px 0 4px", minHeight:36, marginTop:10 }}/>
+                  <div style={{ borderBottom:`1px solid ${G.forest}`, padding:"16px 0 4px", minHeight:36, marginTop:10 }}/>
                   <div style={{ fontSize:9, color:T.light, fontFamily:FONT, marginTop:4 }}>{s.sub}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div style={{ textAlign:"center", padding:"16px 0", borderTop:`2px solid ${G.forest}` }}>
+          <div style={{ textAlign:"center", padding:"16px 0", borderTop:`1px solid ${G.forest}` }}>
             <div style={{ fontSize:9, fontWeight:700, color:G.deep, fontFamily:FONT, letterSpacing:"2px", textTransform:"uppercase" }}>STAX CAPITAL, INC. — CONFIDENTIAL COMPLIANCE DOCUMENT</div>
             <div style={{ fontSize:9, color:T.muted, fontFamily:FONT, marginTop:4 }}>Retain per FINRA Rule 4511 / SEC Rule 17a-4. Minimum retention: 6 years from account close.</div>
           </div>
@@ -7979,7 +8141,7 @@ ${compFlags.length > 0 ? `
           A registered representative will contact you within 1–2 business days to finalize
           your subscription documents via DocuSign.
         </p>
-        <div style={{ padding:"20px 24px", background:N.section, borderRadius:12, border:`1px solid ${N.border}`, marginBottom:16 }}>
+        <div style={{ padding:"20px 24px", background:N.section, marginBottom:16 }}>
           <div style={{ fontSize:11, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:4 }}>Confirmation Reference</div>
           <div style={{ fontSize:24, fontWeight:700, color:G.forest, fontFamily:FONT }}>{confRef.current}</div>
           <div style={{ fontSize:12, color:T.muted, fontFamily:FONT, marginTop:4 }}>{nowStr}</div>
@@ -8018,7 +8180,7 @@ ${compFlags.length > 0 ? `
         </button>
         <div style={{ fontSize:10, color:T.light, fontFamily:FONT, lineHeight:1.5, marginBottom:12 }}>Supervisory review with all compliance checks, concentration matrix, and approval blocks.</div>
         {/* ── Next Steps ── */}
-        <div style={{ marginTop:8, padding:"20px 24px", background:N.section, borderRadius:12, border:`1px solid ${N.border}`, textAlign:"left", marginBottom:12 }}>
+        <div style={{ marginTop:8, padding:"20px 24px", background:N.section, textAlign:"left", marginBottom:12 }}>
           <div style={{ fontSize:13, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:12 }}>What Happens Next?</div>
           <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
             {[
@@ -8038,7 +8200,7 @@ ${compFlags.length > 0 ? `
           </div>
         </div>
 
-        <div style={{ marginTop:8, fontSize:12, color:T.muted, fontFamily:FONT, textAlign:"center", paddingTop:8, borderTop:`1px solid ${N.border}` }}>
+        <div style={{ marginTop:8, fontSize:12, color:T.muted, fontFamily:FONT, textAlign:"center", paddingTop:8, borderTop:`1px solid ${N.divider}` }}>
           Questions? Call <strong>844-427-1031</strong> · Email <strong>invest@staxai.com</strong> · Visit <strong>staxai.com</strong>
         </div>
       </div>
@@ -8082,7 +8244,7 @@ ${compFlags.length > 0 ? `
 
     /* ── Inline edit save/cancel row ── */
     const EditActions = ({ sectionKey }) => (
-      <div style={{ display:"flex", gap:8, marginTop:16, paddingTop:14, borderTop:`1px solid ${N.border}` }}>
+      <div style={{ display:"flex", gap:8, marginTop:16, paddingTop:14, borderTop:`1px solid ${N.divider}` }}>
         <button type="button" onClick={handleEditSave}
           style={{ display:"flex", alignItems:"center", gap:6, padding:"7px 16px", borderRadius:8, border:`1px solid ${G.forest}`, background:G.forest, color:T.white, fontSize:12, fontWeight:600, fontFamily:FONT, cursor:"pointer" }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17L4 12"/></svg>
@@ -8096,13 +8258,13 @@ ${compFlags.length > 0 ? `
     );
 
     return (
-      <div style={{ maxWidth:860, margin:"0 auto" }}>
+      <div style={{ maxWidth:960, margin:"0 auto" }}>
 
         {/* ── Page Header ── */}
         <div style={{ marginBottom:28, display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:20 }}>
           <div style={{ flex:1 }}>
-            <h1 style={{ fontSize:28, fontWeight:700, color:T.primary, fontFamily:FONT, margin:"0 0 8px", letterSpacing:"-0.02em" }}>You're Almost Done — Let's Review Everything</h1>
-            <p style={{ fontSize:15, color:T.body, fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:580 }}>
+            <h1 style={{ fontSize:24, fontWeight:600, color:"#1D2837", fontFamily:FONT, margin:"0 0 8px" }}>You're Almost Done — Let's Review Everything</h1>
+            <p style={{ fontSize:14, fontWeight:400, color:"#57534E", fontFamily:FONT, margin:0, lineHeight:1.6, maxWidth:660 }}>
               This is the final step. Please take your time and review your information below — if anything looks wrong, you can go back and correct it. When everything looks good, sign at the bottom and submit your application.
             </p>
           </div>
@@ -8151,9 +8313,9 @@ ${compFlags.length > 0 ? `
            COMPLIANCE FLAG ACCEPTANCE AGREEMENT
            ══════════════════════════════════════════════════ */}
         {requiresFlagAcceptance && blockFlags.length === 0 && (
-          <div style={{ marginBottom:24, background:N.card, borderRadius:14,
-              border: allFlagsAcked ? `2px solid ${G.forest}40` : `2px solid ${A.amber}60`,
-              boxShadow: allFlagsAcked ? `0 0 0 3px ${G.forest}10` : `0 0 0 3px ${A.amber}10`,
+          <div style={{ marginBottom:24, background:N.card, borderRadius:BOX_RADIUS,
+              border: allFlagsAcked ? `1px solid ${G.forest}40` : `1px solid ${A.amber}60`,
+              boxShadow: allFlagsAcked ? `0 0 0 1px ${G.forest}10` : `0 0 0 1px ${A.amber}10`,
               overflow:"hidden" }}>
 
             {/* Agreement Header */}
@@ -8219,7 +8381,7 @@ ${compFlags.length > 0 ? `
                 const typeColor = flag.type === "warn" ? C.error : C.warning;
                 return (
                   <div key={flag.id} style={{ marginBottom:16, borderRadius:12, overflow:"hidden",
-                    border: isAcked ? `2px solid ${G.forest}40` : `2px solid ${typeBorder}`,
+                    border: isAcked ? `1px solid ${G.forest}40` : `1px solid ${typeBorder}`,
                     background: isAcked ? `${G.mint}40` : N.card, transition:"all 0.3s" }}>
                     <div style={{ padding:"12px 18px", display:"flex", alignItems:"center", gap:10,
                       background: isAcked ? `${G.forest}10` : typeBg, borderBottom: isAcked ? `1px solid ${G.forest}20` : `1px solid ${typeBorder}` }}>
@@ -8248,7 +8410,7 @@ ${compFlags.length > 0 ? `
 
               {/* ── HOLD HARMLESS AGREEMENT ── */}
               <div style={{ marginTop:8, borderRadius:12, overflow:"hidden",
-                border: flagHoldHarmless ? `2px solid ${G.forest}40` : `2px solid ${N.border}`,
+                border: flagHoldHarmless ? `1px solid ${G.forest}40` : `1px solid ${N.border}`,
                 background: flagHoldHarmless ? `${G.mint}30` : N.card }}>
                 <div style={{ padding:"14px 18px",
                   background: flagHoldHarmless ? `linear-gradient(135deg, ${G.darkest}, ${G.deep})` : "linear-gradient(135deg, #1E293B, #334155)" }}>
@@ -8309,9 +8471,9 @@ ${compFlags.length > 0 ? `
                       which disclose the investor's overall concentration in real estate securities, conventional real estate holdings,
                       and 1031 information gathered and contained in this document, as the same being unique to the purchaser.
                     </p>
-                    <div style={{ marginTop:14, padding:"10px 14px", background:C.errorBg, borderRadius:8, border:`1px solid ${C.errorBorder}` }}>
-                      <div style={{ fontWeight:700, fontSize:11, color:C.error, marginBottom:4 }}>HOLD HARMLESS PROVISION</div>
-                      <div style={{ fontSize:11, color:C.error, lineHeight:1.6 }}>
+                    <div style={{ marginTop:14, borderLeft:`3px solid ${ALERT_BANNER_RED}`, padding:12, background:ALERT_BANNER_BG, borderRadius:"0 8px 8px 0" }}>
+                      <div style={{ fontSize:14, fontWeight:500, color:ALERT_BANNER_RED, fontFamily:FONT, marginBottom:4, lineHeight:"20px" }}>HOLD HARMLESS PROVISION</div>
+                      <div style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>
                         The Purchaser agrees to hold Stax Capital, Inc., a California Corporation, and all of its registered
                         representatives, officers, directors, affiliates, and associated persons (collectively "Released Parties")
                         harmless from and against any and all claims, damages, losses, liabilities, costs, and expenses arising
@@ -8326,18 +8488,18 @@ ${compFlags.length > 0 ? `
                   {/* Concentration Summary Table */}
                   {/* ── Concentration Summary Table (inline in agreement) ── */}
                   {fsCalcs.totalAssets > 0 && fsCalcs.netWorthExRes > 0 && (
-                    <div style={{ marginBottom:16, padding:"14px 16px", background:N.section, borderRadius:10, border:`1px solid ${N.border}` }}>
-                      <div style={{ fontSize:11, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:10 }}>
+                    <div style={{ marginBottom:16, padding:"14px 16px", background:LAYER_BG, borderRadius:10 }}>
+                      <div style={{ fontSize:14, fontWeight:500, color:T.primary, fontFamily:FONT, marginBottom:10 }}>
                         Investment Concentration Summary
                       </div>
-                      <table style={{ width:"100%", borderCollapse:"collapse", fontSize:11, fontFamily:FONT }}>
+                      <table style={TABLE.base}>
                         <thead>
-                          <tr style={{ borderBottom:`2px solid ${N.border}` }}>
-                            <th style={{ textAlign:"left", padding:"6px 8px", color:T.muted, fontWeight:600, fontSize:10 }}>Allocation Category</th>
-                            <th style={{ textAlign:"right", padding:"6px 8px", color:T.muted, fontWeight:600, fontSize:10 }}>Pre-Investment</th>
-                            <th style={{ textAlign:"right", padding:"6px 8px", color:T.muted, fontWeight:600, fontSize:10 }}>Post-Investment</th>
-                            <th style={{ textAlign:"right", padding:"6px 8px", color:T.muted, fontWeight:600, fontSize:10 }}>Change</th>
-                            <th style={{ textAlign:"center", padding:"6px 8px", color:T.muted, fontWeight:600, fontSize:10 }}>Guideline</th>
+                          <tr>
+                            <th style={TABLE.head}>Allocation Category</th>
+                            <th style={{ ...TABLE.head, ...TABLE.numeric }}>Pre-Investment</th>
+                            <th style={{ ...TABLE.head, ...TABLE.numeric }}>Post-Investment</th>
+                            <th style={{ ...TABLE.head, ...TABLE.numeric }}>Change</th>
+                            <th style={{ ...TABLE.head, textAlign:"center" }}>Guideline</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -8349,23 +8511,23 @@ ${compFlags.length > 0 ? `
                           ].map(({ cat, pre, post, preAmt, postAmt, thresh }) => {
                             const exceeds = thresh && post > thresh;
                             return (
-                              <tr key={cat} style={{ borderBottom:`1px solid ${N.divider}`, background: exceeds ? "#FEF2F210" : "transparent" }}>
-                                <td style={{ padding:"8px 8px", color:T.body, fontWeight:500 }}>
+                              <tr key={cat} style={{ background: exceeds ? "#FEF2F210" : "transparent" }}>
+                                <td style={{ ...TABLE.value }}>
                                   {cat}
                                   {exceeds && <span style={{ color:A.red, marginLeft:4, fontSize:10 }}>⚠</span>}
                                 </td>
-                                <td style={{ padding:"8px 8px", textAlign:"right", color:T.body }}>
+                                <td style={{ ...TABLE.value, ...TABLE.numeric }}>
                                   <div>{pre.toFixed(1)}%</div>
                                   <div style={{ fontSize:9, color:T.muted }}>{preAmt > 0 ? fmtFull(preAmt) : "—"}</div>
                                 </td>
-                                <td style={{ padding:"8px 8px", textAlign:"right", fontWeight:700, color: exceeds ? A.red : G.forest }}>
+                                <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, color: exceeds ? A.red : G.forest }}>
                                   <div>{post.toFixed(1)}%</div>
                                   <div style={{ fontSize:9, color:T.muted, fontWeight:400 }}>{postAmt > 0 ? fmtFull(postAmt) : "—"}</div>
                                 </td>
-                                <td style={{ padding:"8px 8px", textAlign:"right", color: post > pre ? A.amber : T.muted, fontWeight:600 }}>
+                                <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, color: post > pre ? A.amber : T.muted }}>
                                   {post > pre ? `+${(post - pre).toFixed(1)}pp` : "—"}
                                 </td>
-                                <td style={{ padding:"8px 8px", textAlign:"center", color: exceeds ? A.red : T.muted }}>
+                                <td style={{ ...TABLE.value, textAlign:"center", color: exceeds ? A.red : T.muted }}>
                                   {thresh ? `≤${thresh}%` : "—"}
                                 </td>
                               </tr>
@@ -8402,7 +8564,7 @@ ${compFlags.length > 0 ? `
                       <div>
                         <label style={{ display:"block", fontSize:10, fontWeight:600, color:T.body, fontFamily:FONT, marginBottom:4 }}>Full Legal Name *</label>
                         <input type="text" value={flagSig} onChange={e => setFlagSig(e.target.value)} placeholder="Type full legal name"
-                          style={{ width:"100%", padding:"10px 14px", borderRadius:8, border: flagSig.trim().length > 2 ? `2px solid ${G.forest}` : `1px solid ${N.border}`, fontSize:14, fontFamily:"'Georgia', serif", fontStyle:"italic", color:G.deep, background: flagSig.trim().length > 2 ? `${G.mint}40` : N.card, outline:"none", boxSizing:"border-box" }}/>
+                          style={{ width:"100%", padding:"10px 14px", borderRadius:8, border: flagSig.trim().length > 2 ? `1px solid ${G.forest}` : `1px solid ${N.border}`, fontSize:14, fontFamily:FONT, fontWeight:500, color:G.deep, background: flagSig.trim().length > 2 ? `${G.mint}40` : N.card, outline:"none", boxSizing:"border-box" }}/>
                         {flagSig.trim().length > 2 && <div style={{ fontSize:9, color:G.forest, fontFamily:FONT, marginTop:4 }}>✓ Signed as "{flagSig}" — {nowStr}</div>}
                       </div>
                       <div style={{ display:"flex", flexDirection:"column", justifyContent:"center" }}>
@@ -8434,11 +8596,11 @@ ${compFlags.length > 0 ? `
         )}
 
         {/* ── Main Review Card ── */}
-        <div style={{ background:N.card, borderRadius:14, border:`1px solid ${N.border}`, boxShadow:"0 2px 16px rgba(0,0,0,0.05)", overflow:"hidden", marginBottom:20 }}>
-          <div style={{ padding:"28px 32px" }}>
+        <div style={{ overflow:"hidden", marginBottom:20, background:"#FFFFFF", borderRadius:12, border:"1px solid rgba(212,212,212,0.45)", boxShadow:"0 1px 3px rgba(0,0,0,0.05)" }}>
+          <div style={{ padding:"24px 28px" }}>
             {/* Account Information */}
             <ReviewSection title="Account Information">
-              <table style={{ width:"100%", borderCollapse:"collapse" }}>
+              <table style={TABLE.base}>
                 <tbody>
                   <DR label="Customer Type" value={acct.registrationCategory === "entity" ? "Entity" : "Individual"}/>
                   <DR label="Account Title" value={acct.registrationCategory === "entity" ? (acct.entityName || "—") : fullName}/>
@@ -8473,7 +8635,7 @@ ${compFlags.length > 0 ? `
                       <CurrencyInput label="Sale Price" value={acct.rp_salePrice} onChange={v => updAcct("rp_salePrice",v)}/>
                       <CurrencyInput label="Accumulated Depreciation" value={acct.rp_accumulatedDepreciation} onChange={v => updAcct("rp_accumulatedDepreciation",v)}/>
                     </div>
-                    <div style={{ borderTop:`1px solid ${N.border}`, paddingTop:14 }}>
+                    <div style={{ borderTop:`1px solid ${N.divider}`, paddingTop:14 }}>
                       <div style={{ fontSize:13, fontWeight:600, color:T.primary, fontFamily:FONT, marginBottom:10 }}>Qualified Intermediary</div>
                       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
                         <TInput label="Contact Name" value={acct.qiContactName||""} onChange={v => updAcct("qiContactName",v)}/>
@@ -8488,7 +8650,7 @@ ${compFlags.length > 0 ? `
                 ) : (
                   <>
                     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0 32px" }}>
-                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                      <table style={TABLE.base}>
                         <tbody>
                           <DR label="Relinquished Property" value={[acct.rp_address, acct.rp_city, acct.rp_state, acct.rp_zip].filter(Boolean).join(", ") || "—"}/>
                           <DR label="Property Type" value={(acct.rp_propertyType || "—").replace(/_/g," ")}/>
@@ -8498,7 +8660,7 @@ ${compFlags.length > 0 ? `
                           <DR label="Accum. Depreciation" value={acct.rp_accumulatedDepreciation ? fmtFull(acct.rp_accumulatedDepreciation) : "—"}/>
                         </tbody>
                       </table>
-                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                      <table style={TABLE.base}>
                         <tbody>
                           <DR label="Est. Tax Liability" value={typeof acct.estimatedTaxLiability === "number" && acct.estimatedTaxLiability > 0 ? fmtFull(acct.estimatedTaxLiability) : (acct.estimatedTaxLiability || "—")}/>
                           <DR label="Tax Impact on Risk" value={(acct.taxImpactOnRisk || "—").replace(/_/g," ")}/>
@@ -8512,14 +8674,14 @@ ${compFlags.length > 0 ? `
                     <div style={{ marginTop:12, paddingTop:12, borderTop:`1px solid ${N.divider}` }}>
                       <div style={{ fontSize:12, fontWeight:700, color:T.body, fontFamily:FONT, marginBottom:8 }}>Qualified Intermediary</div>
                       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0 32px" }}>
-                        <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <table style={TABLE.base}>
                           <tbody>
                             <DR label="Contact Name" value={acct.qiContactName || "—"}/>
                             <DR label="Company" value={acct.qiCompany || "—"}/>
                             <DR label="Address" value={[acct.qiAddress, acct.qiCity, acct.qiState, acct.qiZip].filter(Boolean).join(", ") || "—"}/>
                           </tbody>
                         </table>
-                        <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <table style={TABLE.base}>
                           <tbody>
                             <DR label="Phone" value={acct.qiCell || acct.qiBusiness || "—"}/>
                             <DR label="Email" value={acct.qiEmail || "—"}/>
@@ -8572,7 +8734,7 @@ ${compFlags.length > 0 ? `
               ) : (
               <React.Fragment>
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0 32px" }}>
-                  <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                  <table style={TABLE.base}>
                     <tbody>
                       <DR label="Full Name" value={fullName}/>
                       <DR label="Date of Birth" value={acct.dob || "—"}/>
@@ -8584,7 +8746,7 @@ ${compFlags.length > 0 ? `
                       <DR label="Dependents" value={acct.dependents || "0"}/>
                     </tbody>
                   </table>
-                  <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                  <table style={TABLE.base}>
                     <tbody>
                       <DR label="Email Address" value={acct.email || "—"}/>
                       <DR label="Phone (Mobile)" value={acct.phone || "—"}/>
@@ -8598,10 +8760,10 @@ ${compFlags.length > 0 ? `
                   </table>
                 </div>
                 {acct.hasCoApplicant && (
-                  <div style={{ marginTop:16, paddingTop:14, borderTop:`1px solid ${N.divider}` }}>
-                    <div style={{ fontSize:12, fontWeight:700, color:T.body, fontFamily:FONT, marginBottom:10 }}>Co-Applicant</div>
+                <div style={{ marginTop:16, paddingTop:14, borderTop: TABLE_DIVIDER }}>
+                  <div style={{ fontSize:14, fontWeight:500, color:T.body, fontFamily:FONT, marginBottom:10 }}>Co-Applicant</div>
                     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0 32px" }}>
-                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                      <table style={TABLE.base}>
                         <tbody>
                           <DR label="Full Name" value={[acct.coTitle, acct.coFirstName, acct.coMiddleName, acct.coLastName].filter(Boolean).join(" ") || "—"}/>
                           <DR label="Date of Birth" value={acct.coDob || "—"}/>
@@ -8609,7 +8771,7 @@ ${compFlags.length > 0 ? `
                           <DR label="Citizenship" value={acct.coCitizenship || "United States"}/>
                         </tbody>
                       </table>
-                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                      <table style={TABLE.base}>
                         <tbody>
                           <DR label="Email" value={acct.coEmail || "—"}/>
                           <DR label="Phone" value={acct.coPhone || "—"}/>
@@ -8629,7 +8791,7 @@ ${compFlags.length > 0 ? `
               <div style={{ height:1, background:N.divider, margin:"4px 0 24px" }}/>
               <ReviewSection title="Entity Information & Beneficial Ownership" onEdit={() => setStep(3)}>
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0 32px" }}>
-                  <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                  <table style={TABLE.base}>
                     <tbody>
                       <DR label="Entity Name" value={acct.entityName || "—"}/>
                       <DR label="Entity Type" value={(acct.entityType || "—").replace(/_/g," ")}/>
@@ -8638,7 +8800,7 @@ ${compFlags.length > 0 ? `
                       <DR label="State of Formation" value={entityInfo.stateOfFormation || acct.entityStateOfFormation || "—"}/>
                     </tbody>
                   </table>
-                  <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                  <table style={TABLE.base}>
                     <tbody>
                       <DR label="Primary Authorized" value={entityInfo.primaryAuthorized || "—"}/>
                       <DR label="Co-Authorized" value={entityInfo.coAuthorized || "—"}/>
@@ -8650,11 +8812,11 @@ ${compFlags.length > 0 ? `
               </ReviewSection>
             </>)}
 
-            <div style={{ height:1, background:N.divider, margin:"4px 0 24px" }}/>
+            <div style={{ height:1, background:"rgba(212,212,212,0.5)", margin:"8px 0 24px" }}/>
 
             {/* Source of Funds */}
             <ReviewSection title="Source of Funds" onEdit={() => setStep(3)}>
-              <table style={{ width:"100%", borderCollapse:"collapse" }}>
+              <table style={TABLE.base}>
                 <tbody>
                   <DR label="Primary Income Source" value={acct.incomeSource || acct.employmentStatus || "—"}/>
                   <DR label="Funding Source" value={(acct.fundingSource || "—").replace(/_/g," ")}/>
@@ -8666,12 +8828,12 @@ ${compFlags.length > 0 ? `
               </table>
             </ReviewSection>
 
-            <div style={{ height:1, background:N.divider, margin:"4px 0 24px" }}/>
+            <div style={{ height:1, background:"rgba(212,212,212,0.5)", margin:"8px 0 24px" }}/>
 
             {/* Financial Information */}
             <ReviewSection title="Financial Information" onEdit={() => setStep(2)}>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0 32px" }}>
-                <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                <table style={TABLE.base}>
                   <tbody>
                     <DR label="Total Assets" value={fmtFull(fsCalcs.totalAssets)}/>
                     <DR label="Total Liabilities" value={fmtFull(fsCalcs.totalLiab)}/>
@@ -8681,7 +8843,7 @@ ${compFlags.length > 0 ? `
                     <DR label="Cash, Savings & 1031" value={fmtFull(fsCalcs.cashEquiv)}/>
                   </tbody>
                 </table>
-                <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                <table style={TABLE.base}>
                   <tbody>
                     <DR label="Market Securities" value={fmtFull(fsCalcs.mktSec)}/>
                     <DR label="Retirement Accounts" value={fmtFull(fsCalcs.retAccounts)}/>
@@ -8695,10 +8857,10 @@ ${compFlags.length > 0 ? `
 
               {/* Detailed Concentration Analysis */}
               {fsCalcs.totalAssets > 0 && fsCalcs.netWorthExRes > 0 && (
-                <div style={{ marginTop:16, padding:"16px 20px", background:N.section, borderRadius:12, border:`1px solid ${N.border}` }}>
+                <div style={{ marginTop:16, padding:"16px 20px", background:LAYER_BG, borderRadius:10 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
                     <div>
-                      <div style={{ fontSize:13, fontWeight:700, color:T.primary, fontFamily:FONT }}>Investment Concentration Analysis</div>
+                      <div style={{ fontSize:14, fontWeight:500, color:T.primary, fontFamily:FONT }}>Investment Concentration Analysis</div>
                       <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginTop:2 }}>Per Stax DST Disclosure §04/§05 — as % of Net Worth ex-Primary Residence ({fmtFull(fsCalcs.netWorthExRes)})</div>
                     </div>
                     <div style={{ textAlign:"right" }}>
@@ -8707,16 +8869,16 @@ ${compFlags.length > 0 ? `
                     </div>
                   </div>
 
-                  <table style={{ width:"100%", borderCollapse:"collapse", fontSize:12, fontFamily:FONT }}>
+                  <table style={TABLE.base}>
                     <thead>
-                      <tr style={{ borderBottom:`2px solid ${G.forest}30` }}>
-                        <th style={{ textAlign:"left", padding:"8px 10px", color:T.primary, fontWeight:700, fontSize:11 }}>Allocation</th>
-                        <th style={{ textAlign:"right", padding:"8px 10px", color:T.muted, fontWeight:600, fontSize:10, borderLeft:`1px solid ${N.divider}` }}>Pre $</th>
-                        <th style={{ textAlign:"right", padding:"8px 10px", color:T.muted, fontWeight:600, fontSize:10 }}>Pre %</th>
-                        <th style={{ textAlign:"right", padding:"8px 10px", color:T.muted, fontWeight:600, fontSize:10, borderLeft:`1px solid ${N.divider}` }}>Post $</th>
-                        <th style={{ textAlign:"right", padding:"8px 10px", color:T.muted, fontWeight:600, fontSize:10 }}>Post %</th>
-                        <th style={{ textAlign:"center", padding:"8px 10px", color:T.muted, fontWeight:600, fontSize:10, borderLeft:`1px solid ${N.divider}` }}>Δ</th>
-                        <th style={{ textAlign:"center", padding:"8px 10px", color:T.muted, fontWeight:600, fontSize:10 }}>Status</th>
+                      <tr>
+                        <th style={TABLE.head}>Allocation</th>
+                        <th style={{ ...TABLE.head, ...TABLE.numeric }}>Pre $</th>
+                        <th style={{ ...TABLE.head, ...TABLE.numeric }}>Pre %</th>
+                        <th style={{ ...TABLE.head, ...TABLE.numeric }}>Post $</th>
+                        <th style={{ ...TABLE.head, ...TABLE.numeric }}>Post %</th>
+                        <th style={{ ...TABLE.head, textAlign:"center" }}>Δ</th>
+                        <th style={{ ...TABLE.head, textAlign:"center" }}>Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -8730,14 +8892,14 @@ ${compFlags.length > 0 ? `
                         const elevated = thresh && post > (thresh * 0.6) && !exceeds;
                         const delta = post - pre;
                         return (
-                          <tr key={key} style={{ borderBottom:`1px solid ${N.divider}`, background: exceeds ? "#FEF2F208" : "transparent" }}>
-                            <td style={{ padding:"10px 10px", color:T.body, fontWeight:600, fontSize:12 }}>{cat}</td>
-                            <td style={{ padding:"10px 10px", textAlign:"right", color:T.body, fontSize:12, borderLeft:`1px solid ${N.divider}` }}>{preAmt > 0 ? fmtFull(preAmt) : "—"}</td>
-                            <td style={{ padding:"10px 10px", textAlign:"right", color:T.body, fontSize:12, fontWeight:600 }}>{pre.toFixed(1)}%</td>
-                            <td style={{ padding:"10px 10px", textAlign:"right", fontSize:12, fontWeight:700, borderLeft:`1px solid ${N.divider}`, color: exceeds ? A.red : G.forest }}>{postAmt > 0 ? fmtFull(postAmt) : "—"}</td>
-                            <td style={{ padding:"10px 10px", textAlign:"right", fontSize:13, fontWeight:700, color: exceeds ? A.red : elevated ? C.warning : G.forest }}>{post.toFixed(1)}%{exceeds && " ⚠"}</td>
-                            <td style={{ padding:"10px 10px", textAlign:"center", fontSize:11, fontWeight:600, borderLeft:`1px solid ${N.divider}`, color: delta > 0 ? A.amber : T.muted }}>{delta > 0.05 ? `+${delta.toFixed(1)}pp` : "—"}</td>
-                            <td style={{ padding:"10px 10px", textAlign:"center" }}>
+                          <tr key={key} style={{ background: exceeds ? "#FEF2F208" : "transparent" }}>
+                            <td style={{ ...TABLE.valueStrong }}>{cat}</td>
+                            <td style={{ ...TABLE.value, ...TABLE.numeric }}>{preAmt > 0 ? fmtFull(preAmt) : "—"}</td>
+                            <td style={{ ...TABLE.valueStrong, ...TABLE.numeric }}>{pre.toFixed(1)}%</td>
+                            <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, color: exceeds ? A.red : G.forest }}>{postAmt > 0 ? fmtFull(postAmt) : "—"}</td>
+                            <td style={{ ...TABLE.valueStrong, ...TABLE.numeric, color: exceeds ? A.red : elevated ? C.warning : G.forest }}>{post.toFixed(1)}%{exceeds && " ⚠"}</td>
+                            <td style={{ ...TABLE.valueStrong, textAlign:"center", color: delta > 0 ? A.amber : T.muted }}>{delta > 0.05 ? `+${delta.toFixed(1)}pp` : "—"}</td>
+                            <td style={{ ...TABLE.value, textAlign:"center" }}>
                               {exceeds ? <span style={{ display:"inline-block", padding:"2px 8px", borderRadius:4, fontSize:9, fontWeight:700, background:C.errorBg, color:C.error, fontFamily:FONT }}>EXCEEDS</span>
                                : elevated ? <span style={{ display:"inline-block", padding:"2px 8px", borderRadius:4, fontSize:9, fontWeight:700, background:C.warningBg, color:C.warning, fontFamily:FONT }}>ELEVATED</span>
                                : thresh ? <span style={{ display:"inline-block", padding:"2px 8px", borderRadius:4, fontSize:9, fontWeight:700, background:G.mint, color:G.forest, fontFamily:FONT }}>OK</span>
@@ -8794,7 +8956,7 @@ ${compFlags.length > 0 ? `
               )}
             </ReviewSection>
 
-            <div style={{ height:1, background:N.divider, margin:"4px 0 24px" }}/>
+            <div style={{ height:1, background:"rgba(212,212,212,0.5)", margin:"8px 0 24px" }}/>
 
             {/* Selected Investments */}
             <ReviewSection title="Selected DST Investments" onEdit={() => setStep(1)}>
@@ -8814,18 +8976,18 @@ ${compFlags.length > 0 ? `
                   </div>
                 </div>
               ))}
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", paddingTop:12, borderTop:`2px solid ${N.border}`, marginTop:4 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", paddingTop:12, borderTop:`1px solid ${N.divider}`, marginTop:4 }}>
                 <span style={{ fontSize:13, fontWeight:700, color:T.primary, fontFamily:FONT }}>Total Investment</span>
                 <span style={{ fontSize:22, fontWeight:700, color:G.forest, fontFamily:FONT }}>{fmtFull(cartTotal)}</span>
               </div>
             </ReviewSection>
 
-            <div style={{ height:1, background:N.divider, margin:"4px 0 24px" }}/>
+            <div style={{ height:1, background:"rgba(212,212,212,0.5)", margin:"8px 0 24px" }}/>
 
             {/* Experience & Suitability */}
             <ReviewSection title="Investment Experience &amp; Suitability" onEdit={() => setStep(3)}>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0 32px" }}>
-                <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                <table style={TABLE.base}>
                   <tbody>
                     <DR label="Accredited Investor" value={acct.accredited || "—"}/>
                     <DR label="Accredited Basis" value={(acct.accreditedBasis || "—").replace(/_/g," ")}/>
@@ -8833,7 +8995,7 @@ ${compFlags.length > 0 ? `
                     <DR label="Liquidity Needs" value={acct.liquidityNeeds || "—"}/>
                   </tbody>
                 </table>
-                <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                <table style={TABLE.base}>
                   <tbody>
                     <DR label="Emergency Funds" value={acct.emergencyFunds || "—"}/>
                     <DR label="Distribution Method" value={(acct.distributionMethod || "—").replace(/_/g," ")}/>
@@ -8847,8 +9009,8 @@ ${compFlags.length > 0 ? `
         </div>
 
         {/* ── Uploaded Documents Summary ── */}
-        <div style={{ background:N.card, borderRadius:14, border:`1px solid ${N.border}`, boxShadow:"0 2px 16px rgba(0,0,0,0.05)", overflow:"hidden", marginBottom:20 }}>
-          <div style={{ padding:"28px 32px" }}>
+        <div style={{ overflow:"hidden", marginBottom:20, background:"#FFFFFF", borderRadius:12, border:"1px solid rgba(212,212,212,0.45)", boxShadow:"0 1px 3px rgba(0,0,0,0.05)" }}>
+          <div style={{ padding:"24px 28px" }}>
             <ReviewSection title="Uploaded Documents" onEdit={() => setStep(3)}>
               {/* Primary ID */}
               <div style={{ marginBottom:16 }}>
@@ -8867,8 +9029,9 @@ ${compFlags.length > 0 ? `
                     </div>
                   ))
                 ) : (
-                  <div style={{ display:"flex", alignItems:"center", gap:8, padding:"10px 14px", background:C.errorBg, borderRadius:8, border:`1px solid ${C.errorBorder}` }}>
-                    <span style={{ fontSize:11, color:C.error, fontWeight:600, fontFamily:FONT }}>Required: Government-issued photo ID not uploaded</span>
+                  <div style={{ borderLeft:`3px solid ${ALERT_BANNER_RED}`, padding:12, background:ALERT_BANNER_BG, borderRadius:"0 8px 8px 0" }}>
+                    <div style={{ fontSize:14, fontWeight:500, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>Required Document Missing</div>
+                    <div style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>Government-issued photo ID not uploaded.</div>
                   </div>
                 )}
               </div>
@@ -8891,8 +9054,9 @@ ${compFlags.length > 0 ? `
                       </div>
                     ))
                   ) : (
-                    <div style={{ display:"flex", alignItems:"center", gap:8, padding:"10px 14px", background:C.errorBg, borderRadius:8, border:`1px solid ${C.errorBorder}` }}>
-                      <span style={{ fontSize:11, color:C.error, fontWeight:600, fontFamily:FONT }}>Required: Co-applicant photo ID not uploaded</span>
+                    <div style={{ borderLeft:`3px solid ${ALERT_BANNER_RED}`, padding:12, background:ALERT_BANNER_BG, borderRadius:"0 8px 8px 0" }}>
+                      <div style={{ fontSize:14, fontWeight:500, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>Required Document Missing</div>
+                      <div style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>Co-applicant photo ID not uploaded.</div>
                     </div>
                   )}
                 </div>
@@ -8916,8 +9080,9 @@ ${compFlags.length > 0 ? `
                       </div>
                     ))
                   ) : (
-                    <div style={{ display:"flex", alignItems:"center", gap:8, padding:"10px 14px", background:C.errorBg, borderRadius:8, border:`1px solid ${C.errorBorder}` }}>
-                      <span style={{ fontSize:11, color:C.error, fontWeight:600, fontFamily:FONT }}>Required: Entity formation documents not uploaded</span>
+                    <div style={{ borderLeft:`3px solid ${ALERT_BANNER_RED}`, padding:12, background:ALERT_BANNER_BG, borderRadius:"0 8px 8px 0" }}>
+                      <div style={{ fontSize:14, fontWeight:500, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>Required Document Missing</div>
+                      <div style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>Entity formation documents not uploaded.</div>
                     </div>
                   )}
                 </div>
@@ -8941,36 +9106,36 @@ ${compFlags.length > 0 ? `
         </div>
 
         {/* ── Agreements and Disclosures ── */}
-        <div style={{ background:N.card, borderRadius:14, border:`1px solid ${N.border}`, boxShadow:"0 2px 16px rgba(0,0,0,0.05)", overflow:"hidden", marginBottom:20 }}>
+        <div style={{ overflow:"hidden", marginBottom:20, background:"#FFFFFF", borderRadius:12, border:"1px solid rgba(212,212,212,0.45)", boxShadow:"0 1px 3px rgba(0,0,0,0.05)" }}>
           <div style={{ display:"flex", gap:0 }}>
             {/* Left: checklist */}
             <div style={{ flex:1, padding:"28px 28px" }}>
-              <div style={{ fontSize:15, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:4 }}>Agreements and Disclosures</div>
-              <p style={{ fontSize:12, color:T.muted, fontFamily:FONT, lineHeight:1.6, marginBottom:16 }}>Review the following agreements and disclosures carefully. By checking each box, you confirm you have read and agree to the terms of each document.</p>
+              <div style={{ fontSize:16, fontWeight:600, color:T.primary, fontFamily:FONT, marginBottom:4 }}>Agreements and Disclosures</div>
+              <p style={{ fontSize:14, color:T.muted, fontFamily:FONT, lineHeight:1.6, marginBottom:16 }}>Review the following agreements and disclosures carefully. By checking each box, you confirm you have read and agree to the terms of each document.</p>
 
               {/* Master toggle */}
               <div style={{ padding:"10px 14px", background: allDiscAcked ? G.mint : N.section, borderRadius:8, border:`1px solid ${allDiscAcked ? G.forest+"40" : N.border}`, marginBottom:14, display:"flex", alignItems:"center", gap:10 }}>
-                <input type="checkbox" checked={agreeAll} onChange={e => handleAgreeAll(e.target.checked)} style={{ width:15, height:15, accentColor:G.forest, cursor:"pointer" }}/>
-                <span style={{ fontSize:12, fontWeight:600, color: allDiscAcked ? G.forest : T.body, fontFamily:FONT }}>I agree to all listed below</span>
+                <input type="checkbox" checked={agreeAll} onChange={e => handleAgreeAll(e.target.checked)} style={{ width:16, height:16, accentColor:SELECTED_CARD_BORDER, cursor:"pointer" }}/>
+                <span style={{ fontSize:14, fontWeight:500, color: allDiscAcked ? G.forest : T.body, fontFamily:FONT, lineHeight:"20px" }}>I agree to all listed below</span>
                 {allDiscAcked && <span style={{ fontSize:11, color:G.forest, fontFamily:FONT, marginLeft:"auto" }}>✓ All acknowledged</span>}
               </div>
 
-              <div style={{ fontSize:11, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", margin:"14px 0 4px" }}>Investor Representations &amp; Agreements</div>
+              <div style={{ fontSize:12, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.4px", margin:"14px 0 6px" }}>Investor Representations &amp; Agreements</div>
               {DiscRow({ id:"materialReviewed", label:"I have reviewed all Offering Materials and consulted independent legal, tax, and investment advisors prior to investing.", docRef:"[Stax DST Disclosure · §06 Item 1–4]" })}
               {DiscRow({ id:"offering", label:"I understand the investment is highly speculative and involves substantial risk, including possible loss of entire invested capital.", docRef:"[Stax DST Disclosure · §06 Item 1]" })}
-              <div style={{ fontSize:11, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", margin:"14px 0 4px" }}>Illiquidity &amp; Risk</div>
+              <div style={{ fontSize:12, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.4px", margin:"14px 0 6px" }}>Illiquidity &amp; Risk</div>
               {DiscRow({ id:"illiquidity", label:"I understand this investment is illiquid with no established secondary market. Any sale, if possible, may be at a substantial discount.", docRef:"[Stax DST Disclosure · §06 Item 7]" })}
               {DiscRow({ id:"risk", label:"I am not financially dependent on receiving distributions. I can hold the investment indefinitely and withstand a complete loss.", docRef:"[Stax DST Disclosure · §06 Item 3]" })}
               {DiscRow({ id:"noGuarantee", label:"I understand Stax Capital makes no guarantees regarding investment performance. Due diligence does not guarantee any specific outcome.", docRef:"[Stax DST Disclosure · §06 Item 8–9]" })}
-              <div style={{ fontSize:11, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", margin:"14px 0 4px" }}>1031 Exchange</div>
+              <div style={{ fontSize:12, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.4px", margin:"14px 0 6px" }}>1031 Exchange</div>
               {DiscRow({ id:"exchange1031", label:"I acknowledge that 1031 exchange tax deferral may be challenged by the IRS or state authorities, and in the event of foreclosure, I may be subject to additional taxation.", docRef:"[Stax DST Disclosure · §06 Item 5]" })}
-              <div style={{ fontSize:11, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", margin:"14px 0 4px" }}>Concentration &amp; Debt</div>
+              <div style={{ fontSize:12, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.4px", margin:"14px 0 6px" }}>Concentration &amp; Debt</div>
               {DiscRow({ id:"concentration", label:"I have reviewed my pre- and post-investment concentration levels and accept the over-concentration risk as discussed with Stax Capital.", docRef:"[Stax DST Disclosure · §05]" })}
               {DiscRow({ id:"additionalDebt", label:"I understand the investment may have debt that exceeds the amount retired at sale, and I accept all related financing and tax risks.", docRef:"[Stax DST Disclosure · §06 Item 6]" })}
-              <div style={{ fontSize:11, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", margin:"14px 0 4px" }}>Customer Acknowledgments &amp; Account Agreement</div>
+              <div style={{ fontSize:12, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.4px", margin:"14px 0 6px" }}>Customer Acknowledgments &amp; Account Agreement</div>
               {DiscRow({ id:"arbitration", label:"I acknowledge and accept the Stax Capital Client Account Agreement, Privacy Policy, and the Pre-Dispute Arbitration Agreement. All investments carry risk of loss.", docRef:"[NAF · pp. 12–15]" })}
               {DiscRow({ id:"independentAdvice", label:"I have sought independent legal, tax, and investment advice. I reserve the right to decide whether to proceed. I may contact compliance at 844-427-1031.", docRef:"[Stax Customer Acknowledgments · §11]" })}
-              <div style={{ fontSize:11, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.5px", margin:"14px 0 4px" }}>Regulatory Documents &amp; E-SIGN</div>
+              <div style={{ fontSize:12, fontWeight:600, color:T.muted, fontFamily:FONT, textTransform:"uppercase", letterSpacing:"0.4px", margin:"14px 0 6px" }}>Regulatory Documents &amp; E-SIGN</div>
               {DiscRow({ id:"formCRS", label:"I acknowledge receipt of Stax Capital's Form CRS (Customer Relationship Summary) as required by SEC Rule 17a-14.", docRef:"[SEC 17a-14]" })}
               {DiscRow({ id:"regBI", label:"I acknowledge receipt of the Regulation Best Interest Disclosure Document and understand Stax Capital acts in my best interest.", docRef:"[SEC Reg BI]" })}
               {DiscRow({ id:"privacy", label:"I have received and reviewed Stax Capital's Privacy Policy and understand how my nonpublic personal information is collected and protected.", docRef:"[Reg S-P]" })}
@@ -8979,27 +9144,27 @@ ${compFlags.length > 0 ? `
             </div>
 
             {/* Right: info panel */}
-            <div style={{ width:220, flexShrink:0, borderLeft:`1px solid ${N.border}`, padding:"28px 20px", background:N.section }}>
+            <div style={{ width:220, flexShrink:0, borderLeft:`1px solid rgba(212,212,212,0.45)`, padding:"24px 20px", background:"#FFFFFF" }}>
               <div style={{ marginBottom:16 }}>
                 <div style={{ width:40, height:40, borderRadius:10, background:G.mint, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:10, border:`1px solid ${G.forest}20` }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={G.forest} strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                 </div>
-                <div style={{ fontSize:12, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:6 }}>About Agreements and Disclosures</div>
+                <div style={{ fontSize:14, fontWeight:600, color:T.primary, fontFamily:FONT, marginBottom:6 }}>About Agreements and Disclosures</div>
                 <div style={{ fontSize:11, color:T.muted, fontFamily:FONT, lineHeight:1.7 }}>
                   We are required to provide you with certain disclosures mandated by SEC and FINRA regulations. Please review and acknowledge each item.
                 </div>
               </div>
-              <div style={{ padding:"10px 12px", background:N.card, borderRadius:8, border:`1px solid ${N.border}`, marginBottom:10 }}>
+              <div style={{ padding:"10px 12px", background:LAYER_BG, borderRadius:8, marginBottom:10 }}>
                 <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginBottom:4 }}>REGULATORY COMPLIANCE</div>
                 <div style={{ fontSize:11, color:T.body, fontFamily:FONT, lineHeight:1.6 }}>Subject to FINRA Rule 2165, SEC Regulation Best Interest, and USA PATRIOT Act requirements.</div>
               </div>
-              <div style={{ padding:"10px 12px", background:C.infoBg, borderRadius:8, border:`1px solid ${C.infoBorder}`, marginBottom:10 }}>
-                <div style={{ fontSize:10, color:C.info, fontFamily:FONT, marginBottom:4 }}>DOCUMENT DOWNLOAD</div>
-                <div style={{ fontSize:11, color:C.info, fontFamily:FONT, lineHeight:1.6 }}>Full disclosure documents are available from your representative or at staxai.com.</div>
+              <div style={{ padding:"10px 12px", background:LAYER_BG, borderRadius:8, marginBottom:10 }}>
+                <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginBottom:4 }}>DOCUMENT DOWNLOAD</div>
+                <div style={{ fontSize:11, color:T.body, fontFamily:FONT, lineHeight:1.6 }}>Full disclosure documents are available from your representative or at staxai.com.</div>
               </div>
-              <div style={{ padding:"10px 12px", background:C.warningBg, borderRadius:8, border:`1px solid ${C.warningBorder}`, marginBottom:10 }}>
-                <div style={{ fontSize:10, color:C.warning, fontFamily:FONT, marginBottom:4 }}>FOR ACCREDITED INVESTORS</div>
-                <div style={{ fontSize:11, color:C.warning, fontFamily:FONT, lineHeight:1.6 }}>DST investments under Private Placement are offered exclusively to accredited investors per SEC Rule 501.</div>
+              <div style={{ padding:"10px 12px", background:LAYER_BG, borderRadius:8, marginBottom:10 }}>
+                <div style={{ fontSize:10, color:T.muted, fontFamily:FONT, marginBottom:4 }}>FOR ACCREDITED INVESTORS</div>
+                <div style={{ fontSize:11, color:T.body, fontFamily:FONT, lineHeight:1.6 }}>DST investments under Private Placement are offered exclusively to accredited investors per SEC Rule 501.</div>
               </div>
               {requiresFlagAcceptance && (
                 <div style={{ padding:"10px 12px", borderRadius:8, background: allFlagsAcked ? G.mint : C.errorBg, border:`1px solid ${allFlagsAcked ? G.forest+"30" : C.errorBorder}` }}>
@@ -9014,7 +9179,7 @@ ${compFlags.length > 0 ? `
         </div>
 
         {/* ── Communication Preferences ── */}
-        <div style={{ background:N.card, borderRadius:14, border:`1px solid ${N.border}`, padding:"20px 24px", marginBottom:20 }}>
+        <div style={{ padding:"20px 24px", marginBottom:20, background:"#FFFFFF", borderRadius:12, border:"1px solid rgba(212,212,212,0.45)", boxShadow:"0 1px 3px rgba(0,0,0,0.05)" }}>
           <div style={{ fontSize:13, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:10 }}>Communication Preferences</div>
           <div style={{ fontSize:12, color:T.muted, fontFamily:FONT, lineHeight:1.6, marginBottom:12, padding:"10px 14px", background:N.section, borderRadius:8, border:`1px solid ${N.border}` }}>
             By default, you have telephone authorization and electronic delivery of documents. To revoke either privilege, check the applicable box below.
@@ -9024,7 +9189,7 @@ ${compFlags.length > 0 ? `
         </div>
 
         {/* ── Signature ── */}
-        <div style={{ background:N.card, borderRadius:14, border:`1px solid ${N.border}`, padding:"28px 32px", marginBottom:20 }}>
+        <div style={{ padding:"24px 28px", marginBottom:20, background:"#FFFFFF", borderRadius:12, border:"1px solid rgba(212,212,212,0.45)", boxShadow:"0 1px 3px rgba(0,0,0,0.05)" }}>
           <div style={{ fontSize:15, fontWeight:700, color:T.primary, fontFamily:FONT, marginBottom:14 }}>Signature</div>
           <div style={{ fontSize:12, color:T.body, fontFamily:FONT, lineHeight:1.9, marginBottom:20, padding:"14px 16px", background:`${G.forest}06`, borderRadius:8, border:`1px solid ${G.forest}20` }}>
             By typing my name and clicking to proceed, I confirm that: <strong>(1)</strong> all information is accurate, complete, and up-to-date; <strong>(2)</strong> I have read and understood all agreements and disclosures; and <strong>(3)</strong> my electronic signature is the legal equivalent of a manually written signature.
@@ -9037,8 +9202,8 @@ ${compFlags.length > 0 ? `
             </FormField>
             {sig.primary.trim().length > 2 && (
               <div style={{ marginTop:8 }}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", padding:"12px 20px", background:N.section, borderRadius:8, border:`1px solid ${N.border}`, borderBottom:`2px solid ${G.forest}` }}>
-                  <span style={{ fontFamily:"Georgia, 'Times New Roman', serif", fontSize:32, color:G.deep, fontStyle:"italic" }}>{sig.primary}</span>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", padding:"12px 20px", background:N.section, borderRadius:8, border:`1px solid ${N.border}`, borderBottom:`1px solid ${G.forest}` }}>
+                  <span style={{ fontFamily:FONT, fontSize:24, fontWeight:500, color:G.deep }}>{sig.primary}</span>
                   <div style={{ textAlign:"right" }}>
                     <div style={{ fontSize:10, color:T.light, fontFamily:FONT }}>Dated</div>
                     <div style={{ fontSize:11, color:T.muted, fontFamily:FONT }}>{nowStr}</div>
@@ -9056,8 +9221,8 @@ ${compFlags.length > 0 ? `
               </FormField>
               {sig.co.trim().length > 2 && (
                 <div style={{ marginTop:8 }}>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", padding:"12px 20px", background:N.section, borderRadius:8, border:`1px solid ${N.border}`, borderBottom:`2px solid ${G.forest}` }}>
-                    <span style={{ fontFamily:"Georgia, serif", fontSize:32, color:G.deep, fontStyle:"italic" }}>{sig.co}</span>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", padding:"12px 20px", background:N.section, borderRadius:8, border:`1px solid ${N.border}`, borderBottom:`1px solid ${G.forest}` }}>
+                    <span style={{ fontFamily:FONT, fontSize:24, fontWeight:500, color:G.deep }}>{sig.co}</span>
                     <div style={{ textAlign:"right" }}>
                       <div style={{ fontSize:10, color:T.light, fontFamily:FONT }}>Dated</div>
                       <div style={{ fontSize:11, color:T.muted, fontFamily:FONT }}>{nowStr}</div>
@@ -9088,21 +9253,12 @@ ${compFlags.length > 0 ? `
             </div>
           )}
           {allDiscAcked && requiresFlagAcceptance && !allFlagsAcked && (
-            <div style={{
-              padding:"12px 16px", background:C.errorBg, borderRadius:8,
-              border:`1px solid ${C.errorBorder}`, marginTop:16,
-              display:"flex", alignItems:"flex-start", gap:10,
-            }}>
-              <span style={{ fontSize:16, flexShrink:0 }}>🚫</span>
-              <div>
-                <div style={{ fontSize:12, fontWeight:700, color:C.error, fontFamily:FONT, marginBottom:2 }}>
-                  Compliance Acceptance Required
-                </div>
-                <div style={{ fontSize:11, color:C.error, fontFamily:FONT, lineHeight:1.5 }}>
-                  This application has compliance flags that require individual acknowledgment.
-                  Scroll up to the Compliance Flag Acceptance section, acknowledge each flag,
-                  accept the Hold Harmless Agreement, and provide your electronic signature.
-                </div>
+            <div style={{ borderLeft:`3px solid ${ALERT_BANNER_RED}`, padding:12, background:ALERT_BANNER_BG, borderRadius:"0 8px 8px 0", marginTop:16 }}>
+              <div style={{ fontSize:14, fontWeight:500, color:ALERT_BANNER_RED, fontFamily:FONT, marginBottom:2, lineHeight:"20px" }}>
+                Compliance Acceptance Required
+              </div>
+              <div style={{ fontSize:12, fontWeight:400, color:ALERT_BANNER_RED, fontFamily:FONT, lineHeight:"20px" }}>
+                This application has compliance flags that require individual acknowledgment. Scroll up to the Compliance Flag Acceptance section, acknowledge each flag, accept the Hold Harmless Agreement, and provide your electronic signature.
               </div>
             </div>
           )}
@@ -9224,7 +9380,7 @@ ${compFlags.length > 0 ? `
           </FormField>
           {regBISig.repSignature && regBISig.repSignature.trim().length > 2 && (
             <div style={{ marginTop:8, padding:"10px 18px", background:N.card, borderRadius:8,
-              border:`1px solid ${N.border}`, borderBottom:`2px solid ${G.forest}`,
+              border:`1px solid ${N.border}`, borderBottom:`1px solid ${G.forest}`,
               display:"flex", justifyContent:"space-between", alignItems:"flex-end" }}>
               <span style={{ fontFamily:"Georgia, 'Times New Roman', serif", fontSize:26, color:G.deep, fontStyle:"italic" }}>
                 {regBISig.repSignature}
@@ -9360,14 +9516,14 @@ ${compFlags.length > 0 ? `
           <div style={{ fontSize:11 }}>Audit entries are created as you interact with the application.</div>
         </div>
       ) : (
-        <div style={{ background:N.card, borderRadius:12, border:`1px solid ${N.border}`, overflow:"hidden" }}>
-          <div style={{ padding:"10px 16px", background:N.section, borderBottom:`1px solid ${N.border}`, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <div style={{ overflow:"hidden" }}>
+          <div style={{ padding:"10px 16px", background:N.card, borderBottom:`1px solid ${N.divider}`, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
             <span style={{ fontSize:11, fontWeight:700, color:T.primary, fontFamily:FONT }}>Event Log</span>
             <span style={{ fontSize:10, color:T.muted, fontFamily:FONT }}>{auditLog.length} event{auditLog.length !== 1 ? "s" : ""}</span>
           </div>
           {auditLog.map((entry, i) => (
             <div key={i} style={{ display:"flex", gap:12, padding:"12px 16px", borderBottom:`1px solid ${N.divider}`, alignItems:"flex-start" }}>
-              <div style={{ width:10, height:10, borderRadius:"50%", background:G.forest, marginTop:5, flexShrink:0, boxShadow:`0 0 0 3px ${G.mint}` }}/>
+              <div style={{ width:10, height:10, borderRadius:"50%", background:G.forest, marginTop:5, flexShrink:0, boxShadow:`0 0 0 1px ${G.mint}` }}/>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={{ fontSize:12, fontWeight:600, color:T.primary, fontFamily:FONT }}>{entry.action}</div>
                 {entry.details && (
@@ -9426,7 +9582,7 @@ ${compFlags.length > 0 ? `
         .stax-input:focus {
           outline: none;
           border-color: #1B5E3B !important;
-          box-shadow: 0 0 0 3px rgba(27,94,59,0.10) !important;
+          box-shadow: 0 0 0 1px rgba(27,94,59,0.10) !important;
         }
         .stax-input::placeholder {
           color: #B0B8C4;
@@ -9438,7 +9594,7 @@ ${compFlags.length > 0 ? `
           border-color: #EF6B51 !important;
         }
         .stax-input.has-error:focus {
-          box-shadow: 0 0 0 3px rgba(239,107,81,0.12) !important;
+          box-shadow: 0 0 0 1px rgba(239,107,81,0.12) !important;
         }
         .stax-input.is-valid {
           border-color: #1B5E3B !important;
@@ -9451,7 +9607,7 @@ ${compFlags.length > 0 ? `
         .stax-select:focus {
           outline: none;
           border-color: #1B5E3B !important;
-          box-shadow: 0 0 0 3px rgba(27,94,59,0.10) !important;
+          box-shadow: 0 0 0 1px rgba(27,94,59,0.10) !important;
         }
         .stax-select:hover:not(:focus) {
           border-color: #9CA3AF;
@@ -9472,8 +9628,8 @@ ${compFlags.length > 0 ? `
         }
         * { -webkit-tap-highlight-color: transparent; }
         @keyframes stax-highlight-fade {
-          0%   { box-shadow: 0 0 0 3px rgba(239,107,81,0.40); }
-          100% { box-shadow: 0 0 0 3px rgba(239,107,81,0); }
+          0%   { box-shadow: 0 0 0 1px rgba(239,107,81,0.40); }
+          100% { box-shadow: 0 0 0 1px rgba(239,107,81,0); }
         }
         .stax-field-highlight {
           animation: stax-highlight-fade 0.9s ease-out forwards;
@@ -9579,29 +9735,40 @@ ${compFlags.length > 0 ? `
         </ValidationCtx.Provider>
       </div>
 
-      {/* ─── DEV: Autofill Button (development only — stripped in prod builds) ─── */}
       {QUICK_FILL_ENABLED && view === "app" && step <= 5 && (
         <button
-          onClick={quickFill}
-          title={`Autofill Step ${step + 1} — populate all fields with mock data`}
+          onClick={() => quickFill(step)}
+          title={`Autofill current step (${step + 1}) with valid sample data`}
           style={{
-            position: "fixed", bottom: 88, right: 20, zIndex: 300,
-            height: 36, borderRadius: 18,
-            background: N.card, border: `1px solid ${N.border}`,
-            cursor: "pointer", padding: "0 14px 0 10px",
-            display: "flex", alignItems: "center", gap: 6,
-            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-            transition: "box-shadow 0.15s, border-color 0.15s",
-            fontFamily: FONT, fontSize: 11, fontWeight: 600, color: T.muted,
+            position: "fixed",
+            bottom: 88,
+            right: 20,
+            zIndex: 300,
+            height: 36,
+            borderRadius: 18,
+            background: NAVY[700],
+            border: `1px solid ${NAVY[700]}`,
+            cursor: "pointer",
+            padding: "0 14px",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            justifyContent: "center",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.14)",
+            transition: "box-shadow 0.15s, filter 0.15s",
+            fontFamily: FONT,
+            fontSize: 11,
+            fontWeight: 700,
+            color: T.white,
             letterSpacing: "0.02em",
           }}
-          onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 4px 14px rgba(0,0,0,0.14)"; e.currentTarget.style.borderColor = N.divider; e.currentTarget.style.color = T.primary; }}
-          onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 10px rgba(0,0,0,0.08)"; e.currentTarget.style.borderColor = N.border; e.currentTarget.style.color = T.muted; }}
+          onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 4px 14px rgba(0,0,0,0.18)"; e.currentTarget.style.filter = "brightness(1.03)"; }}
+          onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 10px rgba(0,0,0,0.14)"; e.currentTarget.style.filter = "none"; }}
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
           </svg>
-          Autofill
+          Autofill Step
         </button>
       )}
 
